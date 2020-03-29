@@ -20,20 +20,23 @@ char args_doc[] = "COMMANDLINE";
 
 /* The options we understand. */
 struct argp_option options[] = {
+  { 0, 'h', 0, OPTION_HIDDEN, "Alias for --help",0 },
+  { 0, 0, 0, 0, "Attack Controle Options:", 1},
+  {"no-timing",    TIMING_FAKE_KEY, 0,      0,  "Skip the timing attack phase.",1},
+  {"no-guessing",    GUESSING_FAKE_KEY, 0,      0,  "Skip the guessing attack phase.",1 },
+  {"prompt",   'p', "PAYLOAD", 0,"The tool inject this payload if he encounter a prompt. If many prompt options given, the tool inject subsecutives prompt payload at each encoutered prompt. ",1 },
+  { 0, 0, 0, 0, "Output Interpretation Options:", 2},
+  {"fail",    'f', "STR",      0,  "Specify a fail condition. If many fail condition given, the tool consider it's a fail if one of them is verified.",2 },
+  {"sucess",    's', "STR",      0,  "Specify a sucess condition. If many sucess condition given, the tool consider it's a sucess if all of the sucess conditions are verified and no fail condition is verified. In any other case, it's a fail.",2 },
 
-  { 0, 0, 0, 0, "Attack Controle Options:", -1},
-  {"no-timing",    TIMING_FAKE_KEY, 0,      0,  "Skip the timing attack phase." },
-  {"no-guessing",    GUESSING_FAKE_KEY, 0,      0,  "Skip the guessing attack phase." },
-  { 0, 0, 0, 0, "Output Interpretation Options:", -1},
-  {"fail",    'f', "STR",      0,  "Specify a fail condition. If many fail condition given, the tool consider it's a fail if one of them is verified." },
-  {"sucess",    's', "STR",      0,  "Specify a sucess condition. If many sucess condition given, the tool consider it's a sucess if all of the sucess conditions are verified and no fail condition is verified. In any other case, it's a fail." },
-  {"prompt",   'p', "PAYLOAD", 0,
-   "The tool inject this payload if he encounter a prompt. If may prompt options given, the tool inject subsecutives prompt payload at each encoutered prompt. " },
+  { 0, 0, 0, 0, "Furtivity tuning options:", 3},
+{"wait",    'w', "SECONDS",      0,  "Delay each guess by a certain amount of second.",3 },
+{"random-wait",    'r', "SECONDS",      0,  "Delay each guess by a random amount of second borned by the entered value.",3},
+{"no-random",    RANDOM_FAKE_KEY, 0,      0,  "Wihout this option this tool randomize the order of the guess. Activate to turn off this behaviour to win some time.",3 },
 
-  { 0, 0, 0, 0, "Furtivity tuning options:", -1},
-{"wait",    'w', "SECONDS",      0,  "Delay each guess by a certain amount of second." },
-{"random-wait",    'r', "SECONDS",      0,  "Delay each guess by a random amount of second borned by the entered value." },
-{"no-random",    RANDOM_FAKE_KEY, 0,      0,  "Wihout this option this tool randomize the order of the guess. Activate to turn off this behaviour to win some time." },
+{ 0, 0, 0, 0, "Others Options:", 4},
+
+
 
   { 0 }
 };
@@ -71,22 +74,28 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'f':
       arguments->fail[arguments->fail_cpt++]= arg;
     
-    case ARGP_KEY_ARG:
-	arguments->commandLine = arg;
-	arg_count++;
+    case 'h':
+      argp_state_help(state,state->err_stream, ARGP_HELP_STD_HELP); 
 
-      break;
+
+    case ARGP_KEY_ARG:
+	      arguments->commandLine = arg;
+	      arg_count++;
+
+	      break;
 
     case ARGP_KEY_END:
-      {
-	      printf ("\n"); 
-	      if (arg_count > 1) 
-		      argp_failure (state, 1, 0, "Authbreak take only one argument:"); 
-	      else if (arg_count < 1) 
-		      argp_failure (state, 1, 0, "Authbreak need on COMMAND positionnal argument:"); }      break;
+	      {
+		      printf ("\n"); 
+		      if (arg_count != 1){ 
+			      argp_usage (state);
+			      argp_failure (state, 1, 0, "Authbreak take one and only one COMMAND positionnal argument argument. Got %d", arg_count); 
+		      }
+	      }      
+	      break;
 
     default:
-      return ARGP_ERR_UNKNOWN;
+	      return ARGP_ERR_UNKNOWN;
     }
   return 0;
 }
@@ -94,23 +103,23 @@ parse_opt (int key, char *arg, struct argp_state *state)
 /* Our argp parser. */
 struct argp argp = { options, parse_opt, args_doc, doc };
 
-Arguments*
+	Arguments*
 get_arguments (int argc, char **argv)
 {
-  Arguments* arguments = malloc(sizeof(Arguments));
+	Arguments* arguments = malloc(sizeof(Arguments));
 
-  /* Default values. */
-  arguments->no_timing = false;
-  arguments->no_guessing = false;
-  arguments->no_random = false;
-  arguments->wait=0;
-  arguments->random_wait=0;
-  arguments->prompt_cpt=0;
-  arguments->fail_cpt=0;
-  arguments->sucess_cpt=0;
+	/* Default values. */
+	arguments->no_timing = false;
+	arguments->no_guessing = false;
+	arguments->no_random = false;
+	arguments->wait=0;
+	arguments->random_wait=0;
+	arguments->prompt_cpt=0;
+	arguments->fail_cpt=0;
+	arguments->sucess_cpt=0;
 
-  /* Parse our arguments; every option seen by parse_opt will
-     be reflected in arguments. */
-  argp_parse (&argp, argc, argv, 0, 0, arguments);
-  return arguments;
+	/* Parse our arguments; every option seen by parse_opt will
+	   be reflected in arguments. */
+	argp_parse (&argp, argc, argv, 0, 0, arguments);
+	return arguments;
 }
