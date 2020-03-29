@@ -11,6 +11,10 @@ endif()
 cmake_minimum_required(VERSION 3.7)
 
 project(authbreak C )
+set (version 0.0)
+# Adding version to the code
+add_definitions(-DAUTHBREAK_VERSION="${version}")
+
 
 include_directories(src)
 

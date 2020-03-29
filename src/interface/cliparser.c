@@ -8,12 +8,12 @@
 #define RANDOM_FAKE_KEY 1002
 
 const char *argp_program_version =
-  "authbreak 0.0";
+  "authbreak "AUTHBREAK_VERSION;// This variable is added at compilation
 
 
 /* Program documentation. */
 char doc[] =
-  "Authbreak. Generic command line injection point based authentification brutforcer";
+  "\nAuthbreak version "AUTHBREAK_VERSION":\n\nGeneric command line injection point based authentification brutforcer.";
 
 /* A description of the arguments we accept. */
 char args_doc[] = "COMMANDLINE";
