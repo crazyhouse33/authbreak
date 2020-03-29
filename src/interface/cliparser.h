@@ -1,9 +1,12 @@
+#include <stdbool.h>
 /*TODO remove this 100 limit */
-typedef struct arguments
+typedef struct Arguments
 {
   char* commandLine;                
-  char* [100] prompt, fail, success;
-  int prompt_cpt, fail_cpt, success_cpt;
+  char*  prompt[100];
+  char* sucess[100];
+  char* fail[100];
+  int prompt_cpt, fail_cpt, sucess_cpt;
   bool no_timing, no_guessing, no_random;
   double wait, random_wait;
 

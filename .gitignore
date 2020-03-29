@@ -20,6 +20,7 @@ tags
 [._]*.un~
 
 build/*
+bin/*
 
 
 #C
@@ -76,4 +77,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+#personalexception
 
+NV-*

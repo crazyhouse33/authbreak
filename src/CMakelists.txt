@@ -1,4 +1,0 @@
-file(GLOB_RECURSE SOURCES *.h *.cpp)
-
-add_executable(../bin/${CMAKE_PROJECT_NAME} ${SOURCES})
-

@@ -3,9 +3,9 @@
 #include <stdbool.h>
 #include "cliparser.h"
 
-const int timing_fake_key=1000
-const int guessing_fake_key=1001
-const int random_fake_key=1002
+#define TIMING_FAKE_KEY 1000
+#define GUESSING_FAKE_KEY 1001
+#define RANDOM_FAKE_KEY 1002
 
 const char *argp_program_version =
   "authbreak 0.0";
@@ -22,8 +22,8 @@ char args_doc[] = "COMMANDLINE";
 struct argp_option options[] = {
 
   { 0, 0, 0, 0, "Attack Controle Options:", -1},
-  {"no-timing",    timing_fake_key, 0,      0,  "Skip the timing attack phase." },
-  {"no-guessing",    guessing_fake_key, 0,      0,  "Skip the guessing attack phase." },
+  {"no-timing",    TIMING_FAKE_KEY, 0,      0,  "Skip the timing attack phase." },
+  {"no-guessing",    GUESSING_FAKE_KEY, 0,      0,  "Skip the guessing attack phase." },
   { 0, 0, 0, 0, "Output Interpretation Options:", -1},
   {"fail",    'f', "STR",      0,  "Specify a fail condition. If many fail condition given, the tool consider it's a fail if one of them is verified." },
   {"sucess",    's', "STR",      0,  "Specify a sucess condition. If many sucess condition given, the tool consider it's a sucess if all of the sucess conditions are verified and no fail condition is verified. In any other case, it's a fail." },
@@ -33,7 +33,7 @@ struct argp_option options[] = {
   { 0, 0, 0, 0, "Furtivity tuning options:", -1},
 {"wait",    'w', "SECONDS",      0,  "Delay each guess by a certain amount of second." },
 {"random-wait",    'r', "SECONDS",      0,  "Delay each guess by a random amount of second borned by the entered value." },
-{"no-random",    random_fake_key, 0,      0,  "Wihout this option this tool randomize the order of the guess. Activate to turn off this behaviour to win some time." },
+{"no-random",    RANDOM_FAKE_KEY, 0,      0,  "Wihout this option this tool randomize the order of the guess. Activate to turn off this behaviour to win some time." },
 
   { 0 }
 };
@@ -46,16 +46,17 @@ parse_opt (int key, char *arg, struct argp_state *state)
   /* Get the input argument from argp_parse, which we
      know is a pointer to our arguments structure. */
   Arguments* arguments = state->input;
+  static int arg_count=0;
 
   switch (key)
     {
-    case random_fake_key: 
+    case RANDOM_FAKE_KEY: 
       arguments->no_random = true;
       break;
-    case guessing_fake_key:
+    case GUESSING_FAKE_KEY:
       arguments->no_guessing = true;
       break;
-    case timing_fake_key:
+    case TIMING_FAKE_KEY:
       arguments->no_timing = true;
       break;
     case 'r':
@@ -66,22 +67,23 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'p':
       arguments->prompt[arguments->prompt_cpt++]= arg;
     case 's':
-      arguments->success[arguments->sucess_cpt++]= arg;
+      arguments->sucess[arguments->sucess_cpt++]= arg;
     case 'f':
       arguments->fail[arguments->fail_cpt++]= arg;
     
     case ARGP_KEY_ARG:
 	arguments->commandLine = arg;
+	arg_count++;
 
       break;
 
     case ARGP_KEY_END:
       {
 	      printf ("\n"); 
-	      if (*arg_count > 1) 
-		      argp_failure (state, 1, 0, "Authbreakek take one argument"); 
-	      else if (*arg_count < 1) 
-		      argp_failure (state, 1, 0, "too many arguments"); }      break;
+	      if (arg_count > 1) 
+		      argp_failure (state, 1, 0, "Authbreak take only one argument:"); 
+	      else if (arg_count < 1) 
+		      argp_failure (state, 1, 0, "Authbreak need on COMMAND positionnal argument:"); }      break;
 
     default:
       return ARGP_ERR_UNKNOWN;
@@ -95,11 +97,10 @@ struct argp argp = { options, parse_opt, args_doc, doc };
 Arguments*
 get_arguments (int argc, char **argv)
 {
-  Arguments* arguments = malloc(sizeof(Arguments))
+  Arguments* arguments = malloc(sizeof(Arguments));
 
   /* Default values. */
-  arguments->silent = 0;
-  argument->no_timing = false;
+  arguments->no_timing = false;
   arguments->no_guessing = false;
   arguments->no_random = false;
   arguments->wait=0;
