@@ -1,10 +1,10 @@
-message(tamere)
-set (testbin ${CMAKE_PROJECT_NAME}_test_all)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/tests)
+# Test discovery and building 
+file(GLOB_RECURSE TESTS *.c)
+foreach(file ${TESTS})
+  get_filename_component (name_without_extension ${file} NAME_WE)
+  add_executable(${name_without_extension} ${SOURCES})
+  add_test(NAME ${name_without_extension} COMMAND ${name_without_extension})
+endforeach()
 
-#file(GLOB_RECURSE TEST_SOURCES *.h *.c)
-#add_executable(${CMAKE_PROJECT_NAME}_test_all ${TEST_SOURCES})
-
-add_executable(testcli atnjdgk.c)
-
-add_test( all COMMAND testcli)
 
