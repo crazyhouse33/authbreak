@@ -1,0 +1,34 @@
+# List subdir
+MACRO(SUBDIRLIST result curdir)
+  FILE(GLOB_RECURSE children LIST_DIRECTORIES true ${curdir}/* )
+
+  SET(dirlist "")
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${child})
+      LIST(APPEND dirlist ${child})
+    ENDIF()
+  ENDFOREACH()
+
+  SET(${result} ${dirlist})
+ENDMACRO()
+
+
+# Take a dictionary, add the shubdirs that are not hidden (.git and other traps) and add them to include dir
+function(include_subdirectories directory)
+message("\nAdding subdirs of ${directory} as include directory:\n")
+SUBDIRLIST(subdirs ${directory})
+get_filename_component(absdirectory ${directory} REALPATH )
+FOREACH(sub ${subdirs})
+	string(REPLACE ${absdirectory} "" relative ${sub})
+	IF (NOT ${relative} MATCHES ".*/\\..*")
+		message ("\tAdding ${sub} as include dir.") 
+		include_directories(${sub})
+	ENDIF()
+ENDFOREACH()
+ENDFUNCTION(include_subdirectories)
+
+
+MACRO(JOIN VALUES GLUE OUTPUT)
+  string (REPLACE ";" "${GLUE}" _TMP_STR "${VALUES}")
+  set (${OUTPUT} "${_TMP_STR}")
+ENDMACRO()
