@@ -2,6 +2,7 @@
 #include "munit.h"
 #include <wordexp.h>
 #include <stdio.h>
+#include <argp.h> //argp flags
 // https://www.unix.com/programming/126160-building-argc-argv-style-structure-string-char.html
 /* using the default shell parser - no extra code required */
 
@@ -39,12 +40,20 @@ break;
 
 int main() {	
 	//testing public interface
-	char command[]="curl -F password={/opt/secu/wordlist/rockme.txt} 'https://example.com/upload.cgi' --success regexp --fail ";
+	char command[]="authbreak 'curl -F password=password https://example.com/upload.cgi' --success regexp -s gotprompt -f outpuy=18  --fail hopeless=29 -p test --prompt tamere=118";
 	Sysarg sysarg= make_args(command);
-	Arguments* args = get_arguments ( sysarg.argc, sysarg.argv);
+	Arguments* args = get_arguments ( sysarg.argc, sysarg.argv,0 );
 	munit_assert_int(2, ==, args->prompt_cpt);
-	munit_assert_int(1, ==, args->sucess_cpt);
-	munit_assert_int(0, ==, args->fail_cpt);
+	munit_assert_int(2, ==, args->sucess_cpt);
+	munit_assert_int(2, ==, args->fail_cpt);
+	munit_assert_string_equal(args->command_line, "curl -F password=password https://example.com/upload.cgi");
+	munit_assert_string_equal(args->prompt[0], "test");
+	munit_assert_string_equal(args->prompt[1],  "tamere=118");
+	munit_assert_string_equal(args->fail[0],  "outpuy=18");
+	munit_assert_string_equal(args->fail[1],  "hopeless=29");
+	munit_assert_string_equal(args->sucess[0], "regexp");
+	munit_assert_string_equal(args->sucess[1],  "gotprompt");
+
 	exit(0);
 
 }

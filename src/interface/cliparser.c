@@ -27,7 +27,7 @@ struct argp_option options[] = {
   {"prompt",   'p', "PAYLOAD", 0,"The tool inject this payload if he encounter a prompt. If many prompt options given, the tool inject subsecutives prompt payload at each encoutered prompt. ",1 },
   { 0, 0, 0, 0, "Output Interpretation Options:", 2},
   {"fail",    'f', "STR",      0,  "Specify a fail condition. If many fail condition given, the tool consider it's a fail if one of them is verified.",2 },
-  {"sucess",    's', "STR",      0,  "Specify a sucess condition. If many sucess condition given, the tool consider it's a sucess if all of the sucess conditions are verified and no fail condition is verified. In any other case, it's a fail.",2 },
+  {"success",    's', "STR",      0,  "Specify a sucess condition. If many sucess condition given, the tool consider it's a sucess if all of the sucess conditions are verified and no fail condition is verified. In any other case, it's a fail.",2 },
 
   { 0, 0, 0, 0, "Furtivity tuning options:", 3},
 {"wait",    'w', "SECONDS",      0,  "Delay each guess by a certain amount of second.",3 },
@@ -67,19 +67,24 @@ parse_opt (int key, char *arg, struct argp_state *state)
       break;
     case 'w':
       arguments->wait= atof(arg);
+      break;
     case 'p':
       arguments->prompt[arguments->prompt_cpt++]= arg;
+      break;
     case 's':
       arguments->sucess[arguments->sucess_cpt++]= arg;
+      break;
     case 'f':
       arguments->fail[arguments->fail_cpt++]= arg;
+      break;
     
     case 'h':
       argp_state_help(state,state->err_stream, ARGP_HELP_STD_HELP); 
+      break;
 
 
     case ARGP_KEY_ARG:
-	      arguments->commandLine = arg;
+	      arguments->command_line = arg;
 	      arg_count++;
 
 	      break;
@@ -104,7 +109,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 struct argp argp = { options, parse_opt, args_doc, doc };
 
 	Arguments*
-get_arguments (int argc, char **argv)
+get_arguments (int argc, char **argv, unsigned argp_flag)
 {
 	Arguments* arguments = malloc(sizeof(Arguments));
 
@@ -117,9 +122,9 @@ get_arguments (int argc, char **argv)
 	arguments->prompt_cpt=0;
 	arguments->fail_cpt=0;
 	arguments->sucess_cpt=0;
-
 	/* Parse our arguments; every option seen by parse_opt will
 	   be reflected in arguments. */
-	argp_parse (&argp, argc, argv, 0, 0, arguments);
+
+	argp_parse (&argp, argc, argv, argp_flag, 0, arguments);
 	return arguments;
 }

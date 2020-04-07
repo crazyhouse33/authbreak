@@ -40,13 +40,13 @@ file(GLOB_RECURSE EXTERN_SOURCES CONFIGURE_DEPENDS extern/normal/src/*.h extern/
 file(GLOB_RECURSE EXTERN_SOURCES_TEST CONFIGURE_DEPENDS extern/test/src/*.h extern/test/src/*.c)
 
 JOIN(";${SOURCES}" \n\t pretty)
-message ("\nAdding internal source in src:\n${pretty} ")
+message ("\nDetected internal sources in src:\n${pretty} ")
 
 JOIN(";${EXTERN_SOURCES}" \n\t pretty)
-message ("\nAdding external source in extern/normal/src:\n${pretty}")
+message ("\nDetected external sources in extern/normal/src:\n${pretty}")
 
 JOIN(";${EXTERN_SOURCES_TEST}" \n\t pretty)
-message ("\nAdding additional test source in extern/test/src:\n ${pretty}")
+message ("\nDetected sources  for test build in extern/test/src:\n ${pretty}")
  
 
 # Removing garbage among external sources

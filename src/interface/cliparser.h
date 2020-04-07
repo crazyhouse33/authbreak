@@ -2,7 +2,7 @@
 /*TODO remove this 100 limit */
 typedef struct Arguments
 {
-  char* commandLine;                
+  char* command_line;                
   char*  prompt[100];
   char* sucess[100];
   char* fail[100];
@@ -13,5 +13,5 @@ typedef struct Arguments
 } Arguments;
 
 
-Arguments* get_arguments (int argc, char **argv);
+Arguments* get_arguments (int argc, char **argv, unsigned argp_flag);
 
