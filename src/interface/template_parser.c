@@ -2,11 +2,10 @@
 #include "stringmy.h" //trim
 #include <stdlib.h> //malloc
 
-size_t parse_one_option(char* string_begin, char* string_end, Handler* handler){
-	/* Set the handler option as the string read betwen the pointers say
-	 * Expect pointer on begining and comma respectively
+size_t parse_one_option(char* string_begin, Handler* handler){
+	/* Set the handler option as the string read at string_begin
+	 * option is in form key=value or just key.
 	 * */
-	trim(string_begin, string_end);
 	if (strcmp(string_begin, "B1") == 0) 
 	{
 		// do something
@@ -23,7 +22,7 @@ size_t parse_one_option(char* string_begin, char* string_end, Handler* handler){
 
 };
 
-/* We do it the most efficient way. No memory allocation, pointer playing
+/* We do it the most efficient way. No memory allocation, just pointer playing
  * We iterate to the options blocks (separator is ,) 
  * */
 
@@ -33,7 +32,8 @@ Handler* parse_injection_template(char* template_string, size_t until){
 	char* option_block_end;
 	
 	while ((option_block_end= memchr(template_string, ',', until)) != NULL){
-		parse_one_option(template_string, option_block_end, handler );
+		trim_in_place_preserve_right(&template_string, option_block_end);
+		parse_one_option(template_string, handler );
 		template_string=option_block_end;
 		
 	}
