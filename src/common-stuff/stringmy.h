@@ -1,4 +1,4 @@
-#include <string.h> //size_t
+#include <stddef.h> //size_t
 /*This module define trim, a no side effect function to remove white character at end/begining of string. It also define a lot of direct pointer manipulation. Thoses function are hard to use but save some operations if you dont care about modifying source string. Remember that in C litteral are not writable, wich mean you cannot pass char*="literal" values to in place functions. 
  */
 
