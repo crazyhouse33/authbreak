@@ -79,8 +79,8 @@ Output* executor_get_output(char* command, char** prompt, size_t prompt_number, 
 	parent_life( pipe_son[READ], pipe_father[WRITE], prompt, prompt_number, output);
 
 	//EXIT
-	waitpid(cpid, NULL,0);                /* Wait for child terminaison*/
 	close(pipe_father[WRITE]);          /* Reader will see EOF */
+	waitpid(cpid, NULL,0);                /* Wait for child terminaison*/
 	close (pipe_son[READ]);
 	return output;
 

@@ -20,7 +20,11 @@ tags
 [._]*.un~
 
 build/*
+!build/README.md
+
 bin/*
+!bin/tests/*.py
+
 
 
 #C
