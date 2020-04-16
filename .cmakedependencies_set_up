@@ -1,0 +1,16 @@
+# this is necessary for my system because the system variable is set uncorectly
+SUBDIRLIST (libpath1 /usr/local/lib)
+SUBDIRLIST(libpath2 /usr/lib)
+SUBDIRLIST(libpath3 /lib)
+
+list(APPEND CMAKE_LIBRARY_PATH ${libpath1})
+list(APPEND CMAKE_LIBRARY_PATH ${libpath2})
+list(APPEND CMAKE_LIBRARY_PATH ${libpath3})
+
+find_library (libstdbuf NAMES libstdbuf stdbuf libstdbuf.so)
+if(NOT libstdbuf)
+  message(WARNING "libstdbuf library not found in ${CMAKE_LIBRARY_PATH}\nDid you install coreutils?. This mean that the timing attack wont be as precise as it could. ")
+  set (libstdbuf NULL)
+else()
+message ("lbstbuf detected at ${libstdbuf}")
+endif()

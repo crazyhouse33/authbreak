@@ -1,4 +1,4 @@
-#include "stringmy.h"
+#include "trim_string.h"
 #include "munit.h"
 
 int main(){

@@ -1,4 +1,4 @@
-#include "stringmy.h"
+#include "trim_string.h"
 #include <string.h> //strcopy and stuff
 #include <stdlib.h> //malloc
 #include <ctype.h> //isspace

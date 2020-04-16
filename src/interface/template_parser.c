@@ -1,5 +1,5 @@
 #include "template_parser.h"
-#include "stringmy.h" //trim
+#include "trim_string.h" //trim
 #include <stdlib.h> //malloc
 
 size_t parse_one_option(char* string_begin, Handler* handler){

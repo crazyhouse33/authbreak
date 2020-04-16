@@ -33,17 +33,17 @@ int main(){
 
 	size_t oldmax=max;
 	size_t nb= read_append(fd, &buff, &readed, &max);
-	munit_assert_int(nb,==,1);
-	munit_assert_int(readed,==,1);
+	munit_assert_size(nb,==,1);
+	munit_assert_size(readed,==,1);
 	munit_assert_int(strncmp(buff,expected,1),==,0);
-	munit_assert_int(max,>,old_max);
+	munit_assert_size(max,>,old_max);
 
 	while (readed==old_max){// if this is different, either error (-1), either we are done (readed < old_max)
 		old_max=max;
 		nb=read_append(fd,&buff,&readed,&max);
 	}
 	munit_assert_string_equal(buff, expected);
-	munit_assert_int(strlen(buff), == , readed);
+	munit_assert_size(strlen(buff), == , readed);
 	fclose(fp);
 	return 0;
 
