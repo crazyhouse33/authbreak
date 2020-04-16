@@ -29,7 +29,7 @@ void test_argp(){
 
 
 	//testing stdbufenv building
-	if (LIBSTDBUF_PATH != "ERROR-NOT-FOUND"){
+	if (LIBSTDBUF_PATH_IS_FOUND ){
 	char* mode[]={UNBUFFERED, DEFAULT_BUFFERING, FULLY_BUFFERED};
 	char** env = build_stdbuf_exec_envp(mode);
 	size_t expected_new_size= size_env+3;

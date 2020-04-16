@@ -194,49 +194,27 @@ char** get_envp_appended(char** vector){
 		end_argp[current++]= sstrcat_copy(string, mode[fd]);\
 	}\
 
-char** build_stdbuf_exec_envp(char* mode[3]){
-
-
+char** build_stdbuf_exec_envp(char** mode){
+#if ! LIBSTDBUF_IS_FOUND
+		return get_envp();
+#else
 	char** end_argp = malloc(sizeof(char*) * 5);
-	size_t current;
 
-	if (LIBSTDBUF_PATH=="ERROR-NOT-FOUND") //STDBUFLIBPATH is set at compilation, and can be unfound. 
+	size_t current=1;
+	bool at_least_one=false;
+	
+	DEDUP_CODE_MODE(0, "STDBUF_I=");
+	DEDUP_CODE_MODE(1, "STDBUF_O=");
+	DEDUP_CODE_MODE(2, "STDBUF_E=");
+
+	if (at_least_one)
+		end_argp[0]= "LD_PRELOAD="LIBSTDBUF_PATH; // set by compilation
+	else
 		current=0;
-	else{
 
-		current=1;
-		bool at_least_one=false;
-		/* this is the maccro expended	
-		if (mode[0] != ((void *)0)){ 
-			at_least_one=1; 
-			
-			end_argp[current++]= strcat("STDBUF_I=", mode[0]); 
-		};
-
-		if (mode[1] != ((void *)0)){ 
-			at_least_one=1; 
-			end_argp[current++]= strcat("STDBUF_O=", mode[1]); 
-		};
-
-
-		if (mode[2] != ((void *)0)){ 
-			at_least_one=1; 
-			end_argp[current++]= strcat("STDBUF_E=", mode[2]);
-		};
-		*/
-		DEDUP_CODE_MODE(0, "STDBUF_I=");
-		DEDUP_CODE_MODE(1, "STDBUF_O=");
-		DEDUP_CODE_MODE(2, "STDBUF_E=");
-
-
-
-		if (at_least_one)
-			end_argp[0]= "LD_PRELOAD="LIBSTDBUF_PATH; // set by compilation
-		else
-			current=0;
-	}
 
 	end_argp[current]=NULL;	
 	return get_envp_appended(end_argp);
+#endif
 }
 

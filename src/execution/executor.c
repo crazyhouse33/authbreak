@@ -1,22 +1,20 @@
+#define _GNU_SOURCE //execvpe
 #include "executor.h"
-#include "argv.h"//buildarg
+#include "argv.h"//buildarg and buffercontrolling
 
-#include <unistd.h>//fork
 #include <stdio.h>//pipe
 #include <stdlib.h>//EXIT_SUCCESS
 #include <sys/wait.h>
 #include <string.h> //strlen
 #include <errno.h>//perror
-
+#include <unistd.h>//fork
 
 #define READ 0
 #define WRITE 1
 
-void child_life(char** argv){
+void child_life(char** argv, char** envp){
 	/*Do child stuff*/
-	// char* expected[] = {"test.py", "test", NULL};
-	
-	execvp(*argv, argv);
+	execvpe(*argv, argv, envp);
 	perror("Process creation failed");
 
 
@@ -29,21 +27,21 @@ void parent_life(int read_fd, int write_fd, char** prompt, size_t prompt_number,
 		write(write_fd, prompt[i], strlen(prompt[i]));//TODO dont call strlen and control ourself the size?
 	}
 	size_t readed=0;
-	size_t max_read=0;
-	while (max_read==readed){//we stop when we read less what we should or error
-		max_read= read_append_into_Output(read_fd, output,&readed);
+	size_t new_read=1;
+	while (new_read>0){//we stop when read return error or no data (generally =>  end of process), maybe se problems could occur here. 
+		new_read= read_append_into_Output(read_fd, output,&readed);
 	}
 	output->out[readed]=0;
 }
 
 //TODO optim: reuse the same pipe over and over
-Output* executor_get_output(char* command, char** prompt, size_t prompt_number, double timout)
+Output* executor_get_output(char* command, char** prompt, size_t prompt_number, char ** envp, double timout)
 {
 
 	Output* output=Output_new();
 	int pipe_father[2];
 	int pipe_son[2];
-	
+
 	pipe(pipe_father);
 	pipe(pipe_son);
 
@@ -67,7 +65,7 @@ Output* executor_get_output(char* command, char** prompt, size_t prompt_number, 
 		dup2(pipe_son[WRITE], STDOUT_FILENO); /*Replace STDOUT by our pipe*/
 		dup2(pipe_son[WRITE], STDERR_FILENO);
 
-		child_life( argv);
+		child_life( argv, envp);
 
 		//EXIT (executed only if exevp failed)
 		close(pipe_father[READ]);
@@ -85,7 +83,6 @@ Output* executor_get_output(char* command, char** prompt, size_t prompt_number, 
 	waitpid(cpid, NULL,0);                /* Wait for child terminaison*/
 	close (pipe_son[READ]);
 	return output;
-
 
 }
 

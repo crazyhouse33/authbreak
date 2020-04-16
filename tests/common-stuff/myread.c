@@ -38,7 +38,7 @@ int main(){
 	munit_assert_int(strncmp(buff,expected,1),==,0);
 	munit_assert_size(max,>,old_max);
 
-	while (readed==old_max){// if this is different, either error (-1), either we are done (readed < old_max)
+	while (nb>0){
 		old_max=max;
 		nb=read_append(fd,&buff,&readed,&max);
 	}

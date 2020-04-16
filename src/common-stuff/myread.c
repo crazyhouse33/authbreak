@@ -15,5 +15,5 @@ size_t read_append(int fd, char** buffer, size_t* string_size, size_t* buffer_ma
 		*buffer_max_size*=4;
 		*buffer= realloc(*buffer, *buffer_max_size);
 	}
-	return old_max;
+	return new_readed;
 }

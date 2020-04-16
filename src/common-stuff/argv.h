@@ -93,12 +93,17 @@ size_t get_vector_count(char** vector);
 #define DEFAULT_BUFFERING NULL
 
 #ifndef LIBSTDBUF_PATH
+#warning "libstdbuf is not found, build_stdbuf_exec_envp return the current envp, any use in execvpe wor as an execvp call"
 #define LIBSTDBUF_PATH "ERROR-NOT-FOUND"
+#define LIBSTDBUF_IS_FOUND 0
+#else
+#define LIBSTDBUF_IS_FOUND 1
 #endif
-char** build_stdbuf_exec_envp(char* mode[3]);
+
+char** build_stdbuf_exec_envp(char** mode);
 /*This return the argp you need to give to exceve in order to execute child with different buffering than default. The mode is an array that represent stdin (index 0), stdout (index 1), stderr (index2), each of this values can be set to UNBUFFERED, LINE_BUFFERED, FULLY_BUFFERED or any int (as a string) wich is equivalent to FULLY_BUFFERED with a custom size. watch out for collision with ascii character. If mode=DEFAULT_BUFFERING, then dont touch it. Example: 
  * char* mode[]={LINE_BUFFERED,DEFAULT_BUFFERING,UNBUFFERED}
  *
- * If stdbuf.so is not found (install coreutil?), it return NULL 
+ * If stdbuf.so it return current envp 
  * */ 
 
