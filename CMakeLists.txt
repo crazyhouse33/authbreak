@@ -21,7 +21,6 @@ include(.cmakedependencies_set_up) # Finding necessary standard libs
 
 # Adding version to the code
 add_definitions(-DAUTHBREAK_VERSION="${version}")
-add_definitions(-DSTDBUFLIBPATH="${libstdbuf}")
 ###### Separating test and normal build sources   #######
 #maybe this whole concern about separating the sources / tests is useless, I am not strong enought in C, I am just trying to preserve namespace of the normal build.
 

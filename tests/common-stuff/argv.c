@@ -10,7 +10,7 @@ void test_argp(){
 	char* argp[]={"hy", "-te", NULL};
 	size_t size=get_vector_count (argp);
 	munit_assert_size(size,==,2);
-	char ** crafted_args= get_argp_appended(argp);
+	char ** crafted_args= get_envp_appended(argp);
 
 	size_t size_env= get_vector_count(environ);
 
@@ -28,24 +28,32 @@ void test_argp(){
 	}
 
 
+	//testing stdbufenv building
+	if (LIBSTDBUF_PATH != "ERROR-NOT-FOUND"){
 	char* mode[]={UNBUFFERED, DEFAULT_BUFFERING, FULLY_BUFFERED};
-	char** env = build_argp_stdbuf_env(mode);
+	char** env = build_stdbuf_exec_envp(mode);
 	size_t expected_new_size= size_env+3;
 	munit_assert_size(expected_new_size, ==, get_vector_count(env));
 
 	char* mode2[]={DEFAULT_BUFFERING, DEFAULT_BUFFERING, DEFAULT_BUFFERING};
-	char** env2 = build_argp_stdbuf_env(mode2);
+	char** env2 = build_stdbuf_exec_envp(mode2);
 	size_t expected_new_size2= size_env;
 	munit_assert_size(expected_new_size2, ==, get_vector_count(env2));
 
 	char* mode3[]={DEFAULT_BUFFERING, DEFAULT_BUFFERING, "1042"};
-	char** env3 = build_argp_stdbuf_env(mode3);
+	char** env3 = build_stdbuf_exec_envp(mode3);
 	size_t expected_new_size3= size_env+2;
 	munit_assert_size(expected_new_size3, ==, get_vector_count(env3));
 	munit_assert_string_equal(env3[expected_new_size3-1], "STDBUF_E=1042");
-	munit_assert_string_equal(env3[expected_new_size3-2], "LD_PRELOAD="STDBUFLIBPATH );
+	munit_assert_string_equal(env3[expected_new_size3-2], "LD_PRELOAD="LIBSTDBUF_PATH );
 	munit_assert_ptr(env3[expected_new_size3], ==,NULL);
+	}
+	else{
+		char* mode[]={UNBUFFERED, DEFAULT_BUFFERING, FULLY_BUFFERED};
+		char** env = build_stdbuf_exec_envp(mode);
+		munit_assert_ptr(env,==,NULL); 
 
+	}
 
 
 
@@ -76,6 +84,6 @@ int main(){
 
 
 
-	
-	
+
+
 

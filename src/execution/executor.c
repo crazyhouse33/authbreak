@@ -15,6 +15,7 @@
 void child_life(char** argv){
 	/*Do child stuff*/
 	// char* expected[] = {"test.py", "test", NULL};
+	
 	execvp(*argv, argv);
 	perror("Process creation failed");
 
@@ -45,21 +46,6 @@ Output* executor_get_output(char* command, char** prompt, size_t prompt_number, 
 	
 	pipe(pipe_father);
 	pipe(pipe_son);
-
-	FILE* stream1 = fdopen (pipe_son[WRITE], "w");
-	perror("bug with dopen");
-	FILE* stream2 = fdopen (pipe_son[READ], "r");
-	perror("bug with dopen");
-
-	FILE* stream3 = fdopen (pipe_father[WRITE], "w");
-	perror("bug with dopen");
-	FILE* stream4 = fdopen (pipe_father[READ], "r");
-	perror("bug with dopen");
-	setlinebuf(stream1);
-	setlinebuf(stream2);
-	setlinebuf(stream3);
-	setlinebuf(stream4);
-
 
 	pid_t cpid;
 

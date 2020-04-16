@@ -163,14 +163,23 @@ size_t get_vector_count (char ** vector)
 }
 
 extern char** environ;
-char** get_argp_appended(char** vector){
+//TODO make it cross platform
+char** get_envp(){
+	return environ;
+
+}
+
+
+
+char** get_envp_appended(char** vector){
+	char ** argp=get_envp();
 	size_t size_vec=get_vector_count(vector);
-	size_t size_env=get_vector_count(environ);
+	size_t size_env=get_vector_count(argp);
 	size_t new_size =  size_vec + size_env;
 	char** res=malloc(sizeof(char*)*(new_size+1));
 	size_t i=0;
 	for (; i<size_env; i++)
-		res[i]= environ[i];
+		res[i]= argp[i];
 	
 	for (size_t j=0; j<= size_vec; j++)
 		res[j+i]= vector[j];
@@ -185,13 +194,13 @@ char** get_argp_appended(char** vector){
 		end_argp[current++]= sstrcat_copy(string, mode[fd]);\
 	}\
 
-char** build_argp_stdbuf_env(char* mode[3]){
+char** build_stdbuf_exec_envp(char* mode[3]){
 
 
 	char** end_argp = malloc(sizeof(char*) * 5);
 	size_t current;
 
-	if (STDBUFLIBPATH==NULL) //STDBUFLIBPATH is set at compilation, and can be unfound. 
+	if (LIBSTDBUF_PATH=="ERROR-NOT-FOUND") //STDBUFLIBPATH is set at compilation, and can be unfound. 
 		current=0;
 	else{
 
@@ -222,12 +231,12 @@ char** build_argp_stdbuf_env(char* mode[3]){
 
 
 		if (at_least_one)
-			end_argp[0]= "LD_PRELOAD="STDBUFLIBPATH; // set by compilation
+			end_argp[0]= "LD_PRELOAD="LIBSTDBUF_PATH; // set by compilation
 		else
 			current=0;
 	}
 
 	end_argp[current]=NULL;	
-	return get_argp_appended(end_argp);
+	return get_envp_appended(end_argp);
 }
 

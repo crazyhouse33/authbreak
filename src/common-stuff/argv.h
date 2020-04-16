@@ -77,18 +77,25 @@ RETURNS
 void free_arg_vector (char** vector);
 /*Free a null terminated char**, such as argv or argp*/
 
-char** get_argp_appended(char** additonal_argument);
+char** get_envp();
+/*Return current envp*/
+
+char** get_envp_appended(char** additonal_argument);
 /*Return a new vector the current envp appended with additonal_argument. additonal_argument must be a null terminated char** */
 
 
 size_t get_vector_count(char** vector);
-/*Return he number of vector member. Vector must be a null terminated char**, such as argv or argp */
+/*Return he number of vector member. Vector must be a null terminated char**, such as argv or envp */
 
 #define UNBUFFERED "0"
 #define LINE_BUFFERED "L"
 #define FULLY_BUFFERED "B"
 #define DEFAULT_BUFFERING NULL
-char** build_argp_stdbuf_env(char* mode[3]);
+
+#ifndef LIBSTDBUF_PATH
+#define LIBSTDBUF_PATH "ERROR-NOT-FOUND"
+#endif
+char** build_stdbuf_exec_envp(char* mode[3]);
 /*This return the argp you need to give to exceve in order to execute child with different buffering than default. The mode is an array that represent stdin (index 0), stdout (index 1), stderr (index2), each of this values can be set to UNBUFFERED, LINE_BUFFERED, FULLY_BUFFERED or any int (as a string) wich is equivalent to FULLY_BUFFERED with a custom size. watch out for collision with ascii character. If mode=DEFAULT_BUFFERING, then dont touch it. Example: 
  * char* mode[]={LINE_BUFFERED,DEFAULT_BUFFERING,UNBUFFERED}
  *
