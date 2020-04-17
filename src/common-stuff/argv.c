@@ -11,7 +11,7 @@
 #undef isspace
 #endif
 #define isspace(ch) ((ch) == ' ' || (ch) == '\t')
-char **buildargv (char* input, int* given_argc){
+char **argv_vector_from_string (char* input, size_t* given_argc){
   char *arg;
   char *copybuf;
   int squote = 0;
@@ -169,21 +169,35 @@ char** get_envp(){
 
 }
 
+char** dup_arg_vector(char ** vec){
+	size_t size= get_vector_count(vec)+1;
+	char** res= malloc(sizeof(char*)* size);
+	memcpy(res, vec, size*sizeof(char*));
+	return res;
+
+
+}
+
+void concatenate_arg_vector(char*** vec1, char** vec2){
+	size_t size_1=get_vector_count(*vec1);
+	size_t size_2=get_vector_count(vec2);
+	size_t new_size =  size_1 + size_2;
+	*vec1=realloc(*vec1,sizeof(char*)* (new_size+1));
+	memcpy((*vec1+size_1),vec2, (size_2+1)* sizeof(char*));
+}
+
+char** concatenation_arg_vector(char** vec1, char** vec2){
+	char** vec1_clone= dup_arg_vector(vec1);
+	concatenate_arg_vector(&vec1_clone,vec2);
+	return vec1_clone;
+}
+
+
 
 
 char** get_envp_appended(char** vector){
 	char ** argp=get_envp();
-	size_t size_vec=get_vector_count(vector);
-	size_t size_env=get_vector_count(argp);
-	size_t new_size =  size_vec + size_env;
-	char** res=malloc(sizeof(char*)*(new_size+1));
-	size_t i=0;
-	for (; i<size_env; i++)
-		res[i]= argp[i];
-	
-	for (size_t j=0; j<= size_vec; j++)
-		res[j+i]= vector[j];
-	return res;
+	return concatenation_arg_vector(argp, vector);
 }
 
 

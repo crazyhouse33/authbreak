@@ -13,7 +13,7 @@ NAME
 
 SYNOPSIS
 
-	char **buildargv (char* sp)
+	char **buildargv (char* string, size_t* argc)
 
 DESCRIPTION
 
@@ -29,6 +29,8 @@ DESCRIPTION
 	returned result of buildargv, as it's argument.
 
 	The memory for the argv array is dynamically expanded as necessary.
+
+	Store resulted argc in given argc
 
 RETURNS
 
@@ -50,7 +52,7 @@ NOTES
 	Argv is always kept terminated with a NULL arg pointer, so it can
 	be passed to freeargv at any time, or returned, as appropriate.
 */
-char **buildargv (char* string_input, int* argc);
+char **argv_vector_from_string (char* string_input, size_t* argc);
 
 /*
 
@@ -74,6 +76,18 @@ RETURNS
 
 */
 
+size_t get_vector_count(char** vector);
+/*Return he number of vector member. Vector must be a null terminated char**, such as argv or envp */
+
+char** dup_arg_vector(char** vec);
+/*Return a copy of an arg vector*/
+
+void concatenate_arg_vector(char*** vec1, char** vec2);
+/*Concatenate vec1 with vec2*/
+
+char** concatenation_arg_vector(char** vec1, char** vec2);
+/*Return a copy of vec1 concatenated with vec2 */
+
 void free_arg_vector (char** vector);
 /*Free a null terminated char**, such as argv or argp*/
 
@@ -84,8 +98,8 @@ char** get_envp_appended(char** additonal_argument);
 /*Return a new vector the current envp appended with additonal_argument. additonal_argument must be a null terminated char** */
 
 
-size_t get_vector_count(char** vector);
-/*Return he number of vector member. Vector must be a null terminated char**, such as argv or envp */
+
+
 
 #define UNBUFFERED "0"
 #define LINE_BUFFERED "L"

@@ -46,8 +46,8 @@ Output* executor_get_output(char* command, char** prompt, size_t prompt_number, 
 
 	pid_t cpid;
 
-	int argc;
-	char** argv= buildargv(command,&argc); // We do it here because code betwen fork and exec is dangerous (must not contain malloc for exemple)
+	size_t argc;
+	char** argv= argv_vector_from_string(command,&argc); // We do it here because code betwen fork and exec is dangerous (must not contain malloc for exemple)
 
 	cpid = fork();
 

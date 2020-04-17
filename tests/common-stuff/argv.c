@@ -29,8 +29,9 @@ void test_argp(){
 
 
 	//testing stdbufenv building
-	if (LIBSTDBUF_PATH_IS_FOUND ){
-	char* mode[]={UNBUFFERED, DEFAULT_BUFFERING, FULLY_BUFFERED};
+	
+	#if LIBSTDBUF_IS_FOUND
+	char* mode[]={UNBUFFERED, DEFAULT_BUFFERING, "65536"};
 	char** env = build_stdbuf_exec_envp(mode);
 	size_t expected_new_size= size_env+3;
 	munit_assert_size(expected_new_size, ==, get_vector_count(env));
@@ -44,27 +45,60 @@ void test_argp(){
 	char** env3 = build_stdbuf_exec_envp(mode3);
 	size_t expected_new_size3= size_env+2;
 	munit_assert_size(expected_new_size3, ==, get_vector_count(env3));
-	munit_assert_string_equal(env3[expected_new_size3-1], "STDBUF_E=1042");
+	munit_assert_string_equal(env3[expected_new_size3-1], "_STDBUF_E=1042");
 	munit_assert_string_equal(env3[expected_new_size3-2], "LD_PRELOAD="LIBSTDBUF_PATH );
 	munit_assert_ptr(env3[expected_new_size3], ==,NULL);
+	#else
+	char* mode[]={UNBUFFERED, DEFAULT_BUFFERING, "65536"};
+	char** env = build_stdbuf_exec_envp(mode);
+	munit_assert_ptr(env,==,NULL); 
+	#endif
+
+}
+
+void assert_arg_equal(char** arg1, char** arg2){
+	size_t s1=get_vector_count(arg1);
+
+	munit_assert_size(s1,==,get_vector_count(arg2));
+	for (size_t i=0; i< s1;i++){
+		munit_assert_string_equal(arg1[i], arg2[i]);
 	}
-	else{
-		char* mode[]={UNBUFFERED, DEFAULT_BUFFERING, FULLY_BUFFERED};
-		char** env = build_stdbuf_exec_envp(mode);
-		munit_assert_ptr(env,==,NULL); 
 
-	}
+}
+
+void test_base(){
 
 
+	char* vec[] = {"authbreak", "--prompt", "18", "curl -f tamere", "--fail", "hey", NULL};
+	char ** vec1= (char**)vec;
+	size_t size=get_vector_count (vec1);
+	munit_assert_size(size,==,6);
 
+	char** clone= dup_arg_vector(vec1);
+	assert_arg_equal(clone, vec1);
+	munit_assert_ptr(clone,!=,vec1);
+
+
+	char* exepected[]= {"authbreak", "--prompt", "18", "curl -f tamere", "--fail", "hey", "tamere", "tonpere", NULL};
+
+
+	char* vec2[] = {"tamere", "tonpere", NULL};
+	char** concat= concatenation_arg_vector(vec1, vec2);
+	assert_arg_equal(exepected, concat);
+	munit_assert_ptr(concat,!=,vec1);
+	assert_arg_equal(exepected,concat);
+
+	concatenate_arg_vector(&clone,vec2);
+	assert_arg_equal(clone, exepected);
 
 
 }
 
+
 int main(){
 	char* command= "authbreak --prompt 18 'curl -f tamere' --fail hey";
-	int argc;
-	char** argv= buildargv(command, &argc);
+	size_t argc;
+	char** argv= argv_vector_from_string(command, &argc);
 	char* expected[] = {"authbreak", "--prompt", "18", "curl -f tamere", "--fail", "hey", NULL};
 	size_t expected_size = sizeof(expected)/sizeof(expected[0]);
 	size_t i=0;
@@ -74,6 +108,8 @@ int main(){
 
 	munit_assert_ptr(argv[i],==, expected[i]);
 	munit_assert_int(argc, ==, expected_size-1);
+
+	test_base();
 
 	test_argp();
 
