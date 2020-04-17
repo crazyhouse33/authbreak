@@ -1,4 +1,3 @@
-#define _GNU_SOURCE //execvpe
 #include "executor.h"
 #include "argv.h"//buildarg and buffercontrolling
 
@@ -14,7 +13,7 @@
 
 void child_life(char** argv, char** envp){
 	/*Do child stuff*/
-	execvpe(*argv, argv, envp);
+	execve(*argv, argv, envp);
 	perror("Process creation failed");
 
 
