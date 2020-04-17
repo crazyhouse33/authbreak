@@ -29,9 +29,9 @@ int main(){
 	char* expected_res= strdup(expected);
 
 	//we are also testing myread but wathever
-	size_t max = read_append_into_Output(fd, empty, &readed);
+	size_t new_read = read_append_into_Output(fd, empty, &readed);
 	munit_assert_size(readed,==,expected_size); 
-	munit_assert_size(max,==,4096);
+	munit_assert_size(new_read,==,expected_size);
 	empty->out[readed]=0;
 	munit_assert_string_equal(expected, empty->out)	;
 	empty->out[readed]=18;
@@ -39,8 +39,8 @@ int main(){
 	for (int cpt=2; cpt<8; cpt++){
 		expected_res= sstrcat_copy(expected_res, expected);
 		write(fake_pipe[1], buffer, strlen(buffer));
-		max = read_append_into_Output(fd, empty, &readed);
-		munit_assert_size(max,==,4096);
+		new_read = read_append_into_Output(fd, empty, &readed);
+		munit_assert_size(new_read,==,expected_size);
 		munit_assert_size(readed, ==,cpt*expected_size); 
 		
 		empty->out[readed]=0;
