@@ -203,9 +203,9 @@ char** build_stdbuf_exec_envp(char** mode){
 	size_t current=1;
 	bool at_least_one=false;
 	
-	DEDUP_CODE_MODE(0, "STDBUF_I=");
-	DEDUP_CODE_MODE(1, "STDBUF_O=");
-	DEDUP_CODE_MODE(2, "STDBUF_E=");
+	DEDUP_CODE_MODE(0, "_STDBUF_I=");
+	DEDUP_CODE_MODE(1, "_STDBUF_O=");
+	DEDUP_CODE_MODE(2, "_STDBUF_E=");
 
 	if (at_least_one)
 		end_argp[0]= "LD_PRELOAD="LIBSTDBUF_PATH; // set by compilation

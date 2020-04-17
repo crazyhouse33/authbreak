@@ -7,7 +7,7 @@
 //TODO provide something to test tdbuff is working for an undiviual test see stdbuf test himsef
 void test_out(){
 	//stdbuf -o 4096 -e L ./a.out 
-	char* mode[]= {DEFAULT_BUFFERING, FULLY_BUFFERED,LINE_BUFFERED};
+	char* mode[]= {DEFAULT_BUFFERING, "65536",LINE_BUFFERED};
 	char** envp= build_stdbuf_exec_envp(mode);
 
 	char* prompt[] =
@@ -21,7 +21,7 @@ void test_out(){
 
 void test_out2(){
 	//stdbuf -o L -e 4096 ./a.out DONT PASS (And its weird because it should be equivalent to the shell you see on left, that work perfectely)
-	char* mode[]= {DEFAULT_BUFFERING, LINE_BUFFERED,FULLY_BUFFERED};
+	char* mode[]= {DEFAULT_BUFFERING, LINE_BUFFERED,"65536"};
 	char** envp= build_stdbuf_exec_envp(mode);
 
 	char* prompt[] =
@@ -58,7 +58,7 @@ void test_out4(){
 		"goodbye\n"
 	};
 	Output* out=executor_get_output("./a.out", prompt, 3,envp, 10);
-	munit_assert_string_equal( out->out, "stderr 2\nstdout 1\n");
+	munit_assert_string_equal( out->out, "stdout 1\nstderr 2\n");
 
 
 }

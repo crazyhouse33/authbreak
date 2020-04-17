@@ -89,7 +89,6 @@ size_t get_vector_count(char** vector);
 
 #define UNBUFFERED "0"
 #define LINE_BUFFERED "L"
-#define FULLY_BUFFERED "B"
 #define DEFAULT_BUFFERING NULL
 
 #ifndef LIBSTDBUF_PATH
@@ -101,9 +100,11 @@ size_t get_vector_count(char** vector);
 #endif
 
 char** build_stdbuf_exec_envp(char** mode);
-/*This return the argp you need to give to exceve in order to execute child with different buffering than default. The mode is an array that represent stdin (index 0), stdout (index 1), stderr (index2), each of this values can be set to UNBUFFERED, LINE_BUFFERED, FULLY_BUFFERED or any int (as a string) wich is equivalent to FULLY_BUFFERED with a custom size. watch out for collision with ascii character. If mode=DEFAULT_BUFFERING, then dont touch it. Example: 
+/*This return the argp you need to give to exceve in order to execute child with different buffering than default. The mode is an array that represent stdin (index 0), stdout (index 1), stderr (index2), each of this values can be set to UNBUFFERED, LINE_BUFFERED or any int (as a string), which set the buffer size to be equal to this int. A good choice if you use pipe is "65536". There is not easy crossplatform way to return the default pipe size. If mode=DEFAULT_BUFFERING, then the buffering is managed as if you did not use this function . Example: 
  * char* mode[]={LINE_BUFFERED,DEFAULT_BUFFERING,UNBUFFERED}
+ * 
  *
- * If stdbuf.so it return current envp 
+ * If stdbuf location had not be set at compile time in LIBSTDBUF_PATH is not found it return current envp.
+ * (see stdbuf man page to see limitations of this function)
  * */ 
 
