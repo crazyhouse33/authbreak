@@ -13,7 +13,7 @@ NAME
 
 SYNOPSIS
 
-	char **buildargv (char* string, size_t* argc)
+	char **arg_vector_from_string (char* string, size_t* argc)
 
 DESCRIPTION
 
@@ -52,7 +52,7 @@ NOTES
 	Argv is always kept terminated with a NULL arg pointer, so it can
 	be passed to freeargv at any time, or returned, as appropriate.
 */
-char **argv_vector_from_string (char* string_input, size_t* argc);
+char **arg_vector_from_string (char* string_input, size_t* argc);
 
 /*
 
@@ -76,14 +76,17 @@ RETURNS
 
 */
 
+char** create_arg_vector(size_t size);
+/*Allocate memory for a vector*/
+
 size_t get_vector_count(char** vector);
 /*Return he number of vector member. Vector must be a null terminated char**, such as argv or envp */
 
 char** dup_arg_vector(char** vec);
 /*Return a copy of an arg vector*/
 
-void concatenate_arg_vector(char*** vec1, char** vec2);
-/*Concatenate vec1 with vec2*/
+size_t concatenate_arg_vector(char*** vec1, char** vec2);
+/*Concatenate vec1 with vec2, return the new size of vec1*/
 
 char** concatenation_arg_vector(char** vec1, char** vec2);
 /*Return a copy of vec1 concatenated with vec2 */
@@ -122,3 +125,20 @@ char** build_stdbuf_exec_envp(char** mode);
  * (see stdbuf man page to see limitations of this function)
  * */ 
 
+
+char* envp_get_value(char** envp, char* string);
+/*This function is used Retrieve the part after the first "=" of the key variable of envp. Return null if not found */
+
+size_t merge_envp(char*** envp1, char** envp2, char** key_to_merge_vec, char* separator);
+//WARNING key_to_merge_vec is a null terminated char**
+/*Merge envp1 and envp2. Return size of resulted vector. This concatenate env variable of envp2 into envp1, except if the variable is equal to one of the key_to_merge index. , in that case we do not simply concatenate but unstead append the value preceded by the given separator to the same variable in envp1. 
+ *
+ * This function is intented to manage conflict between differents options
+ * Imagine you want to control buffering of the child while preloading one of the library.
+ * If you just concatenate build_stdbuf_exec_envp(mode) and {"LDPRELOAD=yourlibrary",NULL} and give it to execve, then according to the execve implementation, one of the LDPRELOAD only is gonna be taken into account.
+ * The solution to this problem is to use merge_envp(env1,env2,["LDPRELOAD"], ";")
+ * */
+
+
+char** get_envp_merged(char** envp1, char** envp2, char** key_to_merge, char* separator);
+/*Same but work on a copy */

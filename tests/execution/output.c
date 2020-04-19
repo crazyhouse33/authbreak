@@ -37,7 +37,7 @@ int main() {
   empty->out[readed] = 18;
 
   for (int cpt = 2; cpt < 8; cpt++) {
-    expected_res = sstrcat_copy(expected_res, expected);
+    expected_res = get_concatenation_string(expected_res, expected);
     write(fake_pipe[1], buffer, strlen(buffer));
     new_read = read_append_into_Output(fd, empty, &readed);
     munit_assert_size(new_read, ==, expected_size);

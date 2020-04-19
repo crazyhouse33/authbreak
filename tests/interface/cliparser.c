@@ -8,7 +8,7 @@ int main() {
   // testing public interface
   char *command = "authbreak 'curl -F password=password https://example.com/upload.cgi' --success regexp -s gotprompt -f outpuy=18  --fail hopeless=29 -p test --prompt tamere=118";
   size_t argc;
-  char **argv = argv_vector_from_string(command, &argc);
+  char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, 0);
   munit_assert_int(2, ==, args->prompt_cpt);
   munit_assert_int(2, ==, args->sucess_cpt);

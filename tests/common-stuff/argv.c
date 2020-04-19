@@ -31,17 +31,17 @@ void test_argp() {
 #if LIBSTDBUF_IS_FOUND
   char *mode[] = {UNBUFFERED, DEFAULT_BUFFERING, "65536"};
   char **env = build_stdbuf_exec_envp(mode);
-  size_t expected_new_size = size_env + 3;
+  size_t expected_new_size =  3;
   munit_assert_size(expected_new_size, ==, get_vector_count(env));
 
   char *mode2[] = {DEFAULT_BUFFERING, DEFAULT_BUFFERING, DEFAULT_BUFFERING};
   char **env2 = build_stdbuf_exec_envp(mode2);
-  size_t expected_new_size2 = size_env;
+  size_t expected_new_size2 = 0;
   munit_assert_size(expected_new_size2, ==, get_vector_count(env2));
 
   char *mode3[] = {DEFAULT_BUFFERING, DEFAULT_BUFFERING, "1042"};
   char **env3 = build_stdbuf_exec_envp(mode3);
-  size_t expected_new_size3 = size_env + 2;
+  size_t expected_new_size3 =  2;
   munit_assert_size(expected_new_size3, ==, get_vector_count(env3));
   munit_assert_string_equal(env3[expected_new_size3 - 1], "_STDBUF_E=1042");
   munit_assert_string_equal(env3[expected_new_size3 - 2], "LD_PRELOAD=" LIBSTDBUF_PATH);
@@ -49,7 +49,7 @@ void test_argp() {
 #else
   char *mode[] = {UNBUFFERED, DEFAULT_BUFFERING, "65536"};
   char **env = build_stdbuf_exec_envp(mode);
-  munit_assert_ptr(env, ==, NULL);
+  munit_assert_ptr(env[0], ==, NULL);
 #endif
 }
 
@@ -85,10 +85,33 @@ void test_base() {
   assert_arg_equal(clone, exepected);
 }
 
+void test_merge(){
+	#if LIBSTDBUF_IS_FOUND
+	#define FAKE_PRELOAD "mylib.so"
+	#define FAKE_PRELOAD2 "mylib2.so"
+	#define FAKE_PATH "PATH=19"
+	char* envp_adition[]={strdup("LD_PRELOAD="FAKE_PRELOAD) ,strdup(FAKE_PATH), NULL};
+	size_t size;
+	char *mode[] = {UNBUFFERED, DEFAULT_BUFFERING, "65536"};
+  	char **envp = build_stdbuf_exec_envp(mode); 
+
+	size_t oldsize= get_vector_count(envp);
+	char* to_merge[]={"LD_PRELOAD",NULL};
+	size_t newsize=merge_envp(&envp, envp_adition, to_merge, ";");
+	munit_assert_size(newsize,==, oldsize+1); //only path should be appended
+	munit_assert_size(newsize,==, get_vector_count(envp)); 
+	char* ld_value=envp_get_value(envp,"LD_PRELOAD");
+	munit_assert_string_equal(ld_value,LIBSTDBUF_PATH";"FAKE_PRELOAD);
+	munit_assert_string_equal(envp[newsize-1], FAKE_PATH);
+	#endif
+
+
+}
+
 int main() {
   char *command = "authbreak --prompt 18 'curl -f tamere' --fail hey";
   size_t argc;
-  char **argv = argv_vector_from_string(command, &argc);
+  char **argv = arg_vector_from_string(command, &argc);
   char *expected[] = {"authbreak", "--prompt", "18", "curl -f tamere", "--fail", "hey", NULL};
   size_t expected_size = sizeof(expected) / sizeof(expected[0]);
   size_t i = 0;
@@ -102,6 +125,8 @@ int main() {
   test_base();
 
   test_argp();
+
+  test_merge();
 
   return 0;
 }
