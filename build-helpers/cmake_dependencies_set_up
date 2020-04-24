@@ -1,3 +1,9 @@
+
+find_package(PythonInterp) # The building process use python to provide lazy-testing
+if (NOT PythonInterp_FOUND)
+	message(WARNING "Python is not found, lazy testing wont be active")
+endif()
+
 # this is necessary for my system because the system variable is set uncorectly
 SUBDIRLIST (libpath1 /usr/local/lib)
 SUBDIRLIST(libpath2 /usr/lib)

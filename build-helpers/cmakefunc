@@ -32,3 +32,5 @@ MACRO(JOIN VALUES GLUE OUTPUT)
   string (REPLACE ";" "${GLUE}" _TMP_STR "${VALUES}")
   set (${OUTPUT} "${_TMP_STR}")
 ENDMACRO()
+
+

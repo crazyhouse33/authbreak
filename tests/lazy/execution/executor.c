@@ -16,7 +16,7 @@ void test_out() {
 }
 
 void test_out2() {
-  // stdbuf -o L -e 4096 ./child-buf-controle DONT PASS (And its weird because it should be equivalent to the shell you see on left, that work perfectely)
+  // stdbuf -o L -e 4096
   char *mode[] = {DEFAULT_BUFFERING, LINE_BUFFERED, "65536"};
   char **envp = build_stdbuf_exec_envp(mode);
 
@@ -48,7 +48,7 @@ void test_out4() {
 int main() {
   /*This test test the prompt feature*/
   char *prompt[] = {"Hello\n", "test\n", "goodbye\n"};
-  Output *out = executor_get_output("python3.7 test.py test", prompt, 3, get_envp(), 10);
+  Output *out = executor_get_output("python3.7 test.py test", prompt, 3, get_current_envp(), 10);
 
   FILE *fp = fopen("testfile", "r");
   char buffer[200];

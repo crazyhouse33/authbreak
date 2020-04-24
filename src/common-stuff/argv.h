@@ -94,10 +94,10 @@ char** concatenation_arg_vector(char** vec1, char** vec2);
 void free_arg_vector (char** vector);
 /*Free a null terminated char**, such as argv or argp*/
 
-char** get_envp();
+char** get_current_envp();
 /*Return current envp*/
 
-char** get_envp_appended(char** additonal_argument);
+char** get_current_envp_appended(char** additonal_argument);
 /*Return a new vector the current envp appended with additonal_argument. additonal_argument must be a null terminated char** */
 
 
