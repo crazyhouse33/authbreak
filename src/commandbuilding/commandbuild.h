@@ -1,24 +1,19 @@
+#include "stdbool.h"
+#include <stddef.h> //size_t
+//This module iterate on the possibilities created by the user placement of injection point. For performance reason we reflect changes of state unstead of allocating memory to return a prompt and argv.
 
+extern char** command_builder_argv; // any call to defined functions are reflected on this 2 variables
+extern char** command_builder_prompt; 
 
-
-
-typedef struct Payload
-{
-  char* commandLine;                
-  char**  prompt[100];
-} Payload;
 
 void prepare_command_builder (char* command, char** prompts);
-/*Gather all the templates, assign handlers, prepare the fix part, also check if session allready exist to continue it unstead of creating new one*/
+/*Gather all the templates, assign handlers, prepare the fix parts*/
 
-Payload* command_builder_next_command();
-/*return the next command and prompt combinaison*/
+bool command_builder_next_command();
+/*set argv and prompt to next combinaison and return boolean indicating if the builder iterated on everything yet*/
 
-Payload* command_builder_next_command_fixed(int* positions, char** fix);
-/*This function does the same as Command_builder_next_command but dont use the handlers for the given postion, where it use the the coresponding fix string unstead*/
-
-void command_builder_fix(int* positions, char* fix);
-/* Permanently replace the handler by a fix string*/
+void command_builder_fix(size_t positions, char* fix);
+/* Permanently replace a handler by a fix string*/
 
 
 char* command_builder_serialize();

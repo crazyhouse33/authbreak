@@ -1,5 +1,6 @@
 
 #include "argv.h"
+#include "null_vec.h"
 #include <concat_string.h> //sstrcat
 #include <stdbool.h>
 #include <string.h> //strncmp
@@ -44,7 +45,7 @@ char **arg_vector_from_string(char *input, size_t *argc) {
         }
         if (nargv == NULL) {
           if (argv != NULL) {
-            free_arg_vector(argv);
+            free_vector((void **)argv);
             argv = NULL;
           }
           break;
@@ -90,7 +91,7 @@ char **arg_vector_from_string(char *input, size_t *argc) {
       *arg = EOS;
       argv[*argc] = strdup(copybuf);
       if (argv[*argc] == NULL) {
-        free_arg_vector(argv);
+        free_vector((void **)argv);
         argv = NULL;
         break;
       }
@@ -105,57 +106,15 @@ char **arg_vector_from_string(char *input, size_t *argc) {
   return (argv);
 }
 
-void free_arg_vector(char **vector) {
-  register char **scan;
-
-  if (vector != NULL) {
-    for (scan = vector; *scan != NULL; scan++) {
-      free(*scan);
-    }
-    free(vector);
-  }
-}
-
-size_t get_vector_count(char **vector) {
-  size_t argc = 0;
-  while (vector[argc++] != NULL)
-    ;
-  return argc - 1;
-}
-
-char **create_arg_vector(size_t size) { return malloc(sizeof(char *) * (size + 1)); }
-
 char **empty_vec = {NULL};
 
 extern char **environ;
 // TODO make it cross platform
 char **get_current_envp() { return environ; }
 
-char **dup_arg_vector(char **vec) {
-  size_t size = get_vector_count(vec);
-  char **res = create_arg_vector(size);
-  memcpy(res, vec, (size + 1) * sizeof(char *));
-  return res;
-}
-
-size_t concatenate_arg_vector(char ***vec1, char **vec2) {
-  size_t size_1 = get_vector_count(*vec1);
-  size_t size_2 = get_vector_count(vec2);
-  size_t new_size = size_1 + size_2;
-  *vec1 = realloc(*vec1, sizeof(char *) * (new_size + 1));
-  memcpy((*vec1 + size_1), vec2, (size_2 + 1) * sizeof(char *));
-  return new_size;
-}
-
-char **concatenation_arg_vector(char **vec1, char **vec2) {
-  char **vec1_clone = dup_arg_vector(vec1);
-  concatenate_arg_vector(&vec1_clone, vec2);
-  return vec1_clone;
-}
-
 char **get_current_envp_appended(char **vector) {
   char **argp = get_current_envp();
-  return concatenation_arg_vector(argp, vector);
+  return (char **)concatenation_vector((void **)argp, (void **)vector);
 }
 
 // This is just a macro to factorize code
@@ -169,7 +128,7 @@ char **build_stdbuf_exec_envp(char **mode) {
 #if !LIBSTDBUF_IS_FOUND
   return empty_vec;
 #else
-  char **end_argp = create_arg_vector(4);
+  char **end_argp = (char **)create_vector(4);
 
   size_t current = 1;
   bool at_least_one = false;
@@ -208,7 +167,7 @@ char *envp_get_value(char **envp, char *key) { return _envp_get_value(envp, key,
 
 size_t merge_envp(char ***envp1, char **envp2, char **key_to_merge, char *separator) {
 
-  char **to_append = create_arg_vector(get_vector_count(envp2));
+  char **to_append = (char **)create_vector(get_vector_count((void **)envp2));
   size_t cpt = 0;
   size_t i = -1;
   while (envp2[++i] != NULL) {
@@ -227,11 +186,11 @@ size_t merge_envp(char ***envp1, char **envp2, char **key_to_merge, char *separa
     to_append[cpt++] = envp2[i];
   }
   to_append[cpt] = NULL;
-  return concatenate_arg_vector(envp1, to_append);
+  return concatenate_vector((void ***)envp1, (void **)to_append);
 }
 
 char **get_envp_merged(char **envp1, char **envp2, char **key_to_merge, char *separator) {
-  char **envp1_clone = dup_arg_vector(envp1);
+  char **envp1_clone = (char **)dup_vector((void **)envp1);
   ;
   merge_envp(&envp1_clone, envp2, key_to_merge, separator);
   return envp1_clone;

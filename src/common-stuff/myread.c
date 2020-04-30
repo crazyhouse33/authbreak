@@ -1,6 +1,7 @@
 #include "myread.h"
 #include <stdlib.h> //realloc
 #include <unistd.h> //read
+/*Should have used evergrowing pointer*/
 size_t read_append(int fd, char **buffer, size_t *string_size, size_t *buffer_max_size) {
   // we need another level of inderiction for buffer because we need to potentially change the value of the pointer to realloc result
 

@@ -76,24 +76,6 @@ RETURNS
 
 */
 
-char** create_arg_vector(size_t size);
-/*Allocate memory for a vector*/
-
-size_t get_vector_count(char** vector);
-/*Return he number of vector member. Vector must be a null terminated char**, such as argv or envp */
-
-char** dup_arg_vector(char** vec);
-/*Return a copy of an arg vector*/
-
-size_t concatenate_arg_vector(char*** vec1, char** vec2);
-/*Concatenate vec1 with vec2, return the new size of vec1*/
-
-char** concatenation_arg_vector(char** vec1, char** vec2);
-/*Return a copy of vec1 concatenated with vec2 */
-
-void free_arg_vector (char** vector);
-/*Free a null terminated char**, such as argv or argp*/
-
 char** get_current_envp();
 /*Return current envp*/
 
