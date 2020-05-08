@@ -2,7 +2,7 @@
 set -e
 #Run test
 cd ../build
-rm -rf *
+rm -rf -- *
 cmake ..
 make all
-make test
+make lazy-test

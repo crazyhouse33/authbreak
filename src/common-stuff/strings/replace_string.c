@@ -118,7 +118,7 @@ static char *memchr_not_escaped(char *bloc, char to_found, size_t until, char es
 }
 
 Placeholder **placeholder_parse_string(char *string, char opener, char closer, char escaper) {
-  size_t to_parse = strlen(string)+1;//+1 cause end=string-1 trick 
+  size_t to_parse = strlen(string) + 1; //+1 cause end=string-1 trick
   char *begin;
   Placeholder **res_vector = (Placeholder **)create_vector(0);
   ;

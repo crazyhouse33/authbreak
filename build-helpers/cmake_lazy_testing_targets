@@ -55,53 +55,38 @@ add_custom_command(TARGET full-test
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E touch ${test_timestamp_file}
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR} 
-                   COMMENT "Actualizing timestamp for succefull test session"
+                   COMMENT "Actualizing timestamp for test session"
 		   VERBATIM)
 
 add_custom_command(TARGET lazy-test
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E touch ${test_timestamp_file}
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR} 
-                   COMMENT "Actualizing timestamp for succefull test session"
+                   COMMENT "Actualizing timestamp for test session"
 		   VERBATIM)
 
 add_custom_command(TARGET all-test
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E touch ${test_timestamp_file}
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR} 
-                   COMMENT "Actualizing timestamp for succefull test session"
+                   COMMENT "Actualizing timestamp for test session"
 		   VERBATIM)
 
-# The old way of creating the timestamp
-#ADD_CUSTOM_TARGET (
-#    __last-test-timestamp #lazy or full
-#    COMMAND ${CMAKE_COMMAND} -E touch ${test_timestamp_file}
-#    VERBATIM
-#)
-
-#add_dependencies(full-test __last-test-timestamp)
-#add_dependencies(lazy-test __last-test-timestamp)
-#add_dependencies(all-test __last-test-timestamp)
-
-#ADD_CUSTOM_TARGET (
-#    __last_full-test-timestamp 
-#    COMMAND ${CMAKE_COMMAND} -E touch ${full_test_timestamp_file}
-#    VERBATIM
-#)
 add_custom_command(TARGET full-test
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E touch ${full_test_timestamp_file}
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR} 
-                   COMMENT "Actualizing timestamp for succefull full test session"
+                   COMMENT "Actualizing timestamp for full test session"
 		   VERBATIM)
 
 add_custom_command(TARGET all-test
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E touch ${full_test_timestamp_file}
                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR} 
-                   COMMENT "Actualizing timestamp for succefull full test session"
+                   COMMENT "Actualizing timestamp for full test session"
 		   VERBATIM)
-#add_dependencies(full-test __last_full-test-timestamp)
-#add_dependencies(all-test __last_full-test-timestamp)
+
+
+add_dependencies(all-test build-tests ) #forcing re compilation before tests
 
 endif()

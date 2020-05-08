@@ -38,8 +38,8 @@ def fullTestAllreadyRan():
 def run(toRun):
     """Run a list of target with cmake and given options"""
     ctestSelect= "(" + "|".join(toRun) +')'
-    print ("Test command: "+ ctestCommand)
     
+    print ("Test command: "+ args.ctestPath +' -R '+ ctestSelect)
     subprocess.call ([args.ctestPath, '-R', ctestSelect])
 
 def failedPastTest(target):
@@ -58,8 +58,8 @@ if not args.no_build:
     runTarget("build-tests")
 
 #TODO make test create a dependencie
-if fullTestAllreadyRan():
-    print ("The full test have never been run!"
+if not fullTestAllreadyRan():
+    print ("\nThe full test have never been run!\n")
     runTarget('all-test')
     exit(0)
 
