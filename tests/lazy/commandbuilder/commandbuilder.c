@@ -36,7 +36,7 @@ void test_iteration(char *command, char **prompt, size_t n) { // n is number of 
 int main() {
   setup();
   char *prompt[] = {"testprompt", "templatedprompt {}"};
-  char *command = "test hey -p {} -u {}";
+  char *command = "test hey{} -p tata -u {}";
   test_iteration(command, prompt, 3);
 }
 

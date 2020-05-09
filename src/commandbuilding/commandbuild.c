@@ -26,10 +26,13 @@ void prepare_command_builder(char *command, char **prompts) {
   /*Gather all the templates, assign handlers, prepare the fix part, also check if session allready exist to continue it unstead of creating new one*/
   size_t command_size;
   command_builder_argv = arg_vector_from_string(command, &command_size);
-  char *sub_part = *command_builder_argv;
   Placeholder **placeholders = (Placeholder **)create_vector(0);
+
   // Getting every placeholders
-  while (sub_part++ != NULL) {
+  
+  char *sub_part; 
+  size_t it=0;
+  while (sub_part= command_builder_argv[it++]) {
     Placeholder **new_placeholders = placeholder_parse_string(sub_part, '{', '}', '\\');
     unit_num = concatenate_vector((void ***)&placeholders, (void **)new_placeholders);
   }

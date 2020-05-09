@@ -23,7 +23,7 @@ add_custom_target(build-tests
 
 add_custom_target(lazy-test
                   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/build-helpers/lazy-test-cache.py --lazy ${list_lazy_tests} --mandatory ${list_mandatory_tests} --ctestPath ${CMAKE_CTEST_COMMAND} --cmakePath ${CMAKE_COMMAND}                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR} 
-		  COMMENT "Recompile modified dependency of project run the test that changed since since lastlazy/full/all test (not target test, because cmake sucks) and the ones that failed previously"
+		  COMMENT "Recompile modified dependency of project run the test that changed since since lastlazy/full/all test and the ones that failed previously"
 		  VERBATIM
                   USES_TERMINAL
                   )
