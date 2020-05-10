@@ -32,7 +32,7 @@ void test_base() {
   concatenate_vector((void ***)&clone, (void **)vec2);
   assert_arg_equal(clone, exepected);
 
-  put_vector((void ***)concat, (void *)"tam");
+  put_vector((void ***)&concat, (void *)"tam");
 
   char *exepected2[] = {"authbreak", "--prompt", "18", "curl -f tamere", "--fail", "hey", "tamere", "tonpere", "tam", NULL};
   assert_arg_equal(exepected2, concat);
@@ -44,4 +44,7 @@ void test_base() {
   free_vector((void **)vec3);
 }
 
-void main() { test_base(); }
+int main() {
+  test_base();
+  return 0;
+}

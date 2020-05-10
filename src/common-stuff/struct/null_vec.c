@@ -5,9 +5,10 @@
 /*Array based vector. Good enought for stable arrays*/
 
 void free_vector(void **vector) {
+  void **save = vector;
   while (*vector != NULL)
-    free(*vector);
-  free(vector);
+    free(*(vector++));
+  free(save);
 }
 
 size_t get_vector_count(void **vector) {

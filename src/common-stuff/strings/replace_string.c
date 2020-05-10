@@ -99,13 +99,13 @@ static bool is_escaped(char *a_char, char escaper) { return (*(a_char - 1) != es
 static char *memchr_not_escaped(char *bloc, char to_found, size_t until, char escaper) {
   // The two first char need special care to not take care of previous memory introducing wierd bugs, we just hardcode it
 
-  if (until<=0)
-	  return NULL;
+  if (until <= 0)
+    return NULL;
   if (*bloc == to_found)
     return bloc;
   until--;
-  if (until<=0)
-	  return NULL;
+  if (until <= 0)
+    return NULL;
   bloc++;
   if (*(bloc) == to_found && *(bloc - 1) != escaper)
     return bloc;
@@ -115,7 +115,7 @@ static char *memchr_not_escaped(char *bloc, char to_found, size_t until, char es
   do {
     old_found = bloc;
     bloc = memchr(bloc + 1, to_found, --until);
-    until -= bloc - old_found-1;
+    until -= bloc - old_found - 1;
   }
 
   while (bloc != NULL && !is_escaped(bloc, escaper));
@@ -123,27 +123,26 @@ static char *memchr_not_escaped(char *bloc, char to_found, size_t until, char es
   return bloc;
 }
 
-//We could iterate with 2 less variable( current and final)
+// We could iterate with 2 less variable( current and final)
 Placeholder **placeholder_parse_string(char *string, char opener, char closer, char escaper) {
-  size_t to_parse = strlen(string);//we dont include \0 in the search 
-  char* final_end= string + to_parse;
+  size_t to_parse = strlen(string); // we dont include \0 in the search
+  char *final_end = string + to_parse;
   char *begin;
   Placeholder **res_vector = (Placeholder **)create_vector(0);
   ;
   size_t res_size = 0;
   char *end;
-  char* current= string;
+  char *current = string;
   while (begin = memchr_not_escaped(current, opener, to_parse, escaper)) { // there is a begin
 
-    current=begin+1;
-    to_parse=final_end-current;
+    current = begin + 1;
+    to_parse = final_end - current;
     end = memchr_not_escaped(current, closer, to_parse, escaper);
     if (end == NULL)
-      critical_error_msg(1, "Opened template not closed:\n%s", begin);
+      critical_error_msg("Opened template not closed:\n%s", begin);
 
-    current=end+1;
-    to_parse = final_end- current;
-
+    current = end + 1;
+    to_parse = final_end - current;
 
     // valid template, between begin and end
     Placeholder *new_placeholder;
@@ -154,7 +153,6 @@ Placeholder **placeholder_parse_string(char *string, char opener, char closer, c
 
     put_vector((void ***)&res_vector, (void *)new_placeholder);
     res_size++;
-    
   }
   return res_vector;
 }

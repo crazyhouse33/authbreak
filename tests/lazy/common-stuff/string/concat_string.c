@@ -48,4 +48,5 @@ int main() {
   munit_assert_size(size, ==, strlen(test));
 
   others();
+  return 0;
 }

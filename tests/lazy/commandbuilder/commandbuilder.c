@@ -1,37 +1,32 @@
 #include "commandbuild.h"
 #include "concat_string.h"
 #include "munit.h"
-#include "string.h" //strdup
-void setup() {      /*Monkeypatch some functions ( for better isolation and quicker tests suites )*/
+#include <string.h>       //strdup
+#include "test_unicity.h" //assert_not_present
+void setup() {            /*Monkeypatch some functions ( for better isolation and quicker tests suites )*/
 }
 
-void assert_not_present(char *string, char **result, size_t size_res) {
-  while (size_res-- >= 0)
-    munit_assert_string_not_equal(result[size_res], string);
+char *generate(int firs_ite) {
+  // check the concatenation of argvs and prompt
+  if (command_builder_next_command())
+    return NULL; // We are done if so
+
+  char *res = strdup("");
+  int j = 0;
+  while (command_builder_argv[j] != NULL) {
+    concat_string(&res, command_builder_argv[j++]);
+  }
+  int p_t = 0;
+  while (command_builder_prompt[p_t] != NULL)
+    concat_string(&res, command_builder_prompt[p_t++]);
+
+  return res;
 }
 
-void test_iteration(char *command, char **prompt, size_t n) { // n is number of template
-  size_t expected_number = n * (n + 1) / 2;
+void test_iteration(char *command, char **prompt, size_t expected_number) { // n is number of template
   prepare_command_builder(command, prompt);
-  /*Check that we iterate once only on everythings*/
-  char **result_table = malloc(sizeof(char *) * expected_number);
-  for (int i = 0; i < expected_number; i++) {
-    result_table[i] = strdup("");
-  }
-
-  for (size_t i = 0; i < expected_number; i++) {
-    command_builder_next_command();
-    int j = 0;
-
-    while (command_builder_argv[j] != NULL) {
-      concat_string(&result_table[j], command_builder_argv[j++]);
-    }
-    int p_t = 0;
-    while (command_builder_prompt[p_t] != NULL)
-      concat_string(&result_table[j], command_builder_prompt[p_t++]);
-
-    assert_not_present(result_table[j], result_table, j); // compare with previous ones
-  }
+  assert_iteration_test(generate, expected_number);
+}
 }
 int main() {
   setup();

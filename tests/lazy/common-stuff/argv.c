@@ -126,6 +126,5 @@ int main() {
   test_argp();
 
   test_merge();
-
   return 0;
 }

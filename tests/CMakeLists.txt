@@ -5,9 +5,14 @@ set(list_lazy_tests )
 set(list_mandatory_tests )
 
 
+
+
+
+
 message("Test discovery and building:\n")
 file(GLOB_RECURSE TESTS ${PROJECT_SOURCE_DIR}/tests/*.c)
-list(FILTER TESTS EXCLUDE REGEX ${PROJECT_SOURCE_DIR}/tests/.*/ext-tests/.*) # every .c in test excecpt the one in ext-test is to be compiled as a test
+list(FILTER TESTS EXCLUDE REGEX ${PROJECT_SOURCE_DIR}/tests/ext-tests/.*) # every .c in test excecpt the one in ext-test is to be compiled as a test
+list(FILTER TESTS EXCLUDE REGEX ${PROJECT_SOURCE_DIR}/tests/shared-codebase/.*) #Those are not to compile
 foreach(file ${TESTS})
   get_filename_component (name_without_extension ${file} NAME_WE)
   add_executable(${name_without_extension} ${SOURCES} ${file})
@@ -26,7 +31,7 @@ endforeach()
 
 
 #compile ext-test ones
-file(GLOB_RECURSE TEST_DEPENDENCIES ${PROJECT_SOURCE_DIR}/tests/**/ext-tests/*.c)
+file(GLOB_RECURSE TEST_DEPENDENCIES ${PROJECT_SOURCE_DIR}/tests/ext-tests/*.c)
 foreach(file ${TEST_DEPENDENCIES})
 	message ("\t${file} detected as necessary compile target for tests")
 	get_filename_component (name_without_extension ${file} NAME_WE)

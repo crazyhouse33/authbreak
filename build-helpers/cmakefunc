@@ -16,14 +16,17 @@ ENDMACRO()
 # Take a dictionary, add the shubdirs that are not hidden (.git and other traps) and add them to include dir
 function(include_subdirectories directory)
 message("\nAdding subdirs of ${directory} as include directory:\n")
+include_directories(${directory})
+message ("\tAdding ${directory} as include dir.") 
 SUBDIRLIST(subdirs ${directory})
 get_filename_component(absdirectory ${directory} REALPATH )
 FOREACH(sub ${subdirs})
-	string(REPLACE ${absdirectory} "" relative ${sub})
+	string(REPLACE ${absdirectory} "" relative ${sub}) #Here lie the trick to not include .git and other bullshit
 	IF (NOT ${relative} MATCHES ".*/\\..*")
 		message ("\tAdding ${sub} as include dir.") 
 		include_directories(${sub})
 	ENDIF()
+
 ENDFOREACH()
 ENDFUNCTION(include_subdirectories)
 

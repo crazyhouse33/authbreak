@@ -12,7 +12,7 @@ int main() {
   char *buff = malloc(sizeof(char) * max);
   // Output* out=executor_get_output("/opt/handCraftedUtilityShit/authbreak/tests/execution/a.out test.py test", prompt, 3, 10);
 
-  FILE *fp = fopen("test.py", "r");
+  FILE *fp = fopen("GITINCLUDEtest.py", "r");
 
   char buffer[500];
   /* Read and display data */

@@ -38,6 +38,7 @@ include_subdirectories(extern/normal/src)
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.h src/*.c)
 file(GLOB_RECURSE EXTERN_SOURCES CONFIGURE_DEPENDS extern/normal/src/*.h extern/normal/src/*.c)
 file(GLOB_RECURSE EXTERN_SOURCES_TEST CONFIGURE_DEPENDS extern/test/src/*.h extern/test/src/*.c)
+file(GLOB_RECURSE TESTS_SOURCES ${PROJECT_SOURCE_DIR}/tests/shared-codebase/*.c ${PROJECT_SOURCE_DIR}/tests/shared-codebase/*.h)
 
 #pretty printing sources for debuging build process
 JOIN(";${SOURCES}" \n\t pretty)
@@ -46,8 +47,11 @@ message ("\nDetected internal sources in src:\n${pretty} ")
 JOIN(";${EXTERN_SOURCES}" \n\t pretty)
 message ("\nDetected external sources in extern/normal/src:\n${pretty}")
 
+JOIN(";${TESTS_SOURCES}" \n\t pretty)
+message ("\nDetected sources for test build in test/shared-codebase:\n ${pretty}")
+
 JOIN(";${EXTERN_SOURCES_TEST}" \n\t pretty)
-message ("\nDetected sources  for test build in extern/test/src:\n ${pretty}")
+message ("\nDetected sources external sources for test build in extern/test/src:\n ${pretty}")
  
 
 # Removing garbage among external sources
@@ -60,7 +64,6 @@ add_subdirectory(src)
 
 ##### TEST 
 enable_testing() 
-unset(CMAKE_TESTING_ENABLED)#This stop built-in test target to get generated
 
 # Removing the normal entry point 
 list (REMOVE_ITEM SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c )
@@ -68,6 +71,9 @@ list (REMOVE_ITEM SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c )
 
 # Adding test related extern sources
 include_subdirectories(extern/test/src)
+include_subdirectories(tests/shared-codebase)
+
+list(APPEND SOURCES ${TESTS_SOURCES})
 list (APPEND SOURCES ${EXTERN_SOURCES_TEST})
 # Building tests
 add_subdirectory(tests)

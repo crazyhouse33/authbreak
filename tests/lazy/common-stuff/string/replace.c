@@ -110,11 +110,10 @@ void test_placeholder() {
 }
 
 void test_parser() {
-char *test_str7 = "tototata";
+  char *test_str7 = "tototata";
   Placeholder **placeholders7 = placeholder_parse_string(test_str7, '{', '}', '\\');
   size_t size7 = get_vector_count((void **)placeholders7);
   munit_assert_size(size7, ==, 0);
-
 
   char *test_str4 = "{}";
   Placeholder **placeholders4 = placeholder_parse_string(test_str4, '{', '}', '\\');
@@ -130,7 +129,7 @@ char *test_str7 = "tototata";
   Placeholder **placeholders6 = placeholder_parse_string(test_str6, '{', '}', '\\');
   size_t size6 = get_vector_count((void **)placeholders6);
   munit_assert_size(size6, ==, 2);
-  
+
   char *test_str = "{}hey{}{\\{}\\}";
   Placeholder **placeholders = placeholder_parse_string(test_str, '{', '}', '\\');
   size_t size = get_vector_count((void **)placeholders);
@@ -139,7 +138,6 @@ char *test_str7 = "tototata";
   Placeholder **placeholders2 = placeholder_parse_string(test_str2, '*', '*', '\\');
   size_t size2 = get_vector_count((void **)placeholders2);
   munit_assert_size(size2, ==, 3);
-
 
   char *test_str5 = "";
   Placeholder **placeholders5 = placeholder_parse_string(test_str5, '{', '}', '\\');
@@ -162,4 +160,5 @@ int main() {
 
   test_placeholder();
   test_parser();
+  return 0;
 }

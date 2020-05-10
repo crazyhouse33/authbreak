@@ -23,7 +23,7 @@ build/*
 !build/README.md
 
 bin/*
-!bin/tests/*.py
+!bin/tests/GITINCLUDE*
 
 
 

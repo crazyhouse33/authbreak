@@ -29,10 +29,10 @@ void prepare_command_builder(char *command, char **prompts) {
   Placeholder **placeholders = (Placeholder **)create_vector(0);
 
   // Getting every placeholders
-  
-  char *sub_part; 
-  size_t it=0;
-  while (sub_part= command_builder_argv[it++]) {
+
+  char *sub_part;
+  size_t it = 0;
+  while (sub_part = command_builder_argv[it++]) {
     Placeholder **new_placeholders = placeholder_parse_string(sub_part, '{', '}', '\\');
     unit_num = concatenate_vector((void ***)&placeholders, (void **)new_placeholders);
   }
@@ -41,7 +41,7 @@ void prepare_command_builder(char *command, char **prompts) {
   templates = malloc(sizeof(Template_unit) * unit_num);
   for (size_t i = 0; i < unit_num; i++) {
     templates[i].placeholder = placeholders[i];
-    templates[i].handler = NULL; // TODO // Create appropriate handler
+    templates[i].handler = handler_new(*placeholders[i]->base_string + placeholders[i]->begin + 1, placeholders[i]->size_place - 1);
   }
 }
 
@@ -49,8 +49,7 @@ void prepare_command_builder(char *command, char **prompts) {
 bool command_builder_next_command() { // Cartesian product
   Template_unit *current_template = templates;
   char *next_value = handler_next(current_template->handler);
-  while (!next_value) { // the handler is done
-    handler_reset(current_template->handler);
+  while (!next_value) { // the handler boucled once
     current_template++;
     if (current_template - templates > unit_num) // everything had been done
       return true;

@@ -48,7 +48,7 @@ void test_out4() {
 int main() {
   /*This test test the prompt feature*/
   char *prompt[] = {"Hello\n", "test\n", "goodbye\n"};
-  Output *out = executor_get_output("python3.7 test.py test", prompt, 3, get_current_envp(), 10);
+  Output *out = executor_get_output("python3.7 GITINCLUDEtest.py test", prompt, 3, get_current_envp(), 10);
 
   FILE *fp = fopen("testfile", "r");
   char buffer[200];
