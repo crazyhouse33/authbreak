@@ -86,6 +86,11 @@ void test_base() {
   assert_arg_equal(clone, exepected);
 }
 
+void test_join(char **argv, char sep, char *expcted) {
+  char *res = join_argv(argv, sep);
+  munit_assert_string_equal(res, expcted);
+}
+
 void test_merge() {
 #if LIBSTDBUF_IS_FOUND
 #define FAKE_PRELOAD "mylib.so"
@@ -126,5 +131,10 @@ int main() {
   test_argp();
 
   test_merge();
+  test_join((char *[]){"tata", "tot", "sara", NULL}, ';', "tata;tot;sara");
+  test_join((char *[]){NULL}, ';', "");
+  test_join((char *[]){"tata", NULL}, ';', "tata");
+  test_join((char *[]){"tata", "", NULL}, ';', "tata;");
+  test_join((char *[]){"", "tata", NULL}, ';', ";tata");
   return 0;
 }

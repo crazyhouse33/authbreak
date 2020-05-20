@@ -7,6 +7,8 @@
 // To realize polymorphism, we use a big switch rather than function pointer for performance reason, unintuitively. (The switch way allow compiler to optimize way more than a function pointer. The
 // pointer way does not allow the compiler to inline, to pass arg in register...).
 
+DEFINE_ENUM(Handler_type, "\"%s\" is not a valid template type, chose amongs this options: \n%s\n", "\"%s\" is ambigious as template type, choose among: \n%s\n", HANDLER_TYPE);
+
 Handler *handler_new(char *template_string, size_t until) {
   Handler *res = malloc(sizeof(Handler));
   handler_init(res, template_string, until);
@@ -14,13 +16,13 @@ Handler *handler_new(char *template_string, size_t until) {
 }
 
 void handler_init(Handler *emptypointer, char *template_string, size_t until) {
-  parse_injection_template(emptypointer, template_string, until);
+  parse_injection_template(emptypointer, template_string, until); // get type and affect options
   switch (emptypointer->type) {
-  case file_handler:
+  case file:
     file_handler_init_special_needs(emptypointer);
     break;
 
-  case iterator_handler:
+  case iterator:
     iterator_handler_init_special_needs(emptypointer);
     break;
   }
@@ -29,11 +31,11 @@ void handler_init(Handler *emptypointer, char *template_string, size_t until) {
 /*TODO For better performance with the switch prediction, order the placeholders by type of handler in the iteration*/
 char *handler_next(Handler *handler) {
   switch (handler->type) {
-  case file_handler:
+  case file:
     return file_handler_next(handler);
     break;
 
-  case iterator_handler:
+  case iterator:
     return iterator_handler_next(handler);
     break;
   }
@@ -41,11 +43,11 @@ char *handler_next(Handler *handler) {
 
 char *handler_get_current(Handler *handler) {
   switch (handler->type) {
-  case file_handler:
+  case file:
     return file_handler_get_current(handler);
     break;
 
-  case iterator_handler:
+  case iterator:
 
     return iterator_handler_get_current(handler);
 
@@ -55,11 +57,11 @@ char *handler_get_current(Handler *handler) {
 
 void handler_free(Handler *handler) {
   switch (handler->type) {
-  case file_handler:
+  case file:
     file_handler_free_needs(handler);
     break;
 
-  case iterator_handler:
+  case iterator:
 
     iterator_handler_free_needs(handler);
     break;

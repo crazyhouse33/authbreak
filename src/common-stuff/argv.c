@@ -195,3 +195,28 @@ char **get_envp_merged(char **envp1, char **envp2, char **key_to_merge, char *se
   merge_envp(&envp1_clone, envp2, key_to_merge, separator);
   return envp1_clone;
 }
+
+char *join_argv(char **strings, char sep) {
+  if (!strings[0])
+    return "";
+
+  size_t cpt = 0;
+  size_t len_current = strlen(strings[cpt]);
+  size_t total_size = len_current;
+  size_t true_size = 16 * (total_size + 1); //+1 that way joining null string is possible
+  char *res = malloc(true_size * sizeof(char));
+  strcpy(res, strings[cpt++]);
+
+  while (strings[cpt]) {
+    res[total_size] = sep;
+    len_current = strlen(strings[cpt]);
+    total_size += len_current + 1;
+    if (total_size > true_size)
+      res = realloc(res, 4 * true_size * sizeof(char));
+
+    strcpy(res + total_size - len_current, strings[cpt++]);
+  }
+
+  res[total_size] = 0;
+  return res;
+}

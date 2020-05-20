@@ -1,0 +1,6 @@
+- Remember to see if doing you own getdelim is not better as some point as I suspect it may be(we can work directely in the internal buffer) and safer as well because not static shared buffer), after performance report per commit routine is in place.
+
+- The whole parsing "until" technique may be an error of design, and it's more easy to use begin/end interface, because every subparsing stuff need until actualization, which is tedious and recquiert to be super carefull, more variables... I chose it in the begining because it matched strnlen, strncmp way of doing, so it would save sove diff conversion. At least identify function where until is not used like that and change to begin/end
+
+- Order test by prepending number so test discovery put them in an optimal order that reflect test dependancies (So when 10 test fails we know the upper failed one probably is reponsible the 9 others one to fail)
+

@@ -1,9 +1,9 @@
-#include <stddef.h>
+#include <sys/types.h>
 //we suffer in perf from the the deferencing, in rust, you can declare a type that can vary in size
 typedef struct Dynamic_Array
 {
 	  void** array;
-	  size_t max_index;
+	  size_t size;
 } Dynamic_Array;
 
 Dynamic_Array* new_dynamic_array(size_t size);

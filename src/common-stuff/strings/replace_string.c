@@ -2,7 +2,8 @@
 #include "concat_string.h"
 #include "error.h"
 #include "max.h"
-#include "null_vec.h" //vector of placeholder
+#include "null_vec.h"      //vector of placeholder
+#include "search_string.h" //escape memchr
 #include <stdbool.h>
 #include <stdlib.h> //malloc
 #include <string.h> //memmov
@@ -94,45 +95,16 @@ void placeholder_switch(Placeholder *placeholder, char *string) {
   }
 }
 
-static bool is_escaped(char *a_char, char escaper) { return (*(a_char - 1) != escaper) || (*(a_char - 2) == escaper); }
-
-static char *memchr_not_escaped(char *bloc, char to_found, size_t until, char escaper) {
-  // The two first char need special care to not take care of previous memory introducing wierd bugs, we just hardcode it
-
-  if (until <= 0)
-    return NULL;
-  if (*bloc == to_found)
-    return bloc;
-  until--;
-  if (until <= 0)
-    return NULL;
-  bloc++;
-  if (*(bloc) == to_found && *(bloc - 1) != escaper)
-    return bloc;
-
-  /* Dont return escaped character*/
-  char *old_found;
-  do {
-    old_found = bloc;
-    bloc = memchr(bloc + 1, to_found, --until);
-    until -= bloc - old_found - 1;
-  }
-
-  while (bloc != NULL && !is_escaped(bloc, escaper));
-
-  return bloc;
-}
-
 // We could iterate with 2 less variable( current and final)
-Placeholder **placeholder_parse_string(char *string, char opener, char closer, char escaper) {
-  size_t to_parse = strlen(string); // we dont include \0 in the search
-  char *final_end = string + to_parse;
+Placeholder **placeholder_parse_string(char **string, char opener, char closer, char escaper) {
+  size_t to_parse = strlen(*string); // we dont include \0 in the search
+  char *final_end = *string + to_parse;
   char *begin;
   Placeholder **res_vector = (Placeholder **)create_vector(0);
   ;
   size_t res_size = 0;
   char *end;
-  char *current = string;
+  char *current = *string;
   while (begin = memchr_not_escaped(current, opener, to_parse, escaper)) { // there is a begin
 
     current = begin + 1;
@@ -147,7 +119,7 @@ Placeholder **placeholder_parse_string(char *string, char opener, char closer, c
     // valid template, between begin and end
     Placeholder *new_placeholder;
     if (res_size == 0)
-      new_placeholder = placeholder_new(&string, begin, end);
+      new_placeholder = placeholder_new(string, begin, end);
     else
       new_placeholder = placeholder_new_depend(res_vector[res_size - 1], begin, end);
 

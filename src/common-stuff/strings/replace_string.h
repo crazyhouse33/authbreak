@@ -48,7 +48,7 @@ Placeholder *placeholder_new_depend(Placeholder *base_placeholder, char *begin, 
 void placeholder_switch(Placeholder* placeholder, char* string);
 /*Switch the portion delimited byt the placeholder with a string, actualize the size to keep track of the place, actualize the positions of the dependent placeholders*/
 
-Placeholder** placeholder_parse_string(char* string, char opener, char closer, char escaper);
+Placeholder** placeholder_parse_string(char** string, char opener, char closer, char escaper);
 /*Same but also check escaping with the escaper of your choice*/
 
 

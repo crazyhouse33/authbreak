@@ -21,7 +21,7 @@ static void construct_next_table(char **pointer_to_table, char *charset) {
   // take a charset, construct pointer_to_table
   size_t char_num = strlen(charset);
   int char_max = get_max(charset, char_num);
-  *pointer_to_table = (char *)malloc(sizeof(char) * char_max);
+  *pointer_to_table = (char *)malloc(sizeof(char) * (char_max + 1));
   size_t i;
   for (i = 0; i < char_num - 1; i++) { // TODO give the furtivity option to randomize the permutation
 
@@ -52,10 +52,7 @@ static void next_level(Iterator_needs *it, char *charset) {
 static void iterator_handler_reset(Handler *handler) {
   Iterator_needs *needs = (Iterator_needs *)handler->special_needs;
   needs->len = handler->options.len_min;
-  if (needs->len > 0) // if different from 0 we setup properly
-    initiate_level(needs, handler->options.charset);
-  else
-    needs->current[0] = 0; // if 0 first guess must be null char, we let iteration call next_level naturally
+  initiate_level(needs, handler->options.charset);
 }
 
 void iterator_handler_init_special_needs(Handler *handler) {

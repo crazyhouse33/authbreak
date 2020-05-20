@@ -5,10 +5,13 @@
 void left_trim_in_place(char** string);
 /*Make given pointer point on the first non white character*/
 
-void right_trim_in_place(char** string_end);
-	/*Add a null char just after first non white character on the left of the pointer and make it point to it*/
+size_t consec_not_white_number(char* str);
+/*Return how many now white character there is after directely after str*/
 
-char* right_trim(char* string_end);
+void right_trim_in_place(char* begin, char** string_end);
+	/*Add a null char just after first non white character on the right of the pointer and make end point to it*/
+
+char* right_trim(char* begin, char* string_end);
 /*Add a null character just after first non white character on the left of the pointer.*/
 	
 void trim_in_place(char** string_begin, char** string_end);
@@ -24,11 +27,14 @@ char* left_trim(char* string);
 /* Return pointer pointing on the first non white character*/
 
 
-char* get_pointer_to_last_white(char* string_end);
-/*Return pointer to the last white on the end of the string*/
+char* get_pointer_to_last_white(char* begin, char* string_end);
+/*Return pointer to the left most white on the end of the string*/
 
-void point_to_last_white(char** string);
-/*Make string_end point to the last white on the end of the string  */
+void point_to_last_white(char* begin, char** string);
+/*Make string_end point to the left_most white on the end of the string  */
+
+void trim_point(char** begin, char** end);
+/*Make begin and end point to the trimed string, without adding any \0*/
 
 char* trim(char* string_begin, char* string_end);
 /*trim a string without side effect, return pointer to create string*/

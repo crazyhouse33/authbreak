@@ -1,7 +1,8 @@
 //managing broken include
 #ifndef XXX_HANDLER_GUARD_XXX
 #define XXX_HANDLER_GUARD_XXX
-#include <stddef.h>//size_t
+#include <sys/types.h>//size_t
+#include "enum.h"
 
 /*This functions declare the back end of handlers, for how the structures are properly set up check the interface/parse_template*/
 
@@ -11,11 +12,18 @@ typedef struct Handler_options{
 	unsigned short len_min;//Used by iterator to start at specified len: iterator
 	unsigned short len_max;//Used by iterator to stop at specified len: iterator
 
-
-
 } Handler_options;
 
-typedef enum Handler_type{file_handler, iterator_handler} Handler_type;//THE ORDER CORRESPOND TO THE PARSING PRIORITY
+//see enum.h, this declare a bunch of function associated to an enum, for parsing user input 
+#define HANDLER_TYPE(XX) \
+    XX(file,"file",) \
+    XX(iterator,"iterator",) \
+
+DECLARE_ENUM(Handler_type,HANDLER_TYPE);
+
+
+
+
 typedef struct Handler
 {
 	Handler_type type;
@@ -31,7 +39,7 @@ void handler_init(Handler* emptypointer, char* template_string, size_t until);
 /*Initialize memory pointed by emptypointer to the template_string setup. Consider the string end after until bytes*/
 
 char* handler_next(Handler* handler);
-/*Return next value for the template. If we reach end of iterations, return NULL and reset the handler to the begining*/
+/*Increment value for handler and return it. If we reach end of iterations, return NULL and reset the handler to the begining*/
 
 char* handler_get_current(Handler* handler);//This is unavoidable for the first value
 /*Return current value of the handler*/

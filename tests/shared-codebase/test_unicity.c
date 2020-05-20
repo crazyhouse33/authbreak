@@ -1,7 +1,7 @@
 #include "test_unicity.h"
 #include "dynamic_array.h"
 #include "munit.h"
-#include <string.h>// strdup
+#include <string.h> // strdup
 static size_t count(char *string, char **res, ssize_t size_res) {
   size_t cpt = 0;
   for (ssize_t i = 0; i < size_res; i++)

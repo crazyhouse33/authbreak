@@ -9,6 +9,7 @@
 void test_newline() {
   Handler *handler = malloc(sizeof(Handler));
   handler->main_component = test_file;
+  handler->type = file;
   handler->options = (Handler_options){.separator = '\n', .charset = NULL, .len_min = 0, .len_max = 0};
   file_handler_init_special_needs(handler);
   char *res = file_handler_get_current(handler);
@@ -29,6 +30,8 @@ void test_newline() {
 
 void test_colon() {
   Handler *handler = malloc(sizeof(Handler));
+  handler->type = file;
+
   handler->main_component = test_file;
   handler->options = (Handler_options){.separator = ';', .charset = NULL, .len_min = 0, .len_max = 0};
   file_handler_init_special_needs(handler);
@@ -51,11 +54,13 @@ void test_colon() {
 void generic_test() {
   Handler *handler = malloc(sizeof(Handler));
   handler->main_component = test_file;
+  handler->type = file;
   handler->options = (Handler_options){.separator = ';', .charset = NULL, .len_min = 0, .len_max = 0};
   file_handler_init_special_needs(handler);
 
   Handler *fake_handler = malloc(sizeof(Handler));
   fake_handler->main_component = test_file;
+  fake_handler->type = file;
   fake_handler->options = (Handler_options){.separator = ';', .charset = NULL, .len_min = 0, .len_max = 0};
   file_handler_init_special_needs(fake_handler);
   assert_handler_generic_iteration_test(handler, fake_handler, 3);

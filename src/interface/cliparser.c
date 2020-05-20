@@ -1,4 +1,5 @@
 #include "cliparser.h"
+#include "default_options.h"
 #include <argp.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -113,5 +114,11 @@ Arguments *get_arguments(int argc, char **argv, unsigned argp_flag) {
      be reflected in arguments. */
 
   argp_parse(&argp, argc, argv, argp_flag, 0, arguments);
+
+  // TODO set with given user option if present
+  DEFAULT_CHARSET = "abcdefghijklmnopqrstuvwxyz0123456789";
+  DEFAULT_LEN_MIN = 0;
+  DEFAULT_LEN_MAX = 8;
+  DEFAULT_SEPARATOR = '\n';
   return arguments;
 }

@@ -8,15 +8,23 @@ int main() {
   left_trim_in_place(&strip_me);
   munit_assert_string_equal(strip_me, "hey, how you doing? \t");
 
-  char *end = strip_me + strlen(strip_me) - 1;
-  point_to_last_white(&end);
+  char *end = strip_me + strlen(strip_me);
+  point_to_last_white(strip_me, &end);
 
   munit_assert_char(*(end - 1), ==, '?');
   munit_assert_string_equal(strip_me, "hey, how you doing? \t");
 
+  end = strip_me + strlen(strip_me) - 1;
+  point_to_last_white(strip_me, &end);
+  munit_assert_char(*(end - 1), ==, '?');
+
+  end = strip_me + strlen(strip_me) - 2;
+  point_to_last_white(strip_me, &end);
+  munit_assert_char(*(end - 1), ==, '?');
+
   // right_trim_in_place
-  char *end2 = strip_me + strlen(strip_me) - 1;
-  right_trim_in_place(&end2);
+  char *end2 = strip_me + strlen(strip_me);
+  right_trim_in_place(strip_me, &end2);
   munit_assert_string_equal(strip_me, "hey, how you doing?");
 
   // left_trim
@@ -25,6 +33,22 @@ int main() {
   char *left_striped = left_trim(strip_me2);
   munit_assert_string_equal(strip_me2, "  hey, how you doing? \t");
   munit_assert_string_equal(left_striped, "hey, how you doing? \t");
+
+  char strip_me20_array[] = "hey, how you doing?";
+  char *strip_me20 = &strip_me20_array[0];
+  char *left_striped20 = left_trim(strip_me20);
+  munit_assert_string_equal(strip_me20, "hey, how you doing?");
+  munit_assert_string_equal(left_striped20, "hey, how you doing?");
+
+  char strip_me21_array[] = "      ";
+  char *strip_me21 = &strip_me21_array[0];
+  char *left_striped21 = left_trim(strip_me21);
+  munit_assert_string_equal(strip_me21, "      ");
+  munit_assert_string_equal(left_striped21, "");
+
+  munit_assert_size(consec_not_white_number("tamere ,"), ==, 6);
+  munit_assert_size(consec_not_white_number("t"), ==, 1);
+  munit_assert_size(consec_not_white_number(" ,"), ==, 0);
 
   // trim
   char *striped = trim(strip_me2, strip_me2 + strlen(strip_me2));

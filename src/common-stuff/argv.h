@@ -1,5 +1,13 @@
+//need guard cause stdlib stuff
+#ifndef XXX_ARGV_H_GUARD_XXX
+#define XXX_ARGV_H_GUARD_XXX
 
-/*This module provide functions to work with entry variable of process, such as argv and arp*/
+/*TODO put general stuff in his proper code section, argv stuff away.
+ * 
+ * */
+
+
+/*This module provide functions to work with entry variable of process, such as argv and arp. Since thoses are basically char**, it also define general purpose char** operation*/
 
 #include <stdlib.h> 
 #include <string.h>
@@ -82,13 +90,10 @@ char** get_current_envp();
 char** get_current_envp_appended(char** additonal_argument);
 /*Return a new vector the current envp appended with additonal_argument. additonal_argument must be a null terminated char** */
 
-
-
-
-
 #define UNBUFFERED "0"
 #define LINE_BUFFERED "L"
 #define DEFAULT_BUFFERING NULL
+
 
 #ifndef LIBSTDBUF_PATH
 #warning "libstdbuf is not found, build_stdbuf_exec_envp return the current envp, any use in execvpe wor as an execvp call"
@@ -124,3 +129,8 @@ size_t merge_envp(char*** envp1, char** envp2, char** key_to_merge_vec, char* se
 
 char** get_envp_merged(char** envp1, char** envp2, char** key_to_merge, char* separator);
 /*Same but work on a copy */
+
+char* join_argv(char** strings,char sep);
+/* Return jointure each string in argv with character sep*/
+
+#endif

@@ -18,7 +18,7 @@ Template_unit *templates; // Couple of handler, placeholder
 size_t unit_num;          // number of couple
 
 // Dynamic state
-long unsigned int iterator; // used for sessionning
+long unsigned int iterator_build; // used for sessionning
 
 /*This file is important optimization wise because it's the only real cpu work that will do the process for the brutforce part*/
 
@@ -26,14 +26,20 @@ void prepare_command_builder(char *command, char **prompts) {
   /*Gather all the templates, assign handlers, prepare the fix part, also check if session allready exist to continue it unstead of creating new one*/
   size_t command_size;
   command_builder_argv = arg_vector_from_string(command, &command_size);
+  command_builder_prompt = prompts;
   Placeholder **placeholders = (Placeholder **)create_vector(0);
 
   // Getting every placeholders
 
-  char *sub_part;
   size_t it = 0;
-  while (sub_part = command_builder_argv[it++]) {
-    Placeholder **new_placeholders = placeholder_parse_string(sub_part, '{', '}', '\\');
+  while (command_builder_argv[it]) {
+    Placeholder **new_placeholders = placeholder_parse_string(&command_builder_argv[it++], '{', '}', '\\');
+    unit_num = concatenate_vector((void ***)&placeholders, (void **)new_placeholders);
+  }
+  it = 0;
+
+  while (command_builder_prompt[it]) {
+    Placeholder **new_placeholders = placeholder_parse_string(&command_builder_prompt[it++], '{', '}', '\\');
     unit_num = concatenate_vector((void ***)&placeholders, (void **)new_placeholders);
   }
 
@@ -41,7 +47,10 @@ void prepare_command_builder(char *command, char **prompts) {
   templates = malloc(sizeof(Template_unit) * unit_num);
   for (size_t i = 0; i < unit_num; i++) {
     templates[i].placeholder = placeholders[i];
-    templates[i].handler = handler_new(*placeholders[i]->base_string + placeholders[i]->begin + 1, placeholders[i]->size_place - 1);
+    /*Creating handler according to wats in placeholder*/
+    templates[i].handler = handler_new(*placeholders[i]->base_string + placeholders[i]->begin + 1, placeholders[i]->size_place - 2);
+    /*Repalcing {} separators with real handler value*/
+    placeholder_switch(templates[i].placeholder, handler_get_current(templates[i].handler));
   }
 }
 
@@ -50,13 +59,15 @@ bool command_builder_next_command() { // Cartesian product
   Template_unit *current_template = templates;
   char *next_value = handler_next(current_template->handler);
   while (!next_value) { // the handler boucled once
+    // reset the handler to begining
+    placeholder_switch(current_template->placeholder, handler_get_current(current_template->handler));
     current_template++;
-    if (current_template - templates > unit_num) // everything had been done
+    if (current_template - templates > unit_num - 1) // everything had been done
       return true;
     next_value = handler_next(current_template->handler);
   }
   placeholder_switch(current_template->placeholder, next_value);
-  iterator++;
+  iterator_build++;
   return false;
 }
 

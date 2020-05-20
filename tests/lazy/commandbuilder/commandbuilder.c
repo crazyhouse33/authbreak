@@ -1,15 +1,15 @@
 #include "commandbuild.h"
 #include "concat_string.h"
+#include "default_options.h"
 #include "munit.h"
-#include <string.h>       //strdup
 #include "test_unicity.h" //assert_not_present
-void setup() {            /*Monkeypatch some functions ( for better isolation and quicker tests suites )*/
-}
+#include <string.h>       //strdup
 
 char *generate(int firs_ite) {
+  if (!firs_ite)
+    if (command_builder_next_command())
+      return NULL;
   // check the concatenation of argvs and prompt
-  if (command_builder_next_command())
-    return NULL; // We are done if so
 
   char *res = strdup("");
   int j = 0;
@@ -27,12 +27,16 @@ void test_iteration(char *command, char **prompt, size_t expected_number) { // n
   prepare_command_builder(command, prompt);
   assert_iteration_test(generate, expected_number);
 }
-}
+
 int main() {
-  setup();
-  char *prompt[] = {"testprompt", "templatedprompt {}"};
-  char *command = "test hey{} -p tata -u {}";
-  test_iteration(command, prompt, 3);
+  DEFAULT_CHARSET = strdup("01");
+  DEFAULT_LEN_MIN = 0;
+  DEFAULT_LEN_MAX = 2;
+  DEFAULT_SEPARATOR = '\n';
+  char *prompt[] = {strdup("testprompt"), strdup("templatedprompt {}"), NULL};
+  char *command = strdup("test hey{} -p tata -u {}");
+  // each handler have 1 + 2 + 4 7
+  test_iteration(command, prompt, 7 * 7 * 7);
 }
 
 /*Testing internal state*/

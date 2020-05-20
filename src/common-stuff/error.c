@@ -1,3 +1,4 @@
+#include "error.h"
 #include "concat_string.h"
 #include <errno.h>
 #include <stdarg.h> //variadic stuff
@@ -15,4 +16,12 @@ void critical_error_msg(char *format, ...) {
   if (errno != 0)
     fprintf(stderr, "\nperror: %s\n", lib_error);
   abort();
+}
+
+void controlled_error_msg(int status, char *format, ...) {
+  va_list args;
+  va_start(args, format);
+  vfprintf(stderr, format, args);
+  va_end(args);
+  exit(status);
 }
