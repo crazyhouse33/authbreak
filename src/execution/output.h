@@ -3,7 +3,7 @@ typedef struct Output
 {
   char* out;
   int status;
-  double times;
+  int term_time;
 } Output;
 
 
