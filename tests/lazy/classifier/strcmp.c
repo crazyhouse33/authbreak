@@ -1,7 +1,7 @@
 #include "munit.h"
 #include "strcmp_classifier.h"
 
-void generate_test(char* res, char* target, bool expected) {
+void generate_test(char *res, char *target, bool expected) {
   Output *out = malloc(sizeof(Output));
   out->out = res;
   Classifier_strcmp *class = malloc(sizeof(Classifier_strcmp));
@@ -16,7 +16,7 @@ void generate_test(char* res, char* target, bool expected) {
 }
 
 int main() {
-  generate_test("tot", "toto",  false);
+  generate_test("tot", "toto", false);
   generate_test("", "", true);
   generate_test("", "ta", false);
 

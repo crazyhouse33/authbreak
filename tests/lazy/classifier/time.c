@@ -32,7 +32,6 @@ int main() {
   generate_test(18, 19, superior_or_eq, true);
   generate_test(18, 17, superior_or_eq, false);
 
-
   generate_test(0, 1, superior_strict, true);
   generate_test(1, 0, inferior_strict, true);
 
