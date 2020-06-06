@@ -1,9 +1,9 @@
 #include "time_classifier.h"
 #include "classifier_common.h"
 
-// DEFINE_ENUM(Operator, "\"%s\" is not a suported operator, chose amongs this options: \n%s\n", "\"%s\" is ambigious as an operator, choose among: \n%s\n", OPERATOR);
+DEFINE_ENUM(Supported_operator, "\"%s\" is not a suported operator, chose amongs this options: \n%s\n", "\"%s\" is ambigious as an operator, choose among: \n%s\n", SUPPORTED_OPERATOR);
 
-void time_init_core(Classifier_time *classifier, int target_int, Operator op) {
+void time_init_core(Classifier_time *classifier, int target_int, Supported_operator op) {
   classifier->target_int = target_int;
   switch (op) {
   case inferior_strict:

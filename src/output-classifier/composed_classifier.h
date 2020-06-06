@@ -7,8 +7,8 @@
 
 
 typedef struct Composed_classifier{
-	Classifier_strcmp* strcmp_class;
-	size_t num_strcmp;
+	Classifier_stringcmp* stringcmp_class;
+	size_t num_stringcmp;
 	Classifier_time* time_class;
 	size_t num_time;
 } Composed_classifier;

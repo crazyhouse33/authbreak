@@ -160,7 +160,7 @@ void handler_separate_option(char *option, size_t until, char **key, char **valu
 
 void handler_parse_option(Handler *handler, char *string_begin, size_t until) {
   /* Separate key and value, check if key is undersood option, feed handler the value
-   * Notice than we dont trim value, because it may be desirbale to acces some space, for exemple, for the separator
+   * Notice than we dont trim value, because it may be desirable to acces some space, for exemple, for the separator
    * */
   char *value;
   char *key;

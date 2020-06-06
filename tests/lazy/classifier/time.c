@@ -1,7 +1,7 @@
 #include "munit.h"
 #include "time_classifier.h"
 
-void generate_test(int target_time, int time, Operator op, bool expected) {
+void generate_test(int target_time, int time,Supported_operator op, bool expected) {
   Output *out = malloc(sizeof(Output));
   out->term_time = time;
   Classifier_time *class = malloc(sizeof(Classifier_time));

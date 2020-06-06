@@ -23,8 +23,11 @@ void Classifier_##classfier_type##_init(Classifier_##classfier_type* classfier, 
 	classfier_type##_init_core(classfier, XMACRO(GET_ID));\
 }
 
+//TODO The generic init is finally not used in favor to the normal ones, consider to remove it?
+
 #define HERITATE_CLASSIFIER_DECLARATION(classfier_type,XMACRO)\
 bool Classifier_##classfier_type##_classify(Classifier_##classfier_type* classfier, Output* out);\
-void Classifier_##classfier_type##_init(Classifier_##classfier_type* classfier, bool target, XMACRO(GET_WHOLE));
+void Classifier_##classfier_type##_init(Classifier_##classfier_type* classfier, bool target, XMACRO(GET_WHOLE));\
+void classfier_type##_init_core(Classifier_##classfier_type* classfier, XMACRO(GET_WHOLE));
 
 #endif

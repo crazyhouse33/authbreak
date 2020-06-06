@@ -7,7 +7,7 @@
   return false
 
 bool classify_output(Composed_classifier *classifier, Output *out) {
-  CLASSIFY(strcmp);
+  CLASSIFY(stringcmp);
   CLASSIFY(time);
   return true;
 }
