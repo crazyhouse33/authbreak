@@ -1,3 +1,5 @@
+#ifndef XX_GUARD_COMPOSED_CLASSIFIER_H__X
+#define XX_GUARD_COMPOSED_CLASSIFIER_H__X
 #include "output.h"
 #include <stdbool.h>
 #include "strcmp_classifier.h"
@@ -14,8 +16,4 @@ typedef struct Composed_classifier{
 } Composed_classifier;
 bool classify_output(Composed_classifier* classifier, Output* out);
 /*Apply each condition of the classifier to classify an output as success or failure*/
-
-
-
-
-
+#endif

@@ -21,5 +21,5 @@ int main() {
   munit_assert_string_equal(args->sucess[0], "regexp");
   munit_assert_string_equal(args->sucess[1], "gotprompt");
 
-  exit(0);
+  return 0;
 }
