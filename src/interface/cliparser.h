@@ -1,3 +1,5 @@
+#ifndef XX_INCLUDE_GUARD_CLIPARSER_H__XX
+#define XX_INCLUDE_GUARD_CLIPARSER_H__XX
 #include <stdbool.h>
 /*TODO remove this 100 limit */
 typedef struct Arguments
@@ -14,4 +16,4 @@ typedef struct Arguments
 
 
 Arguments* get_arguments (int argc, char **argv, unsigned argp_flag);
-
+#endif

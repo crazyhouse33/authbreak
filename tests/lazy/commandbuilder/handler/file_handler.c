@@ -24,7 +24,7 @@ void test_newline() {
   res = file_handler_next(handler);
   munit_assert_ptr(res, ==, NULL);
 
-  res = file_handler_next(handler);
+  res = file_handler_get_current(handler);
   munit_assert_string_equal(res, "GUESS1;");
 }
 
@@ -47,8 +47,11 @@ void test_colon() {
   res = file_handler_next(handler);
   munit_assert_ptr(res, ==, NULL);
 
-  res = file_handler_next(handler);
+  res = file_handler_get_current(handler);
   munit_assert_string_equal(res, "GUESS1");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "\nGUESS2");
 }
 
 void generic_test() {

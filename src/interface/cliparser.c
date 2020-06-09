@@ -38,12 +38,12 @@ struct argp_option options[] = {
 
     {0}};
 
+int arg_count = 0; // this should be static to parse_opt. But it fail if we parse more than one time. So we put it global, for the test to be able to pass
 /* Arg parser */
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
   /* Get the input argument from argp_parse, which we
      know is a pointer to our arguments structure. */
   Arguments *arguments = state->input;
-  static int arg_count = 0;
 
   switch (key) {
   case RANDOM_FAKE_KEY:
@@ -112,6 +112,8 @@ Arguments *get_arguments(int argc, char **argv, unsigned argp_flag) {
   arguments->sucess_cpt = 0;
   /* Parse our arguments; every option seen by parse_opt will
      be reflected in arguments. */
+
+  arg_count = 0; // we reset state
 
   argp_parse(&argp, argc, argv, argp_flag, 0, arguments);
 

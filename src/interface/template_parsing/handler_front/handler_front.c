@@ -37,9 +37,10 @@ void handler_parse_charset(Handler *handler, char *charset, size_t until) {
 }
 
 static bool file_handler_parse_main_component(Handler *handler, char *main, size_t until) {
+
   if (!is_openable_file_until(main, until))
     return false;
-  handler->main_component = main;
+  handler->main_component = strndup(main, until);
   return true;
 }
 

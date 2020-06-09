@@ -20,14 +20,18 @@ char *file_handler_next(Handler *handler) {
   if (UNLIKELY(feof(fp))) { // We tell compiler it's unlikely so he is free to reorder the ifs. My guess is that it would fail to detect that file have more chances to be non empty that empty. I may
                             // be wrong tho and in that case it's still harmless
     rewind(fp);
-    return NULL; // Signaling we are done
+    file_handler_next(handler); // reset to the first line
+    return NULL;                // Signaling we are done
   } else if (buffer[res - 1] == sep)
     buffer[res - 1] = 0;
   return buffer;
 }
 
-void file_handler_init_special_needs(Handler *handler) { handler->special_needs = fopen(handler->main_component, "r"); }
+void file_handler_init_special_needs(Handler *handler) {
+  handler->special_needs = fopen(handler->main_component, "r");
+  file_handler_next(handler); // getting first value
+}
 
-char *file_handler_get_current(Handler *handler) { return file_handler_next(handler); }
+char *file_handler_get_current(Handler *handler) { return buffer; }
 
 void file_handler_free_needs(Handler *handler) { fclose(handler->special_needs); }

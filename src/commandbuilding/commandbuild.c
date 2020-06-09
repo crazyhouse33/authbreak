@@ -1,5 +1,6 @@
 #include "commandbuild.h"
-#include "argv.h"           //arg_vector_from_string
+#include "argv.h"
+#include "concat_string.h"
 #include "handler.h"        //Handler
 #include "null_vec.h"       //concatenate_vector
 #include "replace_string.h" //Placeholder
@@ -16,11 +17,6 @@ typedef struct Template_unit {
 // Fix state
 Template_unit *templates; // Couple of handler, placeholder
 size_t unit_num;          // number of couple
-
-// Dynamic state
-long unsigned int iterator_build; // used for sessionning
-
-/*This file is important optimization wise because it's the only real cpu work that will do the process for the brutforce part*/
 
 void prepare_command_builder(char *command, char **prompts) {
   /*Gather all the templates, assign handlers, prepare the fix part, also check if session allready exist to continue it unstead of creating new one*/
@@ -67,8 +63,16 @@ bool command_builder_next_command() { // Cartesian product
     next_value = handler_next(current_template->handler);
   }
   placeholder_switch(current_template->placeholder, next_value);
-  iterator_build++;
   return false;
+}
+
+char *command_builder_current_command() {
+  char *command = join_argv(command_builder_argv, ' ');
+  char *prompts = join_argv(command_builder_prompt, '\n');
+  concat_string(&command, "\n");
+  concat_string(&command, prompts);
+  free(prompts);
+  return command;
 }
 
 void command_builder_fix(size_t positions, char *fix);

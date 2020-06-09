@@ -1,24 +1,30 @@
 #include "executor.h"
 #include "argv.h" //buildarg and buffercontrolling
 
-#include <errno.h>  //perror
-#include <stdio.h>  //pipe
-#include <stdlib.h> //EXIT_SUCCESS
-#include <string.h> //strlen
+#include "file_info.h" //search_executable
+#include <errno.h>     //perror
+#include <stdio.h>     //pipe
+#include <stdlib.h>    //EXIT_SUCCESS
+#include <string.h>    //strlen
 #include <sys/wait.h>
 #include <unistd.h> //fork
 
 #define READ 0
 #define WRITE 1
 
-void child_life(char **argv, char **envp) {
+void executor_prepare_argv(char **argv) {
+  // put a binary file to remove any need for a PATH search
+  argv[0] = search_executable(argv[0]);
+}
+
+static void child_life(char **argv, char **envp) {
   /*Do child stuff*/
   execve(*argv, argv, envp);
   perror("Process creation failed");
 }
 
 // TODO better control over when to send in pipe
-void parent_life(int read_fd, int write_fd, char **prompt, size_t prompt_number, Output *output) {
+static void parent_life(int read_fd, int write_fd, char **prompt, size_t prompt_number, Output *output) {
   // inject prompt
   for (int i = 0; i < prompt_number; i++) {
     write(write_fd, prompt[i], strlen(prompt[i])); // TODO dont call strlen and control ourself the size?
@@ -32,7 +38,7 @@ void parent_life(int read_fd, int write_fd, char **prompt, size_t prompt_number,
 }
 
 // TODO optim: reuse the same pipe over and over
-Output *executor_get_output(char *command, char **prompt, size_t prompt_number, char **envp, double timout) {
+Output *executor_get_output(char **argv, char **prompt, size_t prompt_number, char **envp, double timout) {
 
   Output *output = Output_new();
   int pipe_father[2];
@@ -44,7 +50,6 @@ Output *executor_get_output(char *command, char **prompt, size_t prompt_number, 
   pid_t cpid;
 
   size_t argc;
-  char **argv = arg_vector_from_string(command, &argc); // We do it here because code betwen fork and exec is dangerous (must not contain malloc for exemple)
 
   cpid = fork();
 
