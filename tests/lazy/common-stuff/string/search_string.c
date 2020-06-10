@@ -6,6 +6,11 @@ void test_common_part(char *s1, char *s2, size_t s, size_t expected) {
   size_t res = common_substring_size(s1, s2, s);
   munit_assert_size(res, ==, expected);
 }
+void test_get_unique2() { // help reproduce a bug I dont undertand
+  char *list[] = {"out_eq", "time", NULL};
+  ssize_t res = get_unique_matching_string(list, "output", 6);
+  munit_assert_int(res, ==, SEARCH_ERROR_NO_MATCH);
+}
 
 void test_get_unique() {
   char *list[] = {"separator", "septre", "cylynder", "star", "septree", NULL};
@@ -77,5 +82,6 @@ int main() {
   test_common_part("tas", "tat", 3, 2);
 
   test_get_unique();
+  test_get_unique2();
   return 0;
 }

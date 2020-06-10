@@ -10,5 +10,6 @@ void generate_test(char *parse_str, char *expected_target) {
 int main() {
   generate_test("abcd", "abcd");
   generate_test("aba cd", "aba cd");
+  generate_test("", "");
   return 0;
 }

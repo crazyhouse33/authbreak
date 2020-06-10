@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
   if (strcmp(user, "admin") != 0)
     error("invalid user");
 
-  if (strcmp(password, "root") != 0)
+  if (strcmp(password, "or") != 0)
     error("invalid password");
 
   char pin[100];

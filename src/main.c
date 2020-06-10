@@ -6,6 +6,7 @@
 #include <stdio.h>
 void manage_output(Output *output, Composed_classifier *classifier) {
   if (classify_output(classifier, output)) {
+	  puts("Found succefull creds:\n");
     puts(command_builder_current_command());
     exit(0);
   }
@@ -26,5 +27,6 @@ int main(int argc, char *argv[]) {
     manage_output(output, classifier);
 
   } while (!command_builder_next_command());
+  puts("Ran out of possible tries, no try match a succefful cred");
   exit(1);
 }

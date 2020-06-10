@@ -44,8 +44,10 @@ add_dependencies(executor child-buf-controle)
 set(list_lazy_tests ${list_lazy_tests} PARENT_SCOPE)
 set(list_mandatory_tests ${list_mandatory_tests} PARENT_SCOPE)
 
-add_dependencies (integration authbreak)#integration test must provoke recompiling
-
+#managing special dependencies
+add_dependencies (integration authbreak)#integration test must provoke recompiling the soft
+add_dependencies (integration basic_auth)#integration test must provoke recompiling the integration soft victim
+add_dependencies (executor child-buf-controle)# child_buf is used by executor
 
 
 

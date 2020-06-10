@@ -18,10 +18,12 @@ ssize_t get_unique_matching_string(char **list, char *string, size_t until) {
   char *list_string;
   while (list_string = list[cpt++]) {
     size_t compared_len = strlen(list_string);
-    if (compared_len < until) // cannot match if bigger
-      continue;
+
     compared_len = MIN(compared_len, until);
     size_t common_part = common_substring_size(list_string, string, compared_len + 1); // counting \0
+
+    if (common_part < until) // cannot match if bigger
+      continue;
 
     if (common_part >= max1) {
       max_index = cpt - 1;
@@ -39,7 +41,7 @@ ssize_t get_unique_matching_string(char **list, char *string, size_t until) {
   return max_index;
 }
 
-// I passed A LOT OF TIME mixing the following functions because I had the impression it could be done cleanely but it was just getting into quoting hell, so I will just copy past and fuck it
+// I passed A LOT OF TIME trying to merge the following functions because I had the impression it could be done cleanely but it was just getting into quoting hell, so I will just copy past and fuck it
 ssize_t get_unique_matching_string_tolerant(char **list, char *string, size_t until, char **end_valid) {
   size_t cpt = 0;
   size_t max_index;

@@ -15,5 +15,7 @@ int main() {
   generate_test(classifier, "time = <= 8", 1, 1);
   generate_test(classifier, "! time = >= 14", 2, 1);
   generate_test(classifier, "!  out_eq=totot  ", 2, 2);
+  generate_test(classifier, "!  out_eq=", 2, 3);
+  generate_test(classifier, "out_eq= ", 2, 4);
   return 0;
 }

@@ -15,8 +15,9 @@
     }                                                                                                                                                                                                  \
     break
 
+// we cannot really do a good handy Composed_classifier classifier, it would require knowing parsing before hand
 Composed_classifier *arguments_to_composed_classifier(Arguments *args) {
-  Composed_classifier *classifier = malloc(sizeof(Composed_classifier));
+  Composed_classifier *classifier = calloc(1, sizeof(Composed_classifier)); // need to set nums to 0
 
   INIT(stringcmp);
   INIT(time);
