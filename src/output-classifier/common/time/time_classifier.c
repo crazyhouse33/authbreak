@@ -25,7 +25,10 @@ void time_init_core(Classifier_time *classifier, int target_int, Supported_opera
   }
 }
 
-bool time_classify_core(Classifier_time *classifier, Output *output) { return (classifier->multiplier * output->term_time) < (classifier->multiplier * (classifier->target_int + classifier->adder)); }
+bool time_classify_core(Classifier_time *classifier, Output *output) {
+  return (classifier->multiplier * (long)output->term_time) <
+         (classifier->multiplier * (classifier->target_int + classifier->adder)); // the cast is necessary see if it has perf impact, if so do a timer that return long directely
+}
 
 // heritating mother class
 HERITATE_CLASSIFIER_DEFINITION(time, TIME_INIT_SIGN);

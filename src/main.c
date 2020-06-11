@@ -3,16 +3,18 @@
 #include "commandbuild.h"
 #include "executor.h"
 #include "interface/cliparser.h"
+#include "timer.h"
 #include <stdio.h>
 void manage_output(Output *output, Composed_classifier *classifier) {
   if (classify_output(classifier, output)) {
-	  puts("Found succefull creds:\n");
+    puts("Found succefull creds:\n");
     puts(command_builder_current_command());
     exit(0);
   }
 }
 
 int main(int argc, char *argv[]) {
+  unsigned long resolution = init_timer(); // This is needed for APLE
   // getting arg
   Arguments *argument = get_arguments(argc, argv, 0);
   // setting backend accordingly

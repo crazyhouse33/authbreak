@@ -7,8 +7,7 @@ typedef struct Arguments
   char* command_line;                
   char*  prompt[100];
   char* sucess[100];
-  char* fail[100];
-  int prompt_cpt, fail_cpt, sucess_cpt;
+  int prompt_cpt, sucess_cpt;
   bool no_timing, no_guessing, no_random;
   double wait, random_wait;
 

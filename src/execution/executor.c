@@ -2,10 +2,11 @@
 #include "argv.h" //buildarg and buffercontrolling
 
 #include "file_info.h" //search_executable
-#include <errno.h>     //perror
-#include <stdio.h>     //pipe
-#include <stdlib.h>    //EXIT_SUCCESS
-#include <string.h>    //strlen
+#include "timer.h"
+#include <errno.h>  //perror
+#include <stdio.h>  //pipe
+#include <stdlib.h> //EXIT_SUCCESS
+#include <string.h> //strlen
 #include <sys/wait.h>
 #include <unistd.h> //fork
 
@@ -51,6 +52,7 @@ Output *executor_get_output(char **argv, char **prompt, size_t prompt_number, ch
 
   size_t argc;
 
+  unsigned long t1 = get_time_ns();
   cpid = fork();
 
   if (cpid == 0) { /* Child reads from pipe */
@@ -78,6 +80,7 @@ Output *executor_get_output(char **argv, char **prompt, size_t prompt_number, ch
   // EXIT
   close(pipe_father[WRITE]); /* Reader will see EOF */
   waitpid(cpid, NULL, 0);    /* Wait for child terminaison*/
+  output->term_time = get_time_ns() - t1;
   close(pipe_son[READ]);
   return output;
 }

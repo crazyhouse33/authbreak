@@ -4,3 +4,7 @@
 
 - Order test by prepending number so test discovery put them in an optimal order that reflect test dependancies (So when 10 test fails we know the upper failed one probably is reponsible the 9 others one to fail)
 
+
+- use https://www.argtable.org/ unstead of argp (cross platform)
+
+-use len min and len max as option. Allow file to use charset, and filter each entry accordingly
