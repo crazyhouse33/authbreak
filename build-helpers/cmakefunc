@@ -12,6 +12,14 @@ MACRO(SUBDIRLIST result curdir)
   SET(${result} ${dirlist})
 ENDMACRO()
 
+MACRO(DIR_AND_SUBDIRS_LIST result curdir)
+
+SUBDIRLIST( SUBS curdir)
+
+set(${result} ${curdir}) 
+LIST(APPEND ${result} {$SUBS})
+ENDMACRO()
+
 
 # Take a dictionary, add the shubdirs that are not hidden (.git and other traps) and add them to include dir
 function(include_subdirectories directory)

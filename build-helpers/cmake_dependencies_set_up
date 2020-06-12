@@ -4,18 +4,14 @@ if (NOT PythonInterp_FOUND)
 	message(WARNING "Python is not found, lazy testing wont be active")
 endif()
 
-# this is necessary for my system because the system variable is set uncorectly
-SUBDIRLIST (libpath1 /usr/local/lib)
-SUBDIRLIST(libpath2 /usr/lib)
-SUBDIRLIST(libpath3 /lib)
+
+DIR_AND_SUBDIRS_LIST(libpath1 /usr/lib/x86_64-linux-gnu/coreutils/)
 
 list(APPEND CMAKE_LIBRARY_PATH ${libpath1})
-list(APPEND CMAKE_LIBRARY_PATH ${libpath2})
-list(APPEND CMAKE_LIBRARY_PATH ${libpath3})
 
 find_library (libstdbuf NAMES libstdbuf stdbuf libstdbuf.so)
 if(NOT libstdbuf)
-  message(WARNING "libstdbuf library not found in ${CMAKE_LIBRARY_PATH}\nDid you install coreutils?. This mean that the timing attack wont be as precise as it could. ")
+  message(WARNING "libstdbuf library not found in ${CMAKE_LIBRARY_PATH}\nDid you install coreutils?. This mean that the timing attack may wont be as precise as it could. ")
 else()
 
 add_definitions(-DLIBSTDBUF_PATH="${libstdbuf}")

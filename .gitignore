@@ -20,7 +20,7 @@ tags
 [._]*.un~
 
 build/*
-!build/README.md
+!build/.gitkeep
 
 bin/*
 !bin/tests/GITINCLUDE*

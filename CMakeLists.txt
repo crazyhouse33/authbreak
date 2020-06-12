@@ -15,14 +15,24 @@ project(authbreak C )
 #Common use functions
 include(build-helpers/cmakefunc)
 
-
 #Setting compilation options
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_C_FLAGS_DEBUG "-ggdb3")
 set (version 0.0)
+#allow C programs to get the version
 add_definitions(-DAUTHBREAK_VERSION="${version}")
 include(build-helpers/cmake_dependencies_set_up) # Finding necessary standard libs and seting up path in the code
 
+
+#TODO put it separate file
+#if we are not in master, we need to us templates to fill some files for master
+set ( CONFIGURE_DIR ${CMAKE_SOURCE_DIR}/dev/push_release_to_master)
+if(EXISTS "${CONFIGURE_DIR}")
+configure_file(${CONFIGURE_DIR}/push_to_master.py.cmake_template ${CONFIGURE_DIR}/push_to_master.py)#give python version number
+
+configure_file(${CONFIGURE_DIR}/README.md.cmake_template ${CMAKE_SOURCE_DIR}/README.md)#give readme version number
+
+endif()
 
 ###### Separating test and normal build sources   #######
 
