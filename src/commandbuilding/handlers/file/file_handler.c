@@ -17,8 +17,7 @@ char *file_handler_next(Handler *handler) {
   // change the buffer and point to the good parts. Actually this wont work with many handlers
 
   ssize_t res = getdelim(&buffer, &buffer_size, sep, fp);
-  if (UNLIKELY(feof(fp))) { // We tell compiler it's unlikely so he is free to reorder the ifs. My guess is that it would fail to detect that file have more chances to be non empty that empty. I may
-                            // be wrong tho and in that case it's still harmless
+  if (res<=0 && UNLIKELY(feof(fp))) { 
     rewind(fp);
     file_handler_next(handler); // reset to the first line
     return NULL;                // Signaling we are done

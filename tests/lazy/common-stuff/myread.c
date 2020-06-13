@@ -10,9 +10,8 @@ int main() {
   size_t max = 1;
   size_t old_max = max;
   char *buff = malloc(sizeof(char) * max);
-  // Output* out=executor_get_output("/opt/handCraftedUtilityShit/authbreak/tests/execution/a.out test.py test", prompt, 3, 10);
 
-  FILE *fp = fopen("GITINCLUDEtest.py", "r");
+  FILE *fp = fopen("../test_data/targets/prompted.py", "r");
 
   char buffer[500];
   /* Read and display data */

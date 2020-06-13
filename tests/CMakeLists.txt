@@ -1,5 +1,5 @@
 #putting test in bin/test
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/tests)
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/test_binaries)
 
 set(list_lazy_tests )
 set(list_mandatory_tests )

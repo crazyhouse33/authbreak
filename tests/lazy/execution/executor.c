@@ -61,7 +61,7 @@ int main() {
   char *prompt[] = {"Hello\n", "test\n", "goodbye\n"};
   size_t argc;
 
-  char **argv = arg_vector_from_string("/usr/bin/python3 GITINCLUDEtest.py test", &argc);
+  char **argv = arg_vector_from_string("/usr/bin/python3 ../test_data/targets/prompted.py test", &argc);
 
   remove("testfile"); // if we dont remove the file the prompt test is biaised
 
@@ -74,7 +74,7 @@ int main() {
   size_t size = fread(buffer, 1, 200, fp);
   buffer[size] = 0;
   fclose(fp);
-  munit_assert_string_equal(buffer, "GITINCLUDEtest.py test\nHello\ntest\ngoodbye\n");
+  munit_assert_string_equal(buffer, "../test_data/targets/prompted.py test\nHello\ntest\ngoodbye\n");
 /* Pyhton dont work with stdbuf, test it on C test (see test_out)
  * https://stackoverflow.com/questions/61250119/stdbuf-no-effect-for-python3-process
  munit_assert_string_equal( out->out, "test sdout recup\ntest stderr recup");

@@ -9,7 +9,7 @@ int main() {
                    "sdout recup\")\nprint(\"test stderr recup\", file=sys.stderr)\n";
   size_t expected_size = strlen(expected);
 
-  FILE *fp = fopen("GITINCLUDEtest.py", "r");
+  FILE *fp = fopen("../test_data/targets/prompted.py", "r");
 
   char buffer[500];
   /* Read and display data */

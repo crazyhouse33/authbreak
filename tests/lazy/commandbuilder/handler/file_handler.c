@@ -4,7 +4,7 @@
 #include "munit.h"
 #include <string.h>
 
-#define test_file strdup("GITINCLUDEguess.list")
+#define test_file strdup("../test_data/list/guess.list")
 
 void test_newline() {
   Handler *handler = malloc(sizeof(Handler));
@@ -54,6 +54,32 @@ void test_colon() {
   munit_assert_string_equal(res, "\nGUESS2");
 }
 
+void test_colon2() {
+  Handler *handler = malloc(sizeof(Handler));
+  handler->type = file;
+
+  handler->main_component = "../test_data/list/guess2.list";
+  handler->options = (Handler_options){.separator = ';', .charset = NULL, .len_min = 0, .len_max = 0};
+  file_handler_init_special_needs(handler);
+  char *res = file_handler_get_current(handler);
+  munit_assert_string_equal(res, "GUESS1");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "\nGUESS2");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "\nGUESS3 \n hey\n");
+
+  res = file_handler_next(handler);
+  munit_assert_ptr(res, ==, NULL);
+
+  res = file_handler_get_current(handler);
+  munit_assert_string_equal(res, "GUESS1");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "\nGUESS2");
+}
+
 void generic_test() {
   Handler *handler = malloc(sizeof(Handler));
   handler->main_component = test_file;
@@ -71,6 +97,7 @@ void generic_test() {
 
 int main() {
   test_colon();
+  test_colon2();
   test_newline();
   generic_test();
 
