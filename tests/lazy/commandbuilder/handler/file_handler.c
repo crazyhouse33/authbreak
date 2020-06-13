@@ -4,6 +4,7 @@
 #include "munit.h"
 #include <string.h>
 
+// The unix convention that put \n at end of every file make the parsing harder than it should be. We test the ability to use edge case (empty strings) with newline or whatever as separator
 #define test_file strdup("../test_data/list/guess.list")
 
 void test_newline() {
@@ -19,7 +20,7 @@ void test_newline() {
   munit_assert_string_equal(res, "GUESS2;");
 
   res = file_handler_next(handler);
-  munit_assert_string_equal(res, "GUESS3;");
+  munit_assert_string_equal(res, "GUESS3");
 
   res = file_handler_next(handler);
   munit_assert_ptr(res, ==, NULL);
@@ -95,10 +96,73 @@ void generic_test() {
   assert_handler_generic_iteration_test(handler, fake_handler, 3);
 }
 
+void test_another_complex_file() {
+  Handler *handler = malloc(sizeof(Handler));
+  handler->type = file;
+
+  handler->main_component = "../test_data/list/complex.list";
+  handler->options = (Handler_options){.separator = ';', .charset = NULL, .len_min = 0, .len_max = 0};
+  file_handler_init_special_needs(handler);
+  char *res = file_handler_get_current(handler);
+  munit_assert_string_equal(res, "");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "\nhey");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "ho");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "");
+
+  res = file_handler_next(handler);
+  munit_assert_ptr(res, ==, NULL);
+
+  res = file_handler_get_current(handler);
+  munit_assert_string_equal(res, "");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "\nhey");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "ho");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "");
+}
+
+void test_another_complex_file_newline() {
+  Handler *handler = malloc(sizeof(Handler));
+  handler->type = file;
+
+  handler->main_component = "../test_data/list/complex.list";
+  handler->options = (Handler_options){.separator = '\n', .charset = NULL, .len_min = 0, .len_max = 0};
+  file_handler_init_special_needs(handler);
+  char *res = file_handler_get_current(handler);
+  munit_assert_string_equal(res, ";");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "hey;ho;");
+
+  res = file_handler_next(handler);
+  munit_assert_ptr(res, ==, NULL);
+
+  res = file_handler_get_current(handler);
+  munit_assert_string_equal(res, ";");
+
+  res = file_handler_next(handler);
+  munit_assert_string_equal(res, "hey;ho;");
+
+  res = file_handler_next(handler);
+  munit_assert_ptr(res, ==, NULL);
+}
+
 int main() {
   test_colon();
   test_colon2();
   test_newline();
+  test_another_complex_file();
+  test_another_complex_file_newline();
   generic_test();
 
   return 0;

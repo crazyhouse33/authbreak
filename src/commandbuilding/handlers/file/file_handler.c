@@ -17,11 +17,18 @@ char *file_handler_next(Handler *handler) {
   // change the buffer and point to the good parts. Actually this wont work with many handlers
 
   ssize_t res = getdelim(&buffer, &buffer_size, sep, fp);
-  if (res<=0 && UNLIKELY(feof(fp))) { 
-    rewind(fp);
-    file_handler_next(handler); // reset to the first line
-    return NULL;                // Signaling we are done
-  } else if (buffer[res - 1] == sep)
+  if (UNLIKELY(feof(fp))) { // EOF reached
+    if (res <= 0) {         // true end
+      rewind(fp);
+      file_handler_next(handler); // reset to the first line
+      return NULL;                // Signaling we are done
+    }
+    if (buffer[res - 1] == '\n') { // On unix every file like to have a last \n, polluting the last guess
+      buffer[res - 1] = 0;
+      return buffer;
+    }
+  }
+  if (buffer[res - 1] == sep) // getdelim dont replace sep at the end
     buffer[res - 1] = 0;
   return buffer;
 }
