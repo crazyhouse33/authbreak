@@ -42,6 +42,7 @@ void right_trim_in_place(char *begin, char **string_end) {
 char *right_trim(char *begin, char *string_end) {
   char *new_pointer = string_end;
   right_trim_in_place(begin, &new_pointer);
+  return new_pointer;
 }
 
 void trim_in_place(char **string, char **string_end) {

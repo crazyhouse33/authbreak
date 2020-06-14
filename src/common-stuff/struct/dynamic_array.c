@@ -20,6 +20,7 @@ Dynamic_Array *new_dynamic_array(size_t size) {
   Dynamic_Array *array = malloc(sizeof(Dynamic_Array));
   array->array = malloc(sizeof(void *) * size);
   array->size = size;
+  return array;
 }
 
 void dynamic_array_put(Dynamic_Array *array, void *to_put, size_t where) {

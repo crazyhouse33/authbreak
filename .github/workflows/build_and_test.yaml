@@ -1,0 +1,21 @@
+name: CMake_cross_setup
+
+on: [push, pull_request]
+
+jobs:
+  build_and_test:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest,windows-latest, macos-latest]
+      fail-fast: true
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: configure
+      run: cd build && cmake ..
+    - name: build
+      run: cd build && cmake --build . --target build-tests
+    - name: test
+      run: cd build && cmake --build . --target all-test
