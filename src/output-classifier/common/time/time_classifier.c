@@ -1,10 +1,9 @@
 #include "time_classifier.h"
 #include "classifier_common.h"
 
-DEFINE_ENUM(Supported_operator, "\"%s\" is not a suported operator, chose amongs this options: \n%s\n", "\"%s\" is ambigious as an operator, choose among: \n%s\n", SUPPORTED_OPERATOR);
+DEFINE_ENUM(Supported_time_operator, "\"%s\" is not a suported operator for time classifier, chose amongs this options: \n%s\n", "\"%s\" is ambigious as an operator, choose among: \n%s\n", XX_time_OPERATOR);
 
-void time_init_core(Classifier_time *classifier, int target_int, Supported_operator op) {
-  classifier->target_int = target_int;
+void classifier_time_init_core_op(Classifier_time *classifier, Supported_time_operator op) {
   switch (op) {
   case inferior_strict:
     classifier->adder = 0;
@@ -25,10 +24,14 @@ void time_init_core(Classifier_time *classifier, int target_int, Supported_opera
   }
 }
 
-bool time_classify_core(Classifier_time *classifier, Output *output) {
+void classifier_time_init_core_value(Classifier_time *classifier, int target) {
+	classifier->target_int=target;
+}
+
+bool classifier_time_classify_core(Classifier_time *classifier, Output *output) {
   return (classifier->multiplier * (long)output->term_time) <
          (classifier->multiplier * (classifier->target_int + classifier->adder)); // the cast is necessary see if it has perf impact, if so do a timer that return long directely
 }
 
 // heritating mother class
-HERITATE_CLASSIFIER_DEFINITION(time, TIME_INIT_SIGN);
+HERITATE_CLASSIFIER_DEFINITION(time, TIME_INIT_SIGNATURE);

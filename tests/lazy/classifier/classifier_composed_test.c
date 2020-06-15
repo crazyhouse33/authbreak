@@ -24,16 +24,16 @@ int main() {
   the_classifier->stringcmp_class = malloc(sizeof(Classifier_stringcmp) * (num_str_suc + num_str_fail));
   int i;
   for (i = 0; i < num_str_suc; i++) {
-    Classifier_stringcmp_init(&the_classifier->stringcmp_class[i], true, sucess_str[i]);
+    Classifier_stringcmp_init(&the_classifier->stringcmp_class[i], true, equal, sucess_str[i]);
   }
   for (; i < num_str_fail + num_str_suc; i++) {
-    Classifier_stringcmp_init(&the_classifier->stringcmp_class[i], false, fail_str[i - num_str_suc]);
+    Classifier_stringcmp_init(&the_classifier->stringcmp_class[i], false, equal, fail_str[i - num_str_suc]);
   }
 
   the_classifier->time_class = malloc(sizeof(Classifier_time) * 2);
-  Classifier_time_init(&the_classifier->time_class[0], true, sucess_time[0], superior_or_eq);
+  Classifier_time_init(&the_classifier->time_class[0], true, superior_or_eq,sucess_time[0] );
 
-  Classifier_time_init(&the_classifier->time_class[1], true, sucess_time[1], inferior_or_eq);
+  Classifier_time_init(&the_classifier->time_class[1], true, inferior_or_eq,sucess_time[1]);
 
   the_classifier->num_stringcmp = num_str_suc + num_str_fail;
   the_classifier->num_time = 2;

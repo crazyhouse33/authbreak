@@ -11,10 +11,10 @@ void generate_test(char **success, size_t success_num, size_t expected_time, siz
 }
 
 int main() {
-  char *success[] = {"! out_eq=19", "out_eq=17", "time= <=4"};
+  char *success[] = {"! out_eq=19", "out_eq=17", "time <=4"};
   generate_test(success, 3, 1, 2);
 
-  char *success2[] = {"time= <=4"};
+  char *success2[] = {"time<=4"};
   generate_test(success2, 1, 1, 0);
   return 0;
 }

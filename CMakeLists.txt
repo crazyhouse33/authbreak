@@ -73,8 +73,7 @@ list (APPEND SOURCES ${EXTERN_SOURCES})
 add_subdirectory(src)
 
 ##### TEST 
-enable_testing() 
-
+include (CTest)
 # Removing the normal entry point 
 list (REMOVE_ITEM SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c )
 

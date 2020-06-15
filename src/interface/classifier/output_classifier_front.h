@@ -1,5 +1,6 @@
-
 #include "composed_classifier.h" //classifier backend
+
+#define MAX_SIZE_AUTHORIZED_CLASSIFIER 6
 #define AUTHORIZED_CLASSIFIER(XX)\
 	XX(stringcmp,"out_eq",)\
 	XX(time,"time",)

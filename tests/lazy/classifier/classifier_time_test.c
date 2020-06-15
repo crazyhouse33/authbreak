@@ -1,16 +1,16 @@
 #include "munit.h"
 #include "time_classifier.h"
 
-void generate_test(int target_time, int time, Supported_operator op, bool expected) {
+void generate_test(int target_time, int time, Supported_time_operator op, bool expected) {
   Output *out = malloc(sizeof(Output));
   out->term_time = time;
   Classifier_time *class = malloc(sizeof(Classifier_time));
-  Classifier_time_init(class, true, target_time, op);
+  Classifier_time_init(class, true,  op, target_time);
   bool test = Classifier_time_classify(class, out);
   munit_assert_true(expected == test);
 
   Classifier_time *class_false = malloc(sizeof(Classifier_time));
-  Classifier_time_init(class_false, false, target_time, op);
+  Classifier_time_init(class_false, false, op,target_time);
   bool test2 = Classifier_time_classify(class_false, out);
   munit_assert_false(test2 == expected);
 }
