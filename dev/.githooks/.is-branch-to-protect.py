@@ -6,7 +6,6 @@ import sys
 with open(sys.argv[1]) as f:
         branchList=f.read().splitlines()
 
-import pdb; pdb.set_trace()
 currentBranch= subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).strip().decode('utf-8')
 
 if currentBranch in branchList:
