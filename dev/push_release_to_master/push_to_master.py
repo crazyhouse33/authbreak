@@ -50,10 +50,10 @@ root_dir="/opt/handCraftedUtilityShit/authbreak"
 change_dir(build_dir)
 threatCommand("cmake ..")
 change_dir(root_dir)
-threatCommand('git commit -a -m"Pushing release version 0.0 to master"')#commiting the readme change
+threatCommand('git commit -a -m"Pushing release version 0.5 to master"')#commiting the readme change
 
 current_branch = check_output(["git","rev-parse","--abbrev-ref" ,"HEAD"]).decode("utf8")[:-1]
-header= "Authbreak 0.0 :\n\n"
+header= "Authbreak 0.5 :\n\n"
 changeLogMessage= header+ args.message
 
 threatCommand("git checkout master")
