@@ -37,7 +37,6 @@ def did_you(string):
         inp=input("Did you "+string+"?[y/n]")
         if inp !='y':
             exit("Well do it")
-    }
 
 if not args.dry:
     did_you("update authbreak help page (interface/cliparser.c)")

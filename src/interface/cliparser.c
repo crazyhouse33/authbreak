@@ -11,19 +11,20 @@
 const char *argp_program_version = AUTHBREAK_VERSION; // This variable is added at compilation
 
 /* Program documentation. */
-char doc[] = "An exemple of a COMMAND: 'auth_command --user INJECT --password INJECT'\n\n"
-             "INJECT: {MAIN[,OPT,...OPT]}\n\n"
-             "Every injection point define a set of string that are going to replace the par in between {}. The brutforcer run every possible combinaison between your injection points only once.\n\n"
-             "There are two type of injection points, you can force the type with OPT= type=file or type=iterator\n\n"
-             "	1: File\n"
-             "		MAIN is a path to an openable file. This injection points the guess are the one present in the file, demilitated by the the separator option\n\n"
-             "		Valids OPT:\n"
-             "			-separator=CHAR : Set the separator of the file\n"
-             "	2: Iterator(default)\n"
-             "		MAIN is empty, or in the form [NUM:]NUM. The second form set the sizes of every guess to be greater or equal than the first one (0 as default) and lesser or equal than the "
-             "second one (MAXINT by default). If 0, the empty string is include in the guesses.\n\n"
-             " 		Valids OPT:\n"
-             "			-charset=STR : STR is a string of different characters. Every guess will contain only thoses characters. (default= abcdefghiklmnopqrstuvwxyz1234567890)\n\n";
+char doc[] =
+    "An exemple of a COMMAND: 'auth_command --user INJECT --password INJECT'\n\n"
+    "INJECT: {MAIN[,OPT,...OPT]}\n\n"
+    "Every injection point defines a set of strings that are going to replace the part in between {}. The brutforcer run every possible combinaison between your injection points only once.\n\n"
+    "There are two type of injection points, you can force the type with OPT= type=file or type=iterator\n\n"
+    "	1: File\n"
+    "		MAIN is a path to an openable file. This injection points the guess are the one present in the file, delimited by the the separator option\n\n"
+    "		Valids OPT:\n"
+    "			-separator=CHAR : Set the separator of the file\n"
+    "	2: Iterator(default)\n"
+    "		MAIN is empty, or in the form [NUM:]NUM. The second form set the sizes of every guess to be greater or equal than the first one (0 as default) and lesser or equal than the "
+    "second one (MAXINT by default). If 0, the empty string is included in the guesses.\n\n"
+    " 		Valids OPT:\n"
+    "			-charset=STR : STR is a string of different characters. Every guess will contain only thoses characters. (default= abcdefghiklmnopqrstuvwxyz1234567890)\n\n";
 /* A description of the arguments we accept. */
 char args_doc[] = "COMMAND";
 

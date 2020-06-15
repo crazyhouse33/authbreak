@@ -18,7 +18,7 @@ include(build-helpers/cmakefunc)
 #Setting compilation options
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_C_FLAGS_DEBUG "-ggdb3")
-set (version 0.0)
+set (version 0.5)
 #allow C programs to get the version
 add_definitions(-DAUTHBREAK_VERSION="${version}")
 include(build-helpers/cmake_dependencies_set_up) # Finding necessary standard libs and seting up path in the code
