@@ -20,7 +20,12 @@ tags
 [._]*.un~
 
 build/*
+!build/.gitkeep
+
+# This is a stupid flaw of github. One solution would have to fragment data and binary, and include data. But then data must be no in the bin dir(otherwise we need to apply the same dirty fix, wich mean every test must refer to ../test data. Now ../data work on linux but not on every windows.
 bin/*
+!bin/test_data
+
 
 
 #C
