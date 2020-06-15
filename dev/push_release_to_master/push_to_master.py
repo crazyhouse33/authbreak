@@ -57,7 +57,7 @@ header= "Authbreak 0.5 :\n\n"
 changeLogMessage= header+ args.message
 
 threatCommand("git checkout master")
-threatCommand("git checkout dev -- src tests build build-helpers CMakeLists.txt extern .gitignore LICENSE README.md")
+threatCommand("git checkout dev -- src bin tests build build-helpers CMakeLists.txt extern .gitignore LICENSE README.md")
 threatCommand('git commit -a -m "'+ changeLogMessage+ '"')
 
 if not args.no_push:#Push and back to current

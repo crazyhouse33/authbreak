@@ -20,7 +20,7 @@
 # with "WIP" (work in progress).
 
 
-protected="$(dev/.githooks/.is-branch-to-protect.py)"
+protected="$(dev/.githooks/.is-branch-to-protect.py protected-branchs)"
 
 if [ "$protected" == "1" ]; then
 	bash -c 'set -e; cd dev; ./pre-push.bash'

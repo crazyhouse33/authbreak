@@ -19,7 +19,7 @@
 # This sample shows how to prevent push of commits where the log message starts
 # with "WIP" (work in progress).
 
-protected="$(dev/.githooks/.is-branch-to-protect.py)"
+protected="$(dev/.githooks/.is-branch-to-protect.py dev/protected-branchs)"
 
 deco='------'
 if [ "$protected" == "1" ]; then
