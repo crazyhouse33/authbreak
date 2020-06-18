@@ -1,11 +1,12 @@
 #include "time_classifier_front.h"
+#include "diff_long_classifier.h"
 #include "munit.h"
 
 
-void generate_test_op(Supported_time_operator op, int expected_target, int expected_adder, int expected_mult) {
+void generate_test_op(Supported_time_operator op, long expected_target, long expected_adder, long  expected_mult) {
  
-  Classifier_time *classifier = malloc(sizeof(Classifier_time));
-  classifier_time_init_core_op(classifier, op);
+  Classifier_diff_long *classifier = malloc(sizeof(Classifier_diff_long));
+  classifier_diff_long_init_core_op(classifier, op);
   munit_assert_int(classifier->multiplier, ==, expected_mult);
   munit_assert_int(classifier->adder, ==, expected_adder);
  }
@@ -13,7 +14,7 @@ void generate_test_op(Supported_time_operator op, int expected_target, int expec
 
 void generate_test_parse(char *parse_str,  int expected_target) {
 
-  Classifier_time *classifier = malloc(sizeof(Classifier_time));
+  Classifier_diff_long *classifier = malloc(sizeof(Classifier_diff_long));
   int target = parse_time_classifier_str_value( parse_str);
   munit_assert_int(target, ==, expected_target);
 }

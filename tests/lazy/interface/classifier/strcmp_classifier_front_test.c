@@ -1,4 +1,5 @@
 #include "strcmp_classifier_front.h"
+#include "strcmp_classifier.h"
 #include "munit.h"
 
 void generate_test(char *parse_str, char *expected_target) {

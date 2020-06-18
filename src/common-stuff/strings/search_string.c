@@ -1,6 +1,8 @@
 #include "search_string.h"
 #include "max.h"
+#include "error.h"
 #include <string.h> //strlen
+#include <stdlib.h> //strtol
 size_t common_substring_size(char *string1, char *string2, size_t max) {
   for (size_t i = 0; i < max; i++) {
     if (string1[i] != string2[i])
@@ -96,6 +98,27 @@ char *memchr_not_escaped(char *bloc, char to_found, size_t until, char escaper) 
   }
 
   while (bloc != NULL && !is_escaped(bloc, escaper));
-
   return bloc;
 }
+
+unsigned long int parse_positive_int_intolerant(char *int_str, int error_status,char* error_format) {
+char* valid_end;
+long int target = strtol(int_str, &valid_end, 0);
+
+  if (target < 0 && *valid_end)
+    controlled_error_msg(error_status, error_format, int_str);
+
+  return (unsigned long int) target;
+}
+
+
+long int parse_int_intolerant(char *int_str, int error_status,char* error_format) {
+char* valid_end;
+long int target = strtol(int_str, &valid_end, 0);
+
+  if (*valid_end)
+    controlled_error_msg(error_status, error_format, int_str);
+
+  return target;
+}
+

@@ -79,8 +79,10 @@ Output *executor_get_output(char **argv, char **prompt, size_t prompt_number, ch
 
   // EXIT
   close(pipe_father[WRITE]); /* Reader will see EOF */
-  waitpid(cpid, NULL, 0);    /* Wait for child terminaison*/
+  int status;
+  waitpid(cpid, &status, 0);    /* Wait for child terminaison*/
   output->term_time = get_time_ns() - t1;
+  output->exit_status=WEXITSTATUS(status);
   close(pipe_son[READ]);
   return output;
 }

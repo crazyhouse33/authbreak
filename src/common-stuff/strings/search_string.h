@@ -28,3 +28,9 @@ bool is_escaped(char *a_char, char escaper);
 char *memchr_not_escaped(char *bloc, char to_found, size_t until, char escaper);
 /*Return the next non escaped character*/
 
+
+long int parse_int_intolerant(char *int_str, int error_status,char* error_format);
+/*Parse a string as an int and fail with error give error_format (feeded by the the int_str) and given exit_status*/
+
+unsigned long int parse_positive_int_intolerant(char *int_str, int error_status,char* error_format);
+/*Same but dont accept negative values*/

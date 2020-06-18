@@ -21,9 +21,7 @@ void generate_test_separation(char* test_str, int expected_type, int expected_op
   munit_assert_string_equal(value,expected_value);
 }
 int main() {
-	Composed_classifier *classifier = calloc(1, sizeof(Composed_classifier));
-	classifier->time_class = malloc(sizeof(Classifier_time) * 2);
-	classifier->stringcmp_class = malloc(sizeof(Classifier_stringcmp) * 2);
+	Composed_classifier *classifier = composed_classifier_new();
 
 	generate_test(classifier, "out_eq==tatata", 0, 1);
 	generate_test(classifier, "time  <= 8", 1, 1);
