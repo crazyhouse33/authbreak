@@ -1,8 +1,8 @@
+#include "error.h"
 #include "handler.h" //Handler
-#include "myread.h"  //getdelim_tok
-#include "stdio.h"   //File pointer
-
-#define UNLIKELY(x) __builtin_expect((x), 0)
+#include "likely.h"
+#include "myread.h" //getdelim_tok
+#include "stdio.h"  //File pointer
 
 /*Should we pass some options used only by some handlers into specials needs? this would unalign handler arrays (is it even possible?)*/
 
@@ -35,6 +35,8 @@ char *file_handler_next(Handler *handler) {
 
 void file_handler_init_special_needs(Handler *handler) {
   handler->special_needs = fopen(handler->main_component, "r");
+  if (handler->special_needs == NULL)
+    controlled_error_msg(3, "Can not open file \"%s\"", handler->main_component);
   file_handler_next(handler); // getting first value
 }
 

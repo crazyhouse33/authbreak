@@ -1,5 +1,7 @@
 #include "cliparser.h"
 #include "default_options.h"
+#include "or_combined_classifier.h"
+#include "output_classifier_front.h"
 #include <argp.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -7,8 +9,11 @@
 #define TIMING_FAKE_KEY 1000
 #define GUESSING_FAKE_KEY 1001
 #define RANDOM_FAKE_KEY 1002
+#define OR_FAKE_KEY 1003
+#define NOT_FAKE_KEY 1004
 
 const char *argp_program_version = AUTHBREAK_VERSION; // This variable is added at compilation
+error_t argp_err_exit_status = 2;
 
 /* Program documentation. */
 char doc[] =
@@ -41,22 +46,25 @@ struct argp_option options[] = {
                                   "Nothing more than you write is injected. In particular, you have to add a newline where you want it to be entered.",
      1},
     {0, 0, 0, 0, "Output Interpretation Options:", 2},
-    {"success", 's', "[!]CLASSIFIER_KEY=VALUE", 0, "Specify a CLASSIFIER. If many are given, Authbreak considers it as a success if all of the CLASSIFIER are TRUE"
+    {"success", 's', "[!]CLASSIFIER_KEY=VALUE", 0, "Add a CLASSIFIER to the current group of classifier. Authbreak considers a group TRUE  if all of the CLASSIFIERS of the group are TRUE. Authbreak "
+                                                   "considers a try as sucess if one group is verified. See NOT and OR."
                                                    " if there is no CLASSIFIER, every guess is a fail. If prefixed by !, the CLASSIFIER are negated. The possible CLASSIFIER_KEY are:",
      2},
     {0, 0, 0, 0, "	out_eq=STR: The WHOLE SESSION stdout from the targeted process exactly matches STR", 3},
     {0, 0, 0, 0, "	time= OPERATOR NANOSECONDS: The total execution time of the targeted process respects the given OPERATOR and time. Supported operators are: <=,<,>,>=", 3},
+    {"NOT", NOT_FAKE_KEY, 0, 0, "Negate the next group of classifier.", 3},
+    {"OR", OR_FAKE_KEY, 0, 0, "Create a new group of classifier.", 3},
     /*{0, 0, 0, 0, "Furtivity tuning options:", 6},
-    {"wait", 'w', "SECONDS", 0, "Delay each guess by a certain amount of seconds.", 6},
-    {"wait-prompt", 0, "SECONDS", 0, "Delay each prompt by a certain amount of seconds.", 6},
-    {"random-wait", 0, "SECONDS", 0, "Delay each prompt by a random amount of seconds bounded by the entered value.", 6},
-    {"random-wait", 'r', "SECONDS", 0, "Delay each guess by a random amount of seconds bounded by the entered value.", 6},
-    {"no-random", RANDOM_FAKE_KEY, 0, 0, "Without this option, Authbreak makes the order of the guesses look random. Activate this flag to turn off this behaviour to win some time.", 6},
-    {0, 0, 0, 0, "User interface", 7},
-    {0, 0, 0, 0, "Press any key to print infos about the state (step of attack, number of guesses done, number yet to be done...)", 7},
-    {"no-session", 0, 0, 0, "When running, at any interuption (user or crash, authbreak saves his current state. If you invoke it with the exact same commandline, it will load his old session. This
-    flag forbids loading an old session. THE OLD SESSION WILL BE OVERWRITTEN", 7},
-    */
+      {"wait", 'w', "SECONDS", 0, "Delay each guess by a certain amount of seconds.", 6},
+      {"wait-prompt", 0, "SECONDS", 0, "Delay each prompt by a certain amount of seconds.", 6},
+      {"random-wait", 0, "SECONDS", 0, "Delay each prompt by a random amount of seconds bounded by the entered value.", 6},
+      {"random-wait", 'r', "SECONDS", 0, "Delay each guess by a random amount of seconds bounded by the entered value.", 6},
+      {"no-random", RANDOM_FAKE_KEY, 0, 0, "Without this option, Authbreak makes the order of the guesses look random. Activate this flag to turn off this behaviour to win some time.", 6},
+      {0, 0, 0, 0, "User interface", 7},
+      {0, 0, 0, 0, "Press any key to print infos about the state (step of attack, number of guesses done, number yet to be done...)", 7},
+      {"no-session", 0, 0, 0, "When running, at any interuption (user or crash, authbreak saves his current state. If you invoke it with the exact same commandline, it will load his old session. This
+      flag forbids loading an old session. THE OLD SESSION WILL BE OVERWRITTEN", 7},
+      */
 
     {0, 0, 0, 0, "Others Options:", 10},
 
@@ -70,6 +78,26 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
   Arguments *arguments = state->input;
 
   switch (key) {
+  case 's':
+    if (arguments->current_classifier == NULL)
+      arguments->current_classifier = composed_classifier_new(arguments->target);
+    parse_classifier_str(arguments->current_classifier, arg);
+    break;
+
+  case OR_FAKE_KEY:
+    if (arguments->current_classifier != NULL) { // there is at least one sucess in the group
+      or_combined_classifier_add(arguments->classifier_combined, arguments->current_classifier);
+      arguments->target = true;
+      arguments->current_classifier = NULL;
+    }
+
+    break;
+  case NOT_FAKE_KEY:
+    if (arguments->current_classifier != NULL) // non empty composed classifier
+      argp_failure(state, 2, 0, "Option --NOT can only start a classifier group, use --OR --NOT");
+
+    arguments->target = false;
+    break;
   case RANDOM_FAKE_KEY:
     arguments->no_random = true;
     break;
@@ -88,9 +116,6 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
   case 'p':
     arguments->prompt[arguments->prompt_cpt++] = arg;
     break;
-  case 's':
-    arguments->sucess[arguments->sucess_cpt++] = arg;
-    break;
 
   case 'h':
     argp_state_help(state, state->err_stream, ARGP_HELP_STD_HELP);
@@ -103,10 +128,13 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     break;
 
   case ARGP_KEY_END: {
+    if (arguments->current_classifier != NULL) // we finished with a non empty composed class
+      or_combined_classifier_add(arguments->classifier_combined, arguments->current_classifier);
+
     printf("\n");
     if (arg_count != 1) {
       argp_usage(state);
-      argp_failure(state, 1, 0, "Authbreak take one and only one COMMAND positionnal argument argument. Got %d", arg_count);
+      argp_failure(state, 2, 0, "Authbreak take one and only one COMMAND positionnal argument argument. Got %d", arg_count);
     }
   } break;
 
@@ -129,11 +157,14 @@ Arguments *get_arguments(int argc, char **argv, unsigned argp_flag) {
   arguments->wait = 0;
   arguments->random_wait = 0;
   arguments->prompt_cpt = 0;
-  arguments->sucess_cpt = 0;
+  arguments->target = true;
+
+  arguments->classifier_combined = or_combined_classifier_new();
+
   /* Parse our arguments; every option seen by parse_opt will
      be reflected in arguments. */
 
-  arg_count = 0; // we reset state
+  arg_count = 0; // we reset state (for tests)
 
   argp_parse(&argp, argc, argv, argp_flag, 0, arguments);
 

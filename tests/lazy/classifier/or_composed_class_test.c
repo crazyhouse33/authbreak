@@ -1,19 +1,14 @@
-#include "composed_classifier.h"
 #include "munit.h"
-#include "munit.h"
+#include "or_combined_classifier.h"
 #include "output.h"
 
-void test_classifier(Composed_classifier *classifier, bool expected, char *out_str, int time, int status) {
+void test_classifier(Or_combined_classifier *classifier, bool expected, char *out_str, int time, int status) {
   Output *out = malloc(sizeof(Output));
   out->out = out_str;
   out->term_time = time;
   out->exit_status = status;
-  classifier->target = true;
-  bool res = composed_classifier_classify_output(classifier, out);
+  bool res = or_combined_classifier_classify_output(classifier, out);
   munit_assert_true(expected == res);
-  classifier->target = false;
-  res = composed_classifier_classify_output(classifier, out);
-  munit_assert_false(expected == res);
 }
 
 int main() {
@@ -51,11 +46,28 @@ int main() {
   the_classifier->num_time = 2;
   the_classifier->num_status_diff = 2;
 
-  test_classifier(the_classifier, false, "denied", 5, -2);
-  test_classifier(the_classifier, true, "access granted", 5, -1);
-  test_classifier(the_classifier, false, "auth broken", 1, 0);
-  test_classifier(the_classifier, false, "access granted", 11, 1);
-  test_classifier(the_classifier, false, "access granted", 5, -3);
+  // status must be -18
+  Composed_classifier *the_classifier2 = composed_classifier_new(false);
+  the_classifier2->num_status_eq = 1;
+  the_classifier2->status_eq_class = malloc(sizeof(Classifier_eq_int));
+  classifier_eq_int_init(&the_classifier2->status_eq_class[0], false, equal, -18);
+
+  Composed_classifier *the_classifier3 = composed_classifier_new(false);
+  the_classifier3->num_stringcmp = 1;
+  the_classifier3->stringcmp_class = malloc(sizeof(Classifier_stringcmp));
+  classifier_stringcmp_init(&the_classifier3->stringcmp_class[0], false, equal, "backdoor");
+
+  Or_combined_classifier *or_class = or_combined_classifier_new();
+  or_combined_classifier_add(or_class, the_classifier);
+  or_combined_classifier_add(or_class, the_classifier2);
+  or_combined_classifier_add(or_class, the_classifier3);
+
+  test_classifier(or_class, true, "backdoor", 456223, -79);
+  test_classifier(or_class, true, "backdoor", 456223, -18);
+  test_classifier(or_class, true, "backdoor", 5, 0);
+  test_classifier(or_class, true, "bazfefsqckdoor", -79, -18);
+  test_classifier(or_class, true, "access granted", 5, 2);
+  test_classifier(or_class, false, "zaesf", 10, 14);
 
   return 0;
 }

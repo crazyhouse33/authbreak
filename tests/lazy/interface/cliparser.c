@@ -4,19 +4,21 @@
 #include <argp.h> //argp flags
 #include <stdio.h>
 
+size_t get_size_composed(Composed_classifier *class) { return class->num_status_eq + class->num_status_diff + class->num_stringcmp + class->num_time; }
+
 void test1() {
   // testing public interface
-  char *command = "authbreak 'curl -F password=password https://example.com/upload.cgi' --success regexp -s gotprompt -p test --prompt tamere=118";
+  char *command = "authbreak 'curl -F password=password https://example.com/upload.cgi' --success out_eq=18 -s out_eq!=5 -p test --prompt tamere=118";
   size_t argc;
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
-  munit_assert_int(2, ==, args->prompt_cpt);
-  munit_assert_int(2, ==, args->sucess_cpt);
+  munit_assert_size(2, ==, args->prompt_cpt);
+  munit_assert_size(2, ==, get_size_composed(&args->classifier_combined->groups[0]));
   munit_assert_string_equal(args->command_line, "curl -F password=password https://example.com/upload.cgi");
   munit_assert_string_equal(args->prompt[0], "test");
   munit_assert_string_equal(args->prompt[1], "tamere=118");
-  munit_assert_string_equal(args->sucess[0], "regexp");
-  munit_assert_string_equal(args->sucess[1], "gotprompt");
+  munit_assert_string_equal(args->classifier_combined->groups[0].stringcmp_class[0].target_string, "18");
+  munit_assert_string_equal(args->classifier_combined->groups[0].stringcmp_class[1].target_string, "5");
 }
 
 void test2() {
@@ -25,7 +27,7 @@ void test2() {
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
   munit_assert_int(1, ==, args->prompt_cpt);
-  munit_assert_int(0, ==, args->sucess_cpt);
+  munit_assert_int(0, ==, args->classifier_combined->num_groups);
   munit_assert_string_equal(args->command_line, "./basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}");
   munit_assert_string_equal(args->prompt[0], "{../test_data/list/basic_auth_crack_pin.list}\n");
 }
@@ -36,7 +38,7 @@ void test3() {
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
   munit_assert_int(1, ==, args->prompt_cpt);
-  munit_assert_int(0, ==, args->sucess_cpt);
+  munit_assert_int(0, ==, args->classifier_combined->num_groups);
   munit_assert_string_equal(args->command_line, "./basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}");
   munit_assert_string_equal(args->prompt[0], "{../test_data/list/basic_auth_crack_pin.list}\n");
 }
@@ -47,11 +49,37 @@ void test4() {
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
   munit_assert_int(1, ==, args->prompt_cpt);
-  munit_assert_int(1, ==, args->sucess_cpt);
+  munit_assert_int(1, ==, args->classifier_combined->num_groups);
+  munit_assert_int(1, ==, args->classifier_combined->groups[0].num_stringcmp);
   munit_assert_string_equal(args->command_line, "./basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}");
   munit_assert_string_equal(args->prompt[0], "{../test_data/list/basic_auth_crack_pin.list}\n");
-  munit_assert_string_equal(args->sucess[0], "!out_eq=");
+  munit_assert_string_equal(args->classifier_combined->groups[0].stringcmp_class[0].target_string, "");
 }
+
+void test_OR_and_NOT() {
+  char *command = "authbreak './basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}' --success !out_eq=ho --prompt {../test_data/list/basic_auth_crack_pin.list}\n --OR "
+                  "--success= time<45 --OR --NOT --sucess status>=20 --sucess out_eq!=89 --sucess status>=10";
+  size_t argc;
+  char **argv = arg_vector_from_string(command, &argc);
+  Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
+  munit_assert_int(1, ==, args->prompt_cpt);
+  munit_assert_int(3, ==, args->classifier_combined->num_groups);
+  munit_assert_int(1, ==, args->classifier_combined->groups[0].num_stringcmp);
+  munit_assert_int(0, ==, args->classifier_combined->groups[0].num_time);
+  munit_assert_int(0, ==, args->classifier_combined->groups[0].num_status_eq);
+  munit_assert_int(0, ==, args->classifier_combined->groups[0].num_status_diff);
+
+  munit_assert_int(0, ==, args->classifier_combined->groups[1].num_stringcmp);
+  munit_assert_int(1, ==, args->classifier_combined->groups[1].num_time);
+  munit_assert_int(0, ==, args->classifier_combined->groups[1].num_status_eq);
+  munit_assert_int(0, ==, args->classifier_combined->groups[1].num_status_diff);
+
+  munit_assert_int(1, ==, args->classifier_combined->groups[2].num_stringcmp);
+  munit_assert_int(0, ==, args->classifier_combined->groups[2].num_time);
+  munit_assert_int(0, ==, args->classifier_combined->groups[2].num_status_eq);
+  munit_assert_int(2, ==, args->classifier_combined->groups[2].num_status_diff);
+}
+
 int main() {
 
   test1();

@@ -17,15 +17,16 @@
 
 
 typedef struct Composed_classifier{
+	bool target;
 	TYPE(stringcmp, stringcmp);
 	TYPE(diff_long, time);
 	TYPE(diff_int, status_diff);
 	TYPE(eq_int, status_eq);
 } Composed_classifier;
-bool classify_output(Composed_classifier* classifier, Output* out);
+bool composed_classifier_classify_output(Composed_classifier* classifier, Output* out);
 /*Apply each condition of the classifier to classify an output as success or failure*/
 
-Composed_classifier* composed_classifier_new();
+Composed_classifier* composed_classifier_new(bool target);
 /*Create empty classifier*/
 
 #endif

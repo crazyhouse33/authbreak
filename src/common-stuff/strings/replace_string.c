@@ -111,7 +111,7 @@ Placeholder **placeholder_parse_string(char **string, char opener, char closer, 
     to_parse = final_end - current;
     end = memchr_not_escaped(current, closer, to_parse, escaper);
     if (end == NULL)
-      critical_error_msg("Opened template not closed:\n%s", begin);
+      controlled_error_msg(2, "Opened template not closed:\n%s", begin);
 
     current = end + 1;
     to_parse = final_end - current;

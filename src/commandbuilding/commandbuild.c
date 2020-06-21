@@ -1,7 +1,8 @@
 #include "commandbuild.h"
 #include "argv.h"
 #include "concat_string.h"
-#include "handler.h"        //Handler
+#include "handler.h" //Handler
+#include "max.h"
 #include "null_vec.h"       //concatenate_vector
 #include "replace_string.h" //Placeholder
 
@@ -16,7 +17,7 @@ typedef struct Template_unit {
 
 // Fix state
 Template_unit *templates; // Couple of handler, placeholder
-size_t unit_num;          // number of couple
+ssize_t unit_num;         // number of couple ss because we do a -1 to map from size to index and it can be 0
 
 void prepare_command_builder(char *command, char **prompts) {
   /*Gather all the templates, assign handlers, prepare the fix part, also check if session allready exist to continue it unstead of creating new one*/
@@ -40,13 +41,21 @@ void prepare_command_builder(char *command, char **prompts) {
   }
 
   // Setting the switching units
-  templates = malloc(sizeof(Template_unit) * unit_num);
-  for (size_t i = 0; i < unit_num; i++) {
-    templates[i].placeholder = placeholders[i];
-    /*Creating handler according to wats in placeholder*/
-    templates[i].handler = handler_new(*placeholders[i]->base_string + placeholders[i]->begin + 1, placeholders[i]->size_place - 2);
-    /*Repalcing {} separators with real handler value*/
-    placeholder_switch(templates[i].placeholder, handler_get_current(templates[i].handler));
+  if (unit_num != 0) {
+    templates = malloc(sizeof(Template_unit) * unit_num);
+    for (size_t i = 0; i < unit_num; i++) {
+      templates[i].placeholder = placeholders[i];
+      /*Creating handler according to wats in placeholder*/
+      templates[i].handler = handler_new(*placeholders[i]->base_string + placeholders[i]->begin + 1, placeholders[i]->size_place - 2);
+      /*Repalcing {} separators with real handler value*/
+      placeholder_switch(templates[i].placeholder, handler_get_current(templates[i].handler));
+    }
+  } else { // if no template we put a dummy handler to avoid branching in next_command TODO dummy handler
+    templates = malloc(sizeof(Template_unit));
+    char *dummy_str = malloc(sizeof(char));
+    Placeholder *dummy_place = placeholder_new(&dummy_str, dummy_str, dummy_str);
+    templates[0].placeholder = dummy_place;
+    templates[0].handler = get_dummy_handler();
   }
 }
 

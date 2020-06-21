@@ -17,7 +17,8 @@ include(build-helpers/cmakefunc)
 
 #Setting compilation options
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_C_FLAGS_DEBUG "-ggdb3")
+#fdiagnostics for ninja that have trouble with color otherwise
+set(CMAKE_C_FLAGS_DEBUG "-ggdb3 -fdiagnostics-color=always")
 set (version 0.5)
 #allow C programs to get the version
 add_definitions(-DAUTHBREAK_VERSION="${version}")
