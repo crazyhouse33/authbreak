@@ -147,13 +147,17 @@ char **build_stdbuf_exec_envp(char **mode) {
 #endif
 }
 
-static size_t _envp_get_var_index(char **envp, char *key, size_t len) {
+static size_t _char_array_get_var_index(char **envp, char *key, size_t len) {
   size_t i = -1;
   while (envp[++i] != NULL)
     if (!strncmp(envp[i], key, len)) // key is equal
       return i;
-
   return -1;
+}
+
+static size_t _envp_get_var_index(char **envp, char *key, size_t len) {
+  char *key2 = get_concatenation_string(key, "=");
+  return _char_array_get_var_index(envp, key2, len + 1);
 }
 
 static char *_envp_get_value(char **envp, char *key, size_t len) {
@@ -172,14 +176,15 @@ size_t merge_envp(char ***envp1, char **envp2, char **key_to_merge, char *separa
   size_t i = -1;
   while (envp2[++i] != NULL) {
     char *equal_char = strchr(envp2[i], '=');
-    size_t offset = equal_char - envp2[i];
-    size_t index = _envp_get_var_index(key_to_merge, envp2[i], offset); // return the index of key to merge
-    if (index != -1) {                                                  // to merge
+    size_t offset = equal_char - envp2[i] - 1;
+    size_t index = _char_array_get_var_index(key_to_merge, envp2[i], offset); // return the index of key to merge
+    if (index != -1) {                                                        // to merge
       size_t index_in_1 = _envp_get_var_index(*envp1, envp2[i], offset);
       if (index_in_1 != -1) { // if it is allready there, concatenate in place and dont append
         char *string_in_1 = (*envp1)[index_in_1];
+#define string_in_1 (*envp1)[index_in_1] // We define cause reallocation in concat need heap pointer
         size_t new_size = concat_char(&string_in_1, separator[index]);
-        concat_string_fast_left(&string_in_1, envp2[i] + offset + 1, new_size); // we dont copy the =
+        concat_string_fast_left(&string_in_1, envp2[i] + offset + 2, new_size); // we dont copy the =
         continue;                                                               // we dont append
       }
     }
