@@ -1,5 +1,6 @@
 #include "cliparser.h"
 #include "argv.h"
+#include "default_options.h"
 #include "munit.h"
 #include <argp.h> //argp flags
 #include <stdio.h>
@@ -80,12 +81,24 @@ void test_OR_and_NOT() {
   munit_assert_int(2, ==, args->classifier_combined->groups[2].num_status_diff);
 }
 
+void test_default() {
+  char *command = "authbreak './basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}' --default-len-max 48 --default-charset koi --default-separator 7 --success !out_eq= "
+                  "--prompt {../test_data/list/basic_auth_crack_pin.list} --default-len-min 18\n";
+  size_t argc;
+  char **argv = arg_vector_from_string(command, &argc);
+  Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
+  munit_assert_ushort(48, ==, DEFAULT_LEN_MAX);
+  munit_assert_ushort(18, ==, DEFAULT_LEN_MIN);
+  munit_assert_int('7', ==, DEFAULT_SEPARATOR);
+  munit_assert_string_equal(DEFAULT_CHARSET, "koi");
+}
 int main() {
 
   test1();
   test2();
   test3();
   test4();
+  test_default();
 
   return 0;
 }

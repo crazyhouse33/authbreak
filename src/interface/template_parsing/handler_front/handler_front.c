@@ -15,11 +15,11 @@ DEFINE_ENUM(Authorized_file_option_key, ERROR_STR_OPT_NO_MATCH(file template), E
 
 DEFINE_ENUM(Authorized_iterator_option_key, ERROR_STR_OPT_NO_MATCH(iterator template), ERROR_STR_OPT_AMBIGIOUS(iterator template), AUTHORIZED_ITERATOR);
 
-static void handler_parse_separator(Handler *handler, char *separator, size_t until) {
+char handler_parse_separator(char *separator, size_t until) {
   if (until != 1) {
     controlled_error_msg(2, "Parsing Error: Separator \"%s\" contain more than one character", separator);
   }
-  handler->options.separator = *separator;
+  return *separator;
 }
 
 static void handler_parse_type(Handler *handler, char *type, size_t until) {
@@ -40,6 +40,7 @@ static bool file_handler_parse_main_component(Handler *handler, char *main, size
 
   if (!is_openable_file_until(main, until))
     return false;
+  handler->type = file;
   handler->main_component = strndup(main, until);
   return true;
 }
@@ -47,7 +48,7 @@ static bool file_handler_parse_main_component(Handler *handler, char *main, size
 #define USE_THE_DEFAULTw -1
 #define INVALID_FORMATw -2
 #define NOT_IN_RANGE_INTw -3
-static long int parse_len(char *begin, size_t until) {
+static long int handler_parse_len(char *begin, size_t until) {
 
   if (left_trim(begin) >= begin + until) // empty stuff
     return USE_THE_DEFAULTw;
@@ -90,7 +91,7 @@ static bool attribute_len(long int len, unsigned short *placeholder, unsigned sh
 static bool iterator_handler_parse_main_component(Handler *handler, char *main, size_t until) {
   char *colon;
   if (!(colon = memchr(main, ':', until))) { // No separation
-    long int len = parse_len(main, until);
+    long int len = handler_parse_len(main, until);
     if (attribute_len(len, &handler->options.len_max, DEFAULT_LEN_MAX)) {
       handler->type = iterator;
       return true;
@@ -101,12 +102,12 @@ static bool iterator_handler_parse_main_component(Handler *handler, char *main, 
   size_t until1 = colon - main;
   size_t until2 = until - until1 - 1;
 
-  long int len1 = parse_len(main, until1);
+  long int len1 = handler_parse_len(main, until1);
 
   if (!attribute_len(len1, &handler->options.len_min, DEFAULT_LEN_MIN))
     return false;
 
-  long int len2 = parse_len(colon + 1, until2);
+  long int len2 = handler_parse_len(colon + 1, until2);
   if (attribute_len(len2, &handler->options.len_max, DEFAULT_LEN_MAX)) {
     handler->type = iterator;
     return true;
@@ -133,7 +134,7 @@ static void handler_parse_option_value(Handler *handler, int option_type, char *
 
   switch (option_type) {
   case separator:
-    handler_parse_separator(handler, opt_value_begin, until);
+    handler->options.separator = handler_parse_separator(opt_value_begin, until);
     break;
 
   case charset:

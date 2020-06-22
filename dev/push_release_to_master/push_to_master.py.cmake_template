@@ -48,9 +48,9 @@ build_dir= "@CMAKE_BINARY_DIR@"
 root_dir="@CMAKE_SOURCE_DIR@"
 
 change_dir(build_dir)
-threatCommand("cmake ..")
+threatCommand("cmake --build . --target full-test")#configuring file and running memory tests
 change_dir(root_dir)
-threatCommand('git commit -a -m"Pushing release version @version@ to master"')#commiting the readme change
+threatCommand('git commit -a -m"Pushing release version @version@ to master"')#commiting the readme and co change
 
 current_branch = check_output(["git","rev-parse","--abbrev-ref" ,"HEAD"]).decode("utf8")[:-1]
 header= "Authbreak @version@ :\n\n"
@@ -59,8 +59,7 @@ changeLogMessage= header+ args.message
 threatCommand("git checkout master")
 
 threatCommand("git checkout dev -- src tests build build-helpers CMakeLists.txt extern .gitignore LICENSE README.md")
-change_dir(build_dir)
-threatCommand("cmake --build . --target full-test"
+
 change_dir(root_dir)
 threatCommand('git commit -a -m "'+ changeLogMessage+ '"')
 
