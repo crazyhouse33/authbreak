@@ -18,6 +18,7 @@ parser = argparse.ArgumentParser(description='Put a new realease on master, copy
 parser.add_argument("message", metavar='CHANGELOG_BODY',type=str, help='Body of the changelog message. Dont put any kind of header.')
 
 parser.add_argument('--dry','-d',action='store_true', help='Show everything that will be executed unstead of executing')
+parser.add_argument('--no-test','-f',action='store_true', help='Dont run test')
 
 parser.add_argument('--no-push','-n',action='store_true', help='Dont push to remote')
 args = parser.parse_args()
@@ -48,12 +49,12 @@ build_dir= "/opt/handCraftedUtilityShit/authbreak/build"
 root_dir="/opt/handCraftedUtilityShit/authbreak"
 
 change_dir(build_dir)
-threatCommand("cmake --build . --target full-test")#configuring file and running memory tests
+threatCommand("cmake --build . --target build-full-test")#configuring file and running memory tests
 change_dir(root_dir)
-threatCommand('git commit -a -m"Pushing release version 0.5 to master"')#commiting the readme and co change
+threatCommand('git commit -a -m"Pushing release version 0.6 to master"')#commiting the readme and co change
 
 current_branch = check_output(["git","rev-parse","--abbrev-ref" ,"HEAD"]).decode("utf8")[:-1]
-header= "Authbreak 0.5 :\n\n"
+header= "Authbreak 0.6 :\n\n"
 changeLogMessage= header+ args.message
 
 threatCommand("git checkout master")

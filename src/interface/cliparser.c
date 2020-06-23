@@ -43,7 +43,11 @@ char doc[] =
     "		MAIN is empty, or in the form [NUM:]NUM. The second form set the sizes of every guess to be greater or equal than the first one and lesser or equal than the "
     "second one. If 0, the empty string is included in the guesses.\n\n"
     " 		Valids OPT:\n"
-    "			-charset=STR : STR is a string of different characters. Every guess will contain only thoses characters.\n\n";
+    "			-charset=STR : STR is a string of different characters. Every guess will contain only thoses characters.\n\n Exit Status:\n"
+    "    0 If at least a try had been successfull.\n"
+    "    1 The attack terminated without finding any sucessfull creds.\n"
+    "    2 There is an error of parsing.\n"
+    "    3 One of the ressource authbreak needs for the given command is not accessible (file, executable...)\n\n";
 /* A description of the arguments we accept. */
 char args_doc[] = "COMMAND";
 
@@ -67,14 +71,16 @@ struct argp_option options[] = {
                                   "Nothing more than you write is injected. In particular, you have to add a newline where you want it to be entered.",
      2},
     {0, 0, 0, 0, "Output Interpretation Options:", 3},
-    {"success", 's', "[!]CLASSIFIER_KEY=VALUE", 0, "Add a CLASSIFIER to the current group of classifier. Authbreak considers a group TRUE  if all of the CLASSIFIERS of the group are TRUE. Authbreak "
-                                                   "considers a try as a success if one group is verified. See NOT and OR options."
-                                                   " if there is no CLASSIFIER, every guess is a fail. If prefixed by !, the CLASSIFIER are negated. The possible CLASSIFIER_KEY are:",
+    {"success", 's', "[!]CLASSIFIER_KEY OPERATOR VALUE", 0,
+     "Add a CLASSIFIER to the current group of classifier. Authbreak considers a group TRUE if all of the CLASSIFIERS of the group are TRUE. Authbreak "
+     "considers a try as a success if one group is TRUE. See NOT and OR options."
+     " if there is no CLASSIFIER, every guess is a fail. If prefixed by !, the CLASSIFIER are negated. The possible CLASSIFIER_KEY are:",
      3},
-    {0, 0, 0, 0, "	out_eq=STR: The WHOLE SESSION stdout from the targeted process exactly matches STR", 3},
-    {0, 0, 0, 0, "	time= OPERATOR NANOSECONDS: The total execution time of the targeted process respects the given OPERATOR and time. Supported operators are: <=,<,>,>=", 3},
-    {"NOT", NOT_FAKE_KEY, 0, 0, "Negate the next group of classifier.", 3},
-    {"OR", OR_FAKE_KEY, 0, 0, "Create a new group of classifier.", 3},
+    {0, 0, 0, 0, "	out_eq [!=,==] STR: The WHOLE SESSION stdout from the targeted process exactly matches STR", 4},
+    {0, 0, 0, 0, "	time [<=,<,>=,>] NANOSECONDS: The total execution time of the targeted process respects the given operator and time.", 4},
+    {0, 0, 0, 0, "	status [==,!=,<=,<,>=,>] INT: The exit status of the targeted process respects the given operator and status.", 4},
+    {"NOT", NOT_FAKE_KEY, 0, 0, "Negate the next group of classifier.", 4},
+    {"OR", OR_FAKE_KEY, 0, 0, "Create a new group of classifier.", 4},
     /*{0, 0, 0, 0, "Furtivity tuning options:", 6},
       {"wait", 'w', "SECONDS", 0, "Delay each guess by a certain amount of seconds.", 6},
       {"wait-prompt", 0, "SECONDS", 0, "Delay each prompt by a certain amount of seconds.", 6},

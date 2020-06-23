@@ -1,4 +1,4 @@
-# Authbreak 0.5
+# Authbreak 0.6
 Generic authentification system injection point based tester for Linux.
 
 
