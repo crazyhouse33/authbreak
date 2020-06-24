@@ -2,7 +2,7 @@
 #include "timer.h"
 #include "munit.h"
 #include "stdio.h"
-//TODO check exist
+// TODO check exist
 #include "valgrind/valgrind.h"
 
 // popen
@@ -48,7 +48,7 @@ int main() {
   unsigned long time = t2 - t1;
   // testing precision
   if (RUNNING_ON_VALGRIND)
-	  return 0;
+    return 0;
   munit_assert_ulong(time, >=, TIME_TO_SLEEP_MS * NANOS_PER_SEC / 1000);
   munit_assert_ulong(time, <=, (TIME_TO_SLEEP_MS + ALLOWED_MISPRESION) * NANOS_PER_SEC / 1000);
   return 0;

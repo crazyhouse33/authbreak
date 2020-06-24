@@ -49,7 +49,7 @@ build_dir= "@CMAKE_BINARY_DIR@"
 root_dir="@CMAKE_SOURCE_DIR@"
 
 change_dir(build_dir)
-threatCommand("cmake --build . --target build-full-test")#configuring file and running memory tests
+threatCommand("cmake --build . --target full-test")#configuring file and running memory tests
 change_dir(root_dir)
 threatCommand('git commit -a -m"Pushing release version @version@ to master"')#commiting the readme and co change
 

@@ -49,7 +49,7 @@ build_dir= "/opt/handCraftedUtilityShit/authbreak/build"
 root_dir="/opt/handCraftedUtilityShit/authbreak"
 
 change_dir(build_dir)
-threatCommand("cmake --build . --target build-full-test")#configuring file and running memory tests
+threatCommand("cmake --build . --target full-test")#configuring file and running memory tests
 change_dir(root_dir)
 threatCommand('git commit -a -m"Pushing release version 0.6 to master"')#commiting the readme and co change
 
