@@ -36,4 +36,7 @@ void handler_set_default(Handler* handler);
 void handler_separate_option(char* option, size_t until, char**key, char** value, size_t *key_size, size_t* value_size);
 	/*Take an option bloc wich is something among "  key =   value  ", and set the given pointer to reflect the situation correctely (trim spaces)*/
 
+//Individual stuff used elsewhere
+ char handler_parse_separator(char *separator, size_t until);
+
 

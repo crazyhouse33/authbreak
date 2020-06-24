@@ -110,6 +110,9 @@ void test_merge() {
   munit_assert_string_equal(ld_value, LIBSTDBUF_PATH ";" FAKE_PRELOAD);
   munit_assert_string_equal(envp[newsize - 1], FAKE_PATH);
 #endif
+  char *envp2[] = {strdup("LD_PRELOADO=1"), strdup("LD_PRELOAD=2")};
+  char *ld_value2 = envp_get_value(envp2, "LD_PRELOAD");
+  munit_assert_string_equal(ld_value2, "2");
 }
 
 int main() {

@@ -69,3 +69,5 @@ void handler_free(Handler *handler) {
   free(handler->main_component);
   free(handler);
 }
+
+Handler *get_dummy_handler() { return handler_new("0:0, type=iterator", 18); }

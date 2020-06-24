@@ -28,12 +28,12 @@ add_custom_target(lazy-test
                   USES_TERMINAL
                   )
 
-# This one test the full build process including the generator
+# This one test the full build process including the generator, and memory checks
 add_custom_target(full-test
 
-                  COMMAND ${CMAKE_CTEST_COMMAND} --build-and-test ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} --build-generator ${CMAKE_GENERATOR} --build-target all --test-command ${CMAKE_CTEST_COMMAND} 
+                  COMMAND ${CMAKE_CTEST_COMMAND} --build-and-test ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} --build-generator ${CMAKE_GENERATOR} --build-target all --test-command ${CMAKE_CTEST_COMMAND} -T memcheck
                   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}" 
-		  COMMENT "Force recreation of generator, recompilation of everything, and run every test"
+		  COMMENT "Force recreation of generator, recompilation of everything, and run every test with memcheck"
 		  VERBATIM
                   USES_TERMINAL
                   )

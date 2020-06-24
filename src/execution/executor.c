@@ -1,6 +1,6 @@
 #include "executor.h"
 #include "argv.h" //buildarg and buffercontrolling
-
+#include "error.h"
 #include "file_info.h" //search_executable
 #include "timer.h"
 #include <errno.h>  //perror
@@ -15,7 +15,10 @@
 
 void executor_prepare_argv(char **argv) {
   // put a binary file to remove any need for a PATH search
-  argv[0] = search_executable(argv[0]);
+  char *exe = search_executable(argv[0]);
+  if (exe == NULL)
+    controlled_error_msg(3, "Cannot find the executable %s\n", argv[0]);
+  argv[0] = exe;
 }
 
 static void child_life(char **argv, char **envp) {
@@ -79,8 +82,10 @@ Output *executor_get_output(char **argv, char **prompt, size_t prompt_number, ch
 
   // EXIT
   close(pipe_father[WRITE]); /* Reader will see EOF */
-  waitpid(cpid, NULL, 0);    /* Wait for child terminaison*/
+  int status;
+  waitpid(cpid, &status, 0); /* Wait for child terminaison*/
   output->term_time = get_time_ns() - t1;
+  output->exit_status = WEXITSTATUS(status);
   close(pipe_son[READ]);
   return output;
 }

@@ -17,8 +17,9 @@ include(build-helpers/cmakefunc)
 
 #Setting compilation options
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_C_FLAGS_DEBUG "-ggdb3")
-set (version 0.5)
+#fdiagnostics for ninja that have trouble with color otherwise
+set(CMAKE_C_FLAGS_DEBUG "-ggdb3 -fdiagnostics-color=always")
+set (version 0.6)
 #allow C programs to get the version
 add_definitions(-DAUTHBREAK_VERSION="${version}")
 include(build-helpers/cmake_dependencies_set_up) # Finding necessary standard libs and seting up path in the code
@@ -73,8 +74,7 @@ list (APPEND SOURCES ${EXTERN_SOURCES})
 add_subdirectory(src)
 
 ##### TEST 
-enable_testing() 
-
+include (CTest)
 # Removing the normal entry point 
 list (REMOVE_ITEM SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c )
 

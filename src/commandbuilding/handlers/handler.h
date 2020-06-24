@@ -35,6 +35,9 @@ typedef struct Handler
 Handler* handler_new(char* template_string, size_t until);
 /*Handler constructor, create a pointer pointing to the handler initialized by the string*/
 
+Handler* get_dummy_handler();
+/*Return an handler that dont do anything*/
+
 void handler_init(Handler* emptypointer, char* template_string, size_t until);
 /*Initialize memory pointed by emptypointer to the template_string setup. Consider the string end after until bytes*/
 

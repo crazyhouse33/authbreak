@@ -4,7 +4,7 @@
 typedef struct Output
 {
   char* out;
-  int status;
+  int exit_status;
   unsigned long term_time;
 } Output;
 
