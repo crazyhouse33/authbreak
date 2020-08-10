@@ -67,8 +67,12 @@ message ("\nDetected sources external sources for test build in extern/test/src:
 
 # Removing garbage among external sources
 list (REMOVE_ITEM EXTERN_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/extern/normal/src/munit/example.c )
+
 list (APPEND SOURCES ${EXTERN_SOURCES})
 
+
+# Including other libs
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/normal/lib/eprof/libs/C)
 
 # Building main executable
 add_subdirectory(src)

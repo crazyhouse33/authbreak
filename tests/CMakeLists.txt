@@ -9,6 +9,8 @@ set(list_mandatory_tests )
 
 
 
+
+
 message("Test discovery and building:\n")
 file(GLOB_RECURSE TESTS ${PROJECT_SOURCE_DIR}/tests/*.c)
 list(FILTER TESTS EXCLUDE REGEX ${PROJECT_SOURCE_DIR}/tests/ext-tests/.*) # every .c in test excecpt the one in ext-test is to be compiled as a test
@@ -16,6 +18,7 @@ list(FILTER TESTS EXCLUDE REGEX ${PROJECT_SOURCE_DIR}/tests/shared-codebase/.*) 
 foreach(file ${TESTS})
   get_filename_component (name_without_extension ${file} NAME_WE)
   add_executable(${name_without_extension} ${SOURCES} ${file})
+  target_link_libraries(${name_without_extension} eprof)
   add_test(NAME ${name_without_extension} COMMAND ${name_without_extension} WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
   if (file MATCHES ${PROJECT_SOURCE_DIR}/tests/lazy/*)
 
