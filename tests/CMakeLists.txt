@@ -53,10 +53,3 @@ add_dependencies (integration basic_auth)#integration test must provoke recompil
 add_dependencies (executor child-buf-controle)# child_buf is used by executor
 
 add_dependencies (timer_test timer_precision)# timer call timer prcision
-
-
-
-
-
-
-

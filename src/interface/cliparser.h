@@ -15,6 +15,7 @@ typedef struct Arguments
   //state
   Composed_classifier* current_classifier;
   bool target;
+  bool no_miss;
 
 
 } Arguments;

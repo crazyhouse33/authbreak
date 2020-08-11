@@ -18,6 +18,7 @@
 #define DEFAULT_MAX_LEN_KEY 1006
 #define DEFAULT_MIN_LEN_KEY 1007
 #define DEFAULT_SEPARATOR_KEY 1008
+#define ALLOW_MISS_KEY 1009
 
 const char *argp_program_version = AUTHBREAK_VERSION; // This variable is added at compilation
 error_t argp_err_exit_status = 2;
@@ -44,8 +45,8 @@ char doc[] =
     "second one. If 0, the empty string is included in the guesses.\n\n"
     " 		Valids OPT:\n"
     "			-charset=STR : STR is a string of different characters. Every guess will contain only thoses characters.\n\n Exit Status:\n"
-    "    0 If at least a try had been successfull.\n"
-    "    1 The attack terminated without finding any sucessfull creds.\n"
+    "    0 If at least a try had been successfull or reached end but --allow-fail activated.\n"
+    "    1 The attack terminated without finding any sucessfull creds\n"
     "    2 There is an error of parsing.\n"
     "    3 One of the ressource authbreak needs for the given command is not accessible (file, executable...)\n\n";
 /* A description of the arguments we accept. */
@@ -81,6 +82,7 @@ struct argp_option options[] = {
     {0, 0, 0, 0, "	status [==,!=,<=,<,>=,>] INT: The exit status of the targeted process respects the given operator and status.", 4},
     {"NOT", NOT_FAKE_KEY, 0, 0, "Negate the next group of classifier.", 4},
     {"OR", OR_FAKE_KEY, 0, 0, "Create a new group of classifier.", 4},
+    {"allow-miss", ALLOW_MISS_KEY, 0, 0, "Exit stats is 0 if ran out of tried (normally it's 1)", 5},
     /*{0, 0, 0, 0, "Furtivity tuning options:", 6},
       {"wait", 'w', "SECONDS", 0, "Delay each guess by a certain amount of seconds.", 6},
       {"wait-prompt", 0, "SECONDS", 0, "Delay each prompt by a certain amount of seconds.", 6},
@@ -148,6 +150,11 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     argp_state_help(state, state->err_stream, ARGP_HELP_STD_HELP);
     break;
 
+  case ALLOW_MISS_KEY:
+    arguments->no_miss = true;
+    ;
+    break;
+
   case ARGP_KEY_ARG:
     arguments->command_line = arg;
     arg_count++;
@@ -201,6 +208,7 @@ Arguments *get_arguments(int argc, char **argv, unsigned argp_flag) {
   arguments->random_wait = 0;
   arguments->prompt_cpt = 0;
   arguments->target = true;
+  arguments->no_miss = false;
 
   arguments->classifier_combined = or_combined_classifier_new();
 

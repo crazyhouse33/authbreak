@@ -29,5 +29,6 @@ int main(int argc, char *argv[]) {
 
   } while (!command_builder_next_command());
   puts("Ran out of possible tries");
-  exit(1);
+
+  exit(argument->no_miss == false);
 }
