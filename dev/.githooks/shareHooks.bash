@@ -4,5 +4,7 @@
 githooks=$(git rev-parse --show-toplevel)"/.git/hooks"
 echo $githooks
 
+
 ln -s $(realpath .pre-commit) $githooks/pre-commit
+ln -s $(realpath .post-commit) $githooks/post-commit
 ln -s $(realpath .pre-push) $githooks/pre-push

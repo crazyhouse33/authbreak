@@ -19,6 +19,9 @@
 # This sample shows how to prevent push of commits where the log message starts
 # with "WIP" (work in progress).
 
+#Connect to keyboard
+exec < /dev/tty
+
 protected="$(dev/.githooks/.is-branch-to-protect.py dev/protected-branchs)"
 
 deco='------'
@@ -36,4 +39,9 @@ if [ "$protected" == "1" ]; then
 
 fi
 
+if test -f "dev/pre-commit.bash"; then
+	bash -c "set -e; cd dev; ./pre-commit.bash"
+else 
+	echo "No pre-commit hook detected"
+fi
 

@@ -19,14 +19,21 @@
 # This sample shows how to prevent push of commits where the log message starts
 # with "WIP" (work in progress).
 
-exec < /dev/tty #Connect to keyboard
+#Connect to keyboard
+exec < /dev/tty
 
 protected="$(dev/.githooks/.is-branch-to-protect.py dev/protected-branchs)"
 
+deco='------'
 if [ "$protected" == "1" ]; then
-	bash -c 'set -e; cd dev; ./pre-push.bash'
+	echo $deco "Automatic post-commit routing (Modified files)"  $deco
+	if test -f "dev/post-commit.bash"; then
+		bash -c "set -e; cd dev; ./post-commit.bash"
+	else 
+		echo "No post-commit hook detected"
+	fi
 else
-	echo Push is not protected. protected= $protected
+	echo "Branch is not taken into account"
 fi
 
 
