@@ -23,7 +23,8 @@
 exec < /dev/tty
 
 protected="$(dev/.githooks/.is-branch-to-protect.py dev/protected-branchs)"
-
+#Activating post hook only if pre-commit ran
+chmod -x dev/.githooks/.post-commit || true
 deco='------'
 if [ "$protected" == "1" ]; then
 	echo $deco "Automatic post-commit routing (Modified files)"  $deco

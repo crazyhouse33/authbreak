@@ -1,0 +1,3 @@
+[submodule "extern/normal/lib/eprof"]
+	path = extern/normal/lib/eprof
+	url = https://github.com/crazyhouse33/eprof.git

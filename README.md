@@ -16,7 +16,8 @@ In this version, it does:
 git clone https://github.com/crazyhouse33/authbreak
 cd authbreak/build
 cmake ..
-make authbreak
+# Add -DCMAKE_INSTALL_PREFIX:PATH=/path/to/install to the last command to install in another directory than your system default executable location (need root)
+ cmake --build . target install 
 ```
 
 The binary ends up in the bin directory.

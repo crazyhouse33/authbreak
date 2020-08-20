@@ -32,7 +32,7 @@ static unsigned short parse_len(char *len_str) {
 
 /* Program documentation. */
 char doc[] =
-    "An exemple of a COMMAND: 'auth_command --user INJECT --password INJECT'\n\n"
+    "An exemple of a COMMAND: autbreak 'a_command_to_authentifiate --user INJECT --password INJECT'\n\n"
     "INJECT: {MAIN[,OPT,...OPT]}\n\n"
     "Every injection point defines a set of strings that are going to replace the part in between {}. The brutforcer run every possible combinaison between your injection points only once.\n\n"
     "There are two type of injection points, you can force the type with OPT= type=file or type=iterator\n\n"
