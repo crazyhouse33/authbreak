@@ -13,9 +13,12 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+      with:
+              fetch-depth: 2
+              submodules: 'recursive'
     - name: configure
       run: cd build && cmake ..
     - name: build
-      run: cd build && cmake --build . --target build-tests
+      run: cd build && cmake --build . --target all
     - name: test
       run: cd build && cmake --build . --target all-test

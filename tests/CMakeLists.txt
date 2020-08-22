@@ -52,4 +52,4 @@ add_dependencies (integration authbreak)#integration test must provoke recompili
 add_dependencies (integration basic_auth)#integration test must provoke recompiling the integration soft victim
 add_dependencies (executor child-buf-controle)# child_buf is used by executor
 
-add_dependencies (timer_test timer_precision)# timer call timer prcision
+

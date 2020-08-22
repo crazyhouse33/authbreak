@@ -13,7 +13,7 @@ In this version, it does:
 # Install
 
 ```bash
-git clone https://github.com/crazyhouse33/authbreak
+git clone --recursive https://github.com/crazyhouse33/authbreak
 cd authbreak/build
 cmake ..
 # Add -DCMAKE_INSTALL_PREFIX:PATH=/path/to/install to the last command to install in another directory than your system default executable location (need root)
