@@ -50,7 +50,7 @@ void prepare_command_builder(char *command, char **prompts) {
       /*Repalcing {} separators with real handler value*/
       placeholder_switch(templates[i].placeholder, handler_get_current(templates[i].handler));
     }
-  } else { // if no template we put a dummy handler to avoid branching in next_command TODO dummy handler
+  } else { // if no template we put a dummy handler to avoid branching in next_command 
     templates = malloc(sizeof(Template_unit));
     char *dummy_str = malloc(sizeof(char));
     Placeholder *dummy_place = placeholder_new(&dummy_str, dummy_str, dummy_str);

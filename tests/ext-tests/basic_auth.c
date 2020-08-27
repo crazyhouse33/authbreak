@@ -25,3 +25,4 @@ int main(int argc, char **argv) {
     error("invalid pin");
   return 0;
 }
+

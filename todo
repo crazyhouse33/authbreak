@@ -8,3 +8,12 @@
 - use https://www.argtable.org/ unstead of argp (cross platform)
 
 -use len min and len max as option. Allow file to use charset, and filter each entry accordingly
+
+-use enw type of handler hashcat masque
+?l = abcdefghijklmnopqrstuvwxyz
+?u = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+?d = 0123456789
+?a = ?l?u?d?s
+?b = 0x00 - 0xff?s = ”space”!”’()*+,-./:;<=>?@[]‘|Par exemple ?l?l?l?l?l?l?l g ́en ́erera toutes les combinaisonspossibles entre aaaaaaa - zzzzzzz
+
+-remove _eq part of out_eq
