@@ -2,6 +2,7 @@
 #include "argv.h"
 #include "default_options.h"
 #include "munit.h"
+#include "null_vec.h"
 #include <argp.h> //argp flags
 #include <stdio.h>
 
@@ -13,7 +14,8 @@ void test1() {
   size_t argc;
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
-  munit_assert_size(2, ==, args->prompt_cpt);
+
+  munit_assert_size(2, ==, get_vector_count((void **)args->prompt));
   munit_assert_size(2, ==, get_size_composed(&args->classifier_combined->groups[0]));
   munit_assert_string_equal(args->command_line, "curl -F password=password https://example.com/upload.cgi");
   munit_assert_string_equal(args->prompt[0], "test");
@@ -27,7 +29,7 @@ void test2() {
   size_t argc;
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
-  munit_assert_int(1, ==, args->prompt_cpt);
+  munit_assert_int(1, ==, get_vector_count((void **)args->prompt));
   munit_assert_int(0, ==, args->classifier_combined->num_groups);
   munit_assert_string_equal(args->command_line, "./basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}");
   munit_assert_string_equal(args->prompt[0], "{../test_data/list/basic_auth_crack_pin.list}\n");
@@ -38,7 +40,7 @@ void test3() {
   size_t argc;
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
-  munit_assert_int(1, ==, args->prompt_cpt);
+  munit_assert_int(1, ==, get_vector_count((void **)args->prompt));
   munit_assert_int(0, ==, args->classifier_combined->num_groups);
   munit_assert_string_equal(args->command_line, "./basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}");
   munit_assert_string_equal(args->prompt[0], "{../test_data/list/basic_auth_crack_pin.list}\n");
@@ -49,7 +51,7 @@ void test4() {
   size_t argc;
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
-  munit_assert_int(1, ==, args->prompt_cpt);
+  munit_assert_int(1, ==, get_vector_count((void **)args->prompt));
   munit_assert_int(1, ==, args->classifier_combined->num_groups);
   munit_assert_int(1, ==, args->classifier_combined->groups[0].num_stringcmp);
   munit_assert_string_equal(args->command_line, "./basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}");
@@ -63,7 +65,7 @@ void test_OR_and_NOT() {
   size_t argc;
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
-  munit_assert_int(1, ==, args->prompt_cpt);
+  munit_assert_int(1, ==, get_vector_count((void **)args->prompt));
   munit_assert_int(3, ==, args->classifier_combined->num_groups);
   munit_assert_int(1, ==, args->classifier_combined->groups[0].num_stringcmp);
   munit_assert_int(0, ==, args->classifier_combined->groups[0].num_time);

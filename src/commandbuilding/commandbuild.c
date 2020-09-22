@@ -34,9 +34,10 @@ void prepare_command_builder(char *command, char **prompts) {
     unit_num = concatenate_vector((void ***)&placeholders, (void **)new_placeholders);
   }
   it = 0;
-
   while (command_builder_prompt[it]) {
-    Placeholder **new_placeholders = placeholder_parse_string(&command_builder_prompt[it++], '{', '}', '\\');
+    //concat_char(&command_builder_prompt[it],'\n');
+    Placeholder **new_placeholders = placeholder_parse_string(&command_builder_prompt[it], '{', '}', '\\');
+    it++;
     unit_num = concatenate_vector((void ***)&placeholders, (void **)new_placeholders);
   }
 
@@ -50,7 +51,7 @@ void prepare_command_builder(char *command, char **prompts) {
       /*Repalcing {} separators with real handler value*/
       placeholder_switch(templates[i].placeholder, handler_get_current(templates[i].handler));
     }
-  } else { // if no template we put a dummy handler to avoid branching in next_command 
+  } else { // if no template we put a dummy handler to avoid branching in next_command
     templates = malloc(sizeof(Template_unit));
     char *dummy_str = malloc(sizeof(char));
     Placeholder *dummy_place = placeholder_new(&dummy_str, dummy_str, dummy_str);

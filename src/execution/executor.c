@@ -28,23 +28,20 @@ static void child_life(char **argv, char **envp) {
 }
 
 // TODO better control over when to send in pipe
-static void parent_life(int read_fd, int write_fd, char **prompt, size_t prompt_number, Output *output) {
+static void parent_life(int read_fd, int write_fd, char **prompt, Output *output) {
   // inject prompt
-  for (int i = 0; i < prompt_number; i++) {
-    write(write_fd, prompt[i], strlen(prompt[i])); // TODO dont call strlen and control ourself the size?
+  size_t i = 0;
+  char *cur_prompt;
+  while (cur_prompt = prompt[i++]) {
+    write(write_fd, cur_prompt, strlen(cur_prompt)); // TODO dont call strlen and control ourself the size?
   }
-  size_t readed = 0;
-  size_t new_read = 1;
-  while (new_read > 0) { // we stop when read return error or no data (generally =>  end of process), maybe se problems could occur here.
-    new_read = read_append_into_Output(read_fd, output, &readed);
-  }
-  output->out[readed] = 0;
+  read_append_into_Output(read_fd, output);
 }
 
 // TODO optim: reuse the same pipe over and over
-Output *executor_get_output(char **argv, char **prompt, size_t prompt_number, char **envp, double timout) {
+void executor_get_output( char** argv, char** prompt, char** envp, double timout, Output* output){
 
-  Output *output = Output_new();
+  
   int pipe_father[2];
   int pipe_son[2];
 
@@ -78,7 +75,7 @@ Output *executor_get_output(char **argv, char **prompt, size_t prompt_number, ch
   // Parent code
   close(pipe_father[READ]); /* Close unused read end */
   close(pipe_son[WRITE]);
-  parent_life(pipe_son[READ], pipe_father[WRITE], prompt, prompt_number, output);
+  parent_life(pipe_son[READ], pipe_father[WRITE], prompt, output);
 
   // EXIT
   close(pipe_father[WRITE]); /* Reader will see EOF */
@@ -87,5 +84,4 @@ Output *executor_get_output(char **argv, char **prompt, size_t prompt_number, ch
   output->term_time = get_time_ns() - t1;
   output->exit_status = WEXITSTATUS(status);
   close(pipe_son[READ]);
-  return output;
 }

@@ -39,7 +39,7 @@ int main() {
 
   Parent result_invalid;
   valid = str_to_Parent("papaa", 5, &result_invalid);
-  munit_assert_false(result_invalid);
+  munit_assert_false(valid);
 
   valid = str_to_Parent("papa", 4, &result_parent);
   munit_assert_true(valid);

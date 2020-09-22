@@ -22,31 +22,17 @@ int main() {
 
   // populate fake pipe
   write(fake_pipe[1], buffer, strlen(buffer));
+  close(fake_pipe[1]);
   int fd = fake_pipe[0];
   Output *empty = Output_new();
-  size_t readed = 0;
 
   char *expected_res = strdup(expected);
 
   // we are also testing myread but wathever
-  size_t new_read = read_append_into_Output(fd, empty, &readed);
-  munit_assert_size(readed, ==, expected_size);
+  size_t new_read = read_append_into_Output(fd, empty);
   munit_assert_size(new_read, ==, expected_size);
-  empty->out[readed] = 0;
   munit_assert_string_equal(expected, empty->out);
-  empty->out[readed] = 18;
 
-  for (int cpt = 2; cpt < 8; cpt++) {
-    expected_res = get_concatenation_string(expected_res, expected);
-    write(fake_pipe[1], buffer, strlen(buffer));
-    new_read = read_append_into_Output(fd, empty, &readed);
-    munit_assert_size(new_read, ==, expected_size);
-    munit_assert_size(readed, ==, cpt * expected_size);
-
-    empty->out[readed] = 0;
-    munit_assert_string_equal(expected_res, empty->out);
-    empty->out[readed] = 18;
-  }
   close(fake_pipe[1]);
   close(fd);
 

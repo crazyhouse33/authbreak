@@ -78,6 +78,9 @@ add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/extern/normal/lib/eprof/libs/C)
 add_subdirectory(src)
 
 ##### TEST 
+set(VALGRIND_COMMAND_OPTIONS "--error-exitcode=100")
+
+
 include (CTest)
 # Removing the normal entry point 
 list (REMOVE_ITEM SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c )

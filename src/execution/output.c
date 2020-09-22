@@ -11,8 +11,10 @@ Output *Output_new() {
   return res;
 }
 
-size_t read_append_into_Output(int fd, Output *out, size_t *string_size) {
+size_t read_append_into_Output(int fd, Output *out) {
   /*Append the result in the output buffer and manage size properly(actualize constructor new default size, prevent overflow. Return the previous max value. So you can stop reading when after a call
    * returned value != string_size*/
-  return read_append(fd, &out->out, string_size, &OUTPUT_BUFFER_SIZE);
+  size_t len=0;
+  read_append(fd, &out->out, &len, &OUTPUT_BUFFER_SIZE);
+  return len;
 }

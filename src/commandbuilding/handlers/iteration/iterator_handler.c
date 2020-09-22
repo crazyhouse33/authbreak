@@ -68,7 +68,7 @@ char *iterator_handler_next(Handler *handler) { // Normal cartesian product
 
   Iterator_needs *it = (Iterator_needs *)handler->special_needs;
   ssize_t offset = -1;
-  char *current_char; // we start on the first letter
+  char first_letter = handler->options.charset[0];
   do {
     if (++offset >= it->len) {                   // the level is done
       if (it->len >= handler->options.len_max) { // We need to stop(put it unlikely)
@@ -79,7 +79,8 @@ char *iterator_handler_next(Handler *handler) { // Normal cartesian product
       return it->current;
     }
     it->current[offset] = it->charset_next_table[it->current[offset]];
-  } while (it->current[offset] == handler->options.charset[0]);
+
+  } while (it->current[offset] == first_letter);
 
   return it->current;
 }

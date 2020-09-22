@@ -35,7 +35,7 @@ char *search_in_path_openable_file(char *file) {
     return NULL;
   size_t pathlen = strlen(path);
   size_t len = strlen(file) + 1;
-  int total_max_size = pathlen + len;
+  int total_max_size = pathlen + len+1;
   char *buf = malloc(sizeof(char) * total_max_size);
   if (*file == '\0') {
     return NULL;

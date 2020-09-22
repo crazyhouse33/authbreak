@@ -1,6 +1,7 @@
 set -e
 unset GIT_DIR
 if [[ -z "${SKIP_POST_COMMIT}" ]]; then
+	git commit -a --amend --no-verify
 	echo going to perf branch 
 	git checkout perf
 

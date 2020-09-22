@@ -7,7 +7,7 @@ extern char** command_builder_prompt;
 
 
 void prepare_command_builder (char* command, char** prompts);
-/*Gather all the templates, assign handlers, prepare the fix parts*/
+/*Gather all the templates, assign handlers, prepare the fix parts, append newline to prompts*/
 
 bool command_builder_next_command();
 /*set argv and prompt to next combinaison and return boolean indicating if the builder iterated on everything yet*/

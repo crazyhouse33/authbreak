@@ -79,20 +79,19 @@ char *left_trim(char *string) {
 
 char *trim_change_end(char *string_begin, char *string_end) {
   char *new_begin = left_trim(string_begin);
-  point_to_last_white(string_begin, &string_end);
-  unsigned offset = string_end - new_begin;
-  char *copy = malloc(offset * sizeof(char));
-  strncpy(copy, new_begin, offset);
+  char *new_end = get_pointer_to_last_white(string_begin, string_end);
+  unsigned offset = new_end - new_begin;
+  char *copy = malloc((offset+1) * sizeof(char));
+  memcpy(copy, new_begin, offset);
+  copy[offset]=0;
   return copy;
+  
 }
 
 char *trim(char *string_begin, char *string_end) {
-  char *new_begin = left_trim(string_begin);
-  char *new_end = get_pointer_to_last_white(string_begin, string_end);
-  unsigned offset = new_end - new_begin;
-  char *copy = malloc(offset * sizeof(char));
-  strncpy(copy, new_begin, offset);
-  return copy;
+	char* string_end_cpy= string_end;
+	return trim_change_end(string_begin, string_end_cpy);
+	
 }
 
 void trim_point(char **begin, char **end) {

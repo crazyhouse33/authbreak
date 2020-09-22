@@ -40,3 +40,9 @@ size_t concat_string_cut(char **string1, char *string2, size_t s2_len) {
 }
 
 size_t concat_char(char **string, char c) { return concat_string_cut(string, &c, 1); }
+
+char *get_concatenation_char(char *string, char c) {
+  char *clone = strdup(string);
+  concat_char(&clone, c);
+  return clone;
+}

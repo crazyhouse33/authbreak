@@ -112,6 +112,33 @@ void test_placeholder() {
   munit_assert_string_equal("{}tatatatatoNONO", string);
 }
 
+void test_placeholder_long() {//May trigger memory problemes
+  char *string_ar = strdup("{}{aa}");
+  char *string = &(string_ar[0]);
+  char *s1 = memchr(string, '{', 20);
+  char *s2 = memchr(s1 + 1, '{', 20);
+  char *e1 = memchr(string, '}', 20);
+  char *e2 = memchr(e1 + 1, '}', 20);
+
+  char to_concat[1000];
+  char expected[2000];
+  to_concat[0]=0;
+
+  Placeholder *p1 = placeholder_new(&string, s1, e1);
+  Placeholder *p2 = placeholder_new_depend(p1, s2, e2);
+  for (int i=0;i<1000;i++){
+	to_concat[i+1]=0;
+	to_concat[i]='a';
+  	placeholder_switch(p1, to_concat);
+  	placeholder_switch(p2, to_concat);
+	int size= i+1;
+	memcpy(expected, to_concat, size);
+	memcpy(expected+size, to_concat, size+1);
+        munit_assert_string_equal(expected, string);
+  }
+
+}
+
 void test_parser() {
   char *test_str7 = "tototata";
   Placeholder **placeholders7 = placeholder_parse_string(&test_str7, '{', '}', '\\');
@@ -161,6 +188,8 @@ int main() {
   test_replace(replace_same);
   test_replace(replace_empty);
 
+
+  test_placeholder_long();//Dont forget to put it after the normal one
   test_placeholder();
   test_parser();
   return 0;

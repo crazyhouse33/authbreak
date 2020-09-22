@@ -2,6 +2,7 @@
 #include "default_options.h"
 #include "error.h"
 #include "handler_front.h"
+#include "null_vec.h"
 #include "or_combined_classifier.h"
 #include "output_classifier_front.h"
 #include <argp.h>
@@ -143,7 +144,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     arguments->wait = atof(arg);
     break;
   case 'p':
-    arguments->prompt[arguments->prompt_cpt++] = arg;
+    put_vector((void ***)&arguments->prompt, arg);
     break;
 
   case 'h':
@@ -206,11 +207,12 @@ Arguments *get_arguments(int argc, char **argv, unsigned argp_flag) {
   arguments->no_random = false;
   arguments->wait = 0;
   arguments->random_wait = 0;
-  arguments->prompt_cpt = 0;
   arguments->target = true;
   arguments->no_miss = false;
+  arguments->current_classifier = NULL;
 
   arguments->classifier_combined = or_combined_classifier_new();
+  arguments->prompt = (char **)create_vector(0);
 
   /* Parse our arguments; every option seen by parse_opt will
      be reflected in arguments. */

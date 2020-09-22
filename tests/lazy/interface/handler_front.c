@@ -10,6 +10,7 @@ Handler *handler_parse_main_generate(Handler_type type, char *main, size_t until
 
 Handler *handler_parse_option_generate(Handler_type type, char *main, size_t until) {
   Handler *handler = malloc(sizeof(Handler));
+  handler->type=type;
   handler_parse_option(handler, main, until);
   return handler;
 }

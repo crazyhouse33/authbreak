@@ -6,16 +6,15 @@
 typedef struct Arguments
 {
   char* command_line;                
-  char*  prompt[100];
+  char**  prompt;
   Or_combined_classifier* classifier_combined;
-  size_t prompt_cpt;
   bool no_timing, no_guessing, no_random;
   double wait, random_wait;
+  bool target;
+  bool no_miss;
 
   //state
   Composed_classifier* current_classifier;
-  bool target;
-  bool no_miss;
 
 
 } Arguments;

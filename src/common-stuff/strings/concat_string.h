@@ -29,5 +29,9 @@ size_t concat_string_cut(char** string1, char* string2, size_t s2_cut_len);
 size_t concat_char(char** string_1, char c);
 /*Concatenate string_1 with the character c*/
 
+char* get_concatenation_char(char* string_1, char c);
+/*Get concatenation of string_1 with the character c*/
+
+
 
 

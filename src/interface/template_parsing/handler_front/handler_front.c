@@ -27,14 +27,9 @@ static void handler_parse_type(Handler *handler, char *type, size_t until) {
   handler->type = str_to_Handler_type_no_fail(type, until);
 }
 
-void static unify_charset(char *charset) { // TODO remove duplicate char
-}
+static char *unify_charset(char *charset, size_t until) { return strndup(charset, until); }
 
-void handler_parse_charset(Handler *handler, char *charset, size_t until) {
-  charset[until] = 0;
-  unify_charset(charset);
-  handler->options.charset = charset;
-}
+void handler_parse_charset(Handler *handler, char *charset, size_t until) { handler->options.charset = unify_charset(charset, until); }
 
 static bool file_handler_parse_main_component(Handler *handler, char *main, size_t until) {
 

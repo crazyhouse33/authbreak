@@ -69,8 +69,9 @@ void replace_string(char *begin, size_t until, char *replacement) {
 static void _placeholder_fix_memory(Placeholder *placeholder) {
 
   if (*(placeholder->size_of_string) > *(placeholder->max_size)) {                   // too big
-    *(placeholder->max_size) = (PLACEHOLDERMARGIN + *(placeholder->size_of_string)); // all the dependant placeholders are actualized at once
-    *(placeholder->base_string) = realloc(*(placeholder->base_string), sizeof(char) * *(placeholder->max_size));
+	  size_t new_max=PLACEHOLDERMARGIN + *(placeholder->size_of_string);
+    *(placeholder->max_size) = new_max; // all the dependant placeholders are actualized at once
+    *(placeholder->base_string) = realloc(*(placeholder->base_string), sizeof(char) * (new_max+1));//+1 cause null char is no accounted
   }
 }
 
@@ -86,7 +87,7 @@ void placeholder_switch(Placeholder *placeholder, char *string) {
 
     replace_string_fast(placeholder->begin + *(placeholder->base_string), placeholder->size_place, string, new_subpart_len);
     // actualizing new place adjustment
-    placeholder->size_place += diff;
+    placeholder->size_place = new_subpart_len;
     Placeholder **son = *placeholder->dependant_placeholders + placeholder->level;
     while (*son != NULL) {
       (*son)->begin += diff;
