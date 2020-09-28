@@ -14,6 +14,8 @@ int main() { // the weird quoting is due to system stripping white character at 
   generate("../authbreak \"./basic_auth {../test_data/list/long_guess.list} {2:2,charset=or}\" --prompt \"{../test_data/list/basic_auth_crack_pin.list}\n\"", 1); // Detect realloc bug
 
   generate("../authbreak --allow-miss \"./basic_auth {../test_data/list/basic_auth_crack_user.list} {2:2,charset=or}\" --prompt \"{../test_data/list/basic_auth_crack_pin.list}\n\"", 0);
+  
+  generate("../authbreak --allow-miss \"./basic_auth {../test_data/list/basic_auth_crack_user.list} {2:2,charset=or}\" --prompt \"{../test_data/list/basic_auth_crack_pin.list}\"", 0);//without the \n
 
   generate("../authbreak \"./basic_auth {../test_data/list/basic_auth_crack_user.list} {2:2,charset=or}\" --prompt \"{../test_data/list/basic_auth_crack_pin.list}\n\" --success \"out_eq=Starting "
            "main\nHi admin, "

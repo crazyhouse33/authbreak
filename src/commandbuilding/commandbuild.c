@@ -35,7 +35,7 @@ void prepare_command_builder(char *command, char **prompts) {
   }
   it = 0;
   while (command_builder_prompt[it]) {
-    //concat_char(&command_builder_prompt[it],'\n');
+    command_builder_prompt[it]=get_concatenation_char(command_builder_prompt[it],'\n');//Need copy to not segfault
     Placeholder **new_placeholders = placeholder_parse_string(&command_builder_prompt[it], '{', '}', '\\');
     it++;
     unit_num = concatenate_vector((void ***)&placeholders, (void **)new_placeholders);
