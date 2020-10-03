@@ -9,7 +9,7 @@ typedef struct Arguments
   char**  prompt;
   Or_combined_classifier* classifier_combined;
   bool no_timing, no_guessing, no_random;
-  double wait, random_wait;
+  double wait, random_wait, prompt_wait, prompt_random_wait;//delayer
   bool target;
   bool no_miss;
 

@@ -3,6 +3,7 @@
 #include "error.h"
 #include "file_info.h" //search_executable
 #include "timer.h"
+#include "delayer.h"
 #include <errno.h>  //perror
 #include <stdio.h>  //pipe
 #include <stdlib.h> //EXIT_SUCCESS
@@ -10,16 +11,31 @@
 #include <sys/wait.h>
 #include <unistd.h> //fork
 
+Delayer exec_delayer;
+Delayer prompt_delayer;
+
+
 #define READ 0
 #define WRITE 1
 
-void executor_prepare_argv(char **argv) {
+static void executor_prepare_argv(char **argv) {
   // put a binary file to remove any need for a PATH search
   char *exe = search_executable(argv[0]);
   if (exe == NULL)
     controlled_error_msg(3, "Cannot find the executable %s\n", argv[0]);
   argv[0] = exe;
 }
+
+static void executor_prepare_delayers(double delay_min, double delay_rand, double prompt_delay, double prompt_delay_rand) {
+	Delayer_init(&exec_delayer, delay_min, delay_rand);
+	Delayer_init(&prompt_delayer, prompt_delay, prompt_delay_rand);
+}
+
+void executor_prepare( char** argv, double delay_min, double delay_rand, double prompt_delay, double prompt_delay_rand){
+executor_prepare_argv(argv);
+executor_prepare_delayers( delay_min, delay_rand, prompt_delay, prompt_delay_rand);
+}
+
 
 static void child_life(char **argv, char **envp) {
   /*Do child stuff*/
@@ -32,6 +48,7 @@ static void parent_life(int read_fd, int write_fd, char **prompt, Output *output
   // inject prompt
   size_t i = 0;
   char *cur_prompt;
+  //TODO polling to play with prompt and reads
   while (cur_prompt = prompt[i++]) {
     write(write_fd, cur_prompt, strlen(cur_prompt)); // TODO dont call strlen and control ourself the size?
   }
@@ -39,7 +56,7 @@ static void parent_life(int read_fd, int write_fd, char **prompt, Output *output
 }
 
 // TODO optim: reuse the same pipe over and over
-void executor_get_output( char** argv, char** prompt, char** envp, double timout, Output* output){
+void executor_get_output_no_delay( char** argv, char** prompt, char** envp, double timout, Output* output){
 
   
   int pipe_father[2];
@@ -85,3 +102,9 @@ void executor_get_output( char** argv, char** prompt, char** envp, double timout
   output->exit_status = WEXITSTATUS(status);
   close(pipe_son[READ]);
 }
+
+void executor_get_output( char** argv, char** prompt, char** envp, double timout, Output* output){
+	executor_get_output_no_delay(argv, prompt, envp, timout, output);
+	Delayer_delay(&exec_delayer);
+}
+

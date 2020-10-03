@@ -10,7 +10,7 @@ size_t get_size_composed(Composed_classifier *class) { return class->num_status_
 
 void test1() {
   // testing public interface
-  char *command = "authbreak 'curl -F password=password https://example.com/upload.cgi' --success out_eq=18 -s out_eq!=5 -p test --prompt tamere=118";
+  char *command = "authbreak 'curl -F password=password https://example.com/upload.cgi' --success out_eq=18 -s out_eq!=5 -p test --prompt tamere=118 --wait 1 --random-wait 16";
   size_t argc;
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
@@ -22,6 +22,8 @@ void test1() {
   munit_assert_string_equal(args->prompt[1], "tamere=118");
   munit_assert_string_equal(args->classifier_combined->groups[0].stringcmp_class[0].target_string, "18");
   munit_assert_string_equal(args->classifier_combined->groups[0].stringcmp_class[1].target_string, "5");
+  munit_assert_double(args->wait, ==, 1);
+  munit_assert_double(args->random_wait, ==, 16);
 }
 
 void test2() {
@@ -33,6 +35,8 @@ void test2() {
   munit_assert_int(0, ==, args->classifier_combined->num_groups);
   munit_assert_string_equal(args->command_line, "./basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}");
   munit_assert_string_equal(args->prompt[0], "{../test_data/list/basic_auth_crack_pin.list}\n");
+  munit_assert_double(args->wait, ==, 0);
+  munit_assert_double(args->random_wait, ==, 0);
 }
 
 void test3() {

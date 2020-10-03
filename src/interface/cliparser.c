@@ -84,17 +84,17 @@ struct argp_option options[] = {
     {"NOT", NOT_FAKE_KEY, 0, 0, "Negate the next group of classifier.", 4},
     {"OR", OR_FAKE_KEY, 0, 0, "Create a new group of classifier.", 4},
     {"allow-miss", ALLOW_MISS_KEY, 0, 0, "Exit stats is 0 if ran out of tried (normally it's 1)", 5},
-    /*{0, 0, 0, 0, "Furtivity tuning options:", 6},
-      {"wait", 'w', "SECONDS", 0, "Delay each guess by a certain amount of seconds.", 6},
-      {"wait-prompt", 0, "SECONDS", 0, "Delay each prompt by a certain amount of seconds.", 6},
-      {"random-wait", 0, "SECONDS", 0, "Delay each prompt by a random amount of seconds bounded by the entered value.", 6},
-      {"random-wait", 'r', "SECONDS", 0, "Delay each guess by a random amount of seconds bounded by the entered value.", 6},
-      {"no-random", RANDOM_FAKE_KEY, 0, 0, "Without this option, Authbreak makes the order of the guesses look random. Activate this flag to turn off this behaviour to win some time.", 6},
-      {0, 0, 0, 0, "User interface", 7},
-      {0, 0, 0, 0, "Press any key to print infos about the state (step of attack, number of guesses done, number yet to be done...)", 7},
-      {"no-session", 0, 0, 0, "When running, at any interuption (user or crash, authbreak saves his current state. If you invoke it with the exact same commandline, it will load his old session. This
-      flag forbids loading an old session. THE OLD SESSION WILL BE OVERWRITTEN", 7},
-      */
+    {0, 0, 0, 0, "Furtivity tuning options:", 6},
+    {"wait", 'w', "SECONDS", 0, "Ensure a minimu delay each guess by a certain amount of seconds.", 6},
+    {"random-wait", 'r', "SECONDS", 0, "Add a random delay each guess by a random amount of seconds bounded by the given value.", 6},
+    /*{"wait-prompt", 0, "SECONDS", 0, "Delay each prompt by a certain amount of seconds.", 6},
+    {"random-wait", 'r', "SECONDS", 0, "Delay each guess by a random amount of seconds bounded by the entered value.", 6},
+    {"no-random", RANDOM_FAKE_KEY, 0, 0, "Without this option, Authbreak makes the order of the guesses look random. Activate this flag to turn off this behaviour to win some time.", 6},
+    {0, 0, 0, 0, "User interface", 7},
+    {0, 0, 0, 0, "Press any key to print infos about the state (step of attack, number of guesses done, number yet to be done...)", 7},
+    {"no-session", 0, 0, 0, "When running, at any interuption (user or crash, authbreak saves his current state. If you invoke it with the exact same commandline, it will load his old session. This
+    flag forbids loading an old session. THE OLD SESSION WILL BE OVERWRITTEN", 7},
+    */
 
     {0, 0, 0, 0, "Others Options:", 10},
 

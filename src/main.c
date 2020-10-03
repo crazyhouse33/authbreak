@@ -19,10 +19,9 @@ int main(int argc, char *argv[]) {
   // setting backend accordingly
   Or_combined_classifier *classifier = argument->classifier_combined;
   prepare_command_builder(argument->command_line, argument->prompt);
-  // TODO put it in a class that provide different function that use the executor interface, and call the appropriate stuff according to arguments
   Output *output = Output_new();
   char **current_envp = get_current_envp();
-  executor_prepare_argv(command_builder_argv); // transforming command into absoluth path
+  executor_prepare(command_builder_argv, argument->wait, argument->random_wait, argument->prompt_wait, argument->prompt_random_wait);
   do {
     executor_get_output(command_builder_argv, command_builder_prompt, current_envp, 0, output);
     manage_output(output, classifier);
