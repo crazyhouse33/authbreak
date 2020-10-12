@@ -38,6 +38,15 @@ add_custom_target(full-test
                   USES_TERMINAL
                   )
 
+add_custom_target(mem-test
+
+                  COMMAND ${CMAKE_CTEST_COMMAND} -T memcheck
+                  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}" 
+		  COMMENT "Check memory with valgrind"
+		  VERBATIM
+                  USES_TERMINAL
+                  )
+
 #adding some timestamp on test for the cache to check
 #This is gonna overide the default test target (=run all test without compiling) so we can add a timestamp (fighting cmake)
 #TODO try to use add_custom_command instead. Rn the timestamp are added even if the command failed, leading to bugs
@@ -88,5 +97,7 @@ add_custom_command(TARGET all-test
 
 
 add_dependencies(all-test build-tests ) #forcing re compilation before tests
+add_dependencies(mem-test build-tests ) #forcing re compilation before tests
+
 
 endif()

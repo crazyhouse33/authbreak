@@ -14,14 +14,14 @@ unsigned int _Delayer_delay_dry(Delayer *delayer) {
   unsigned int rand_int = fast_rand_range(delayer->rand);
   return delayer->min + rand_int;
 }
-/*Return how much a limiter would wait, internal use*/
 
 unsigned int Delayer_delay(Delayer *delayer) {
   unsigned int to_wait = _Delayer_delay_dry(delayer);
   cross_platform_sleep(to_wait);
   return to_wait;
 }
-/*Wait and return time waited in seconds*/
+
+bool Delayer_is_useless(Delayer *delayer) { return delayer->min + delayer->rand == 0; }
 
 Delayer *Delayer_new(double min, double rand) {
   Delayer *delayer = malloc(sizeof(Delayer));

@@ -1,9 +1,9 @@
 #include "executor.h"
 #include "argv.h" //buildarg and buffercontrolling
+#include "delayer.h"
 #include "error.h"
 #include "file_info.h" //search_executable
 #include "timer.h"
-#include "delayer.h"
 #include <errno.h>  //perror
 #include <stdio.h>  //pipe
 #include <stdlib.h> //EXIT_SUCCESS
@@ -13,7 +13,8 @@
 
 Delayer exec_delayer;
 Delayer prompt_delayer;
-
+bool useless_exec;
+bool useless_prompt;
 
 #define READ 0
 #define WRITE 1
@@ -27,15 +28,16 @@ static void executor_prepare_argv(char **argv) {
 }
 
 static void executor_prepare_delayers(double delay_min, double delay_rand, double prompt_delay, double prompt_delay_rand) {
-	Delayer_init(&exec_delayer, delay_min, delay_rand);
-	Delayer_init(&prompt_delayer, prompt_delay, prompt_delay_rand);
+  Delayer_init(&exec_delayer, delay_min, delay_rand);
+  Delayer_init(&prompt_delayer, prompt_delay, prompt_delay_rand);
+  useless_prompt = Delayer_is_useless(&prompt_delayer);
+  useless_exec = Delayer_is_useless(&exec_delayer);
 }
 
-void executor_prepare( char** argv, double delay_min, double delay_rand, double prompt_delay, double prompt_delay_rand){
-executor_prepare_argv(argv);
-executor_prepare_delayers( delay_min, delay_rand, prompt_delay, prompt_delay_rand);
+void executor_prepare(char **argv, double delay_min, double delay_rand, double prompt_delay, double prompt_delay_rand) {
+  executor_prepare_argv(argv);
+  executor_prepare_delayers(delay_min, delay_rand, prompt_delay, prompt_delay_rand);
 }
-
 
 static void child_life(char **argv, char **envp) {
   /*Do child stuff*/
@@ -48,7 +50,7 @@ static void parent_life(int read_fd, int write_fd, char **prompt, Output *output
   // inject prompt
   size_t i = 0;
   char *cur_prompt;
-  //TODO polling to play with prompt and reads
+  // TODO polling to play with prompt and reads
   while (cur_prompt = prompt[i++]) {
     write(write_fd, cur_prompt, strlen(cur_prompt)); // TODO dont call strlen and control ourself the size?
   }
@@ -56,9 +58,8 @@ static void parent_life(int read_fd, int write_fd, char **prompt, Output *output
 }
 
 // TODO optim: reuse the same pipe over and over
-void executor_get_output_no_delay( char** argv, char** prompt, char** envp, double timout, Output* output){
+void executor_get_output_no_delay(char **argv, char **prompt, char **envp, double timout, Output *output) {
 
-  
   int pipe_father[2];
   int pipe_son[2];
 
@@ -103,8 +104,8 @@ void executor_get_output_no_delay( char** argv, char** prompt, char** envp, doub
   close(pipe_son[READ]);
 }
 
-void executor_get_output( char** argv, char** prompt, char** envp, double timout, Output* output){
-	executor_get_output_no_delay(argv, prompt, envp, timout, output);
-	Delayer_delay(&exec_delayer);
+void executor_get_output(char **argv, char **prompt, char **envp, double timout, Output *output) {
+  executor_get_output_no_delay(argv, prompt, envp, timout, output);
+  if (!useless_exec) // I hope compiler is smart enought to one-time-ify for the default mode
+    Delayer_delay(&exec_delayer);
 }
-

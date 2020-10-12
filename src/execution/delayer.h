@@ -1,4 +1,5 @@
 #include <features.h>//_POSIX_C_SOURCE
+#include <stdbool.h>
 #ifdef WIN32
 #define RATE_LIMIT_UNIT 1000
 #elif _POSIX_C_SOURCE >= 199309L
@@ -18,6 +19,9 @@ unsigned int _Delayer_delay_dry(Delayer* Delayer);
 
 unsigned int Delayer_delay(Delayer* Delayer);
 /*Wait and return time waited in platform specific unit. Multiply by RATE_LIMIT_UNIT to get time in second*/
+
+bool Delayer_is_useless(Delayer *delayer);
+/*Return true if delay always will be 0*/
 
 Delayer* Delayer_new(double min, double rand);
 /*Return a limiter so the waiting will always be > min, and the variation will be in range rand. The unit is in seconds*/
