@@ -97,13 +97,13 @@ void placeholder_switch(Placeholder *placeholder, char *string) {
 }
 
 // We could iterate with 2 less variable( current and final)
-Placeholder **placeholder_parse_string(char **string, char opener, char closer, char escaper) {
+Placeholder **placeholder_parse_string(char **string, char opener, char closer, char escaper, size_t* size) {
   size_t to_parse = strlen(*string); // we dont include \0 in the search
   char *final_end = *string + to_parse;
   char *begin;
   Placeholder **res_vector = (Placeholder **)create_vector(0);
   ;
-  size_t res_size = 0;
+  *size = 0;
   char *end;
   char *current = *string;
   while (begin = memchr_not_escaped(current, opener, to_parse, escaper)) { // there is a begin
@@ -119,16 +119,16 @@ Placeholder **placeholder_parse_string(char **string, char opener, char closer, 
 
     // valid template, between begin and end
     Placeholder *new_placeholder;
-    if (res_size == 0)
+    if (*size == 0)
       new_placeholder = placeholder_new(string, begin, end);
     else
-      new_placeholder = placeholder_new_depend(res_vector[res_size - 1], begin, end);
+      new_placeholder = placeholder_new_depend(res_vector[*size - 1], begin, end);
 
     put_vector((void ***)&res_vector, (void *)new_placeholder);
-    res_size++;
+    (*size)++;
   }
   return res_vector;
 }
 
-/*TODO This is still improvable a bit cause we can still define a function to replace a placeholder** to group of lacholders, and do everything at the same time(computing every diff first, make the
+/*TODO This is still optimizable cause we can still define a function to replace a placeholder** to group of lacholders, and do everything at the same time(computing every diff first, make the
  * string bigger accordingly and add cumulative diff to begin of every dependance*/

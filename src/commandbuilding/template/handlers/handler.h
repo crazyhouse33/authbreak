@@ -43,6 +43,7 @@ void handler_init(Handler* emptypointer, char* template_string, size_t until);
 
 char* handler_next(Handler* handler);
 /*Increment value for handler and return it. If we reach end of iterations, return NULL and reset the handler to the begining*/
+//TODO Make it such as it just return NULL when done, and add a reset method that the user can use if he want
 
 char* handler_get_current(Handler* handler);//This is unavoidable for the first value
 /*Return current value of the handler*/

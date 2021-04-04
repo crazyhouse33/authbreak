@@ -15,7 +15,6 @@ size_t concatenate_vector(void*** vec1, void** vec2);
 size_t put_vector(void*** vec1, void* element);
 /*Add element to the vector*/
 
-
 void** concatenation_vector(void** vec1, void** vec2);
 /*Return a copy of vec1 concatenated with vec2 */
 

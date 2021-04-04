@@ -1,13 +1,16 @@
+#ifndef XX_REPLACESTRINGSXXGUARD
+#define XX_REPLACESTRINGSXXGUARD
+
 #include <stddef.h>//size_t
 #ifndef PLACEHOLDERMARGIN
-#define PLACEHOLDERMARGIN 100
+	#define PLACEHOLDERMARGIN 100
 #endif
 
 
 typedef struct Placeholder Placeholder;
 struct Placeholder {
 	
-	  char** base_string; //one level of indirection cause need to be reallocable:w
+	  char** base_string; //one level of indirection cause need to be reallocable
 	  size_t begin;// cant be a pointer to char since base_string is reallocable
 	  size_t size_place;
 	  
@@ -48,7 +51,7 @@ Placeholder *placeholder_new_depend(Placeholder *base_placeholder, char *begin, 
 void placeholder_switch(Placeholder* placeholder, char* string);
 /*Switch the portion delimited byt the placeholder with a string, actualize the size to keep track of the place, actualize the positions of the dependent placeholders*/
 
-Placeholder** placeholder_parse_string(char** string, char opener, char closer, char escaper);
-/*Same but also check escaping with the escaper of your choice*/
+Placeholder** placeholder_parse_string(char** string, char opener, char closer, char escaper, size_t* size);
+/*Parse a string and return a vector of placeholder and set size to number of placeholder found. */
 
-
+#endif

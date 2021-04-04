@@ -5,26 +5,28 @@
 #include "test_unicity.h" //assert_not_present
 #include <string.h>       //strdup
 
+static Command_builder* builder;
+
 char *generate(int firs_ite) {
   if (!firs_ite)
-    if (command_builder_next_command())
+    if (command_builder_next_command(builder))
       return NULL;
   // check the concatenation of argvs and prompt
 
   char *res = strdup("");
   int j = 0;
-  while (command_builder_argv[j] != NULL) {
-    concat_string(&res, command_builder_argv[j++]);
+  while (builder->argv[j] != NULL) {
+    concat_string(&res, builder->argv[j++]);
   }
   int p_t = 0;
-  while (command_builder_prompt[p_t] != NULL)
-    concat_string(&res, command_builder_prompt[p_t++]);
+  while (builder->prompts[p_t] != NULL)
+    concat_string(&res, builder->prompts[p_t++]);
 
   return res;
 }
 
 void test_iteration(char *command, char **prompt, size_t expected_number) { // n is number of template
-  prepare_command_builder(command, prompt);
+  builder=command_builder_new(command, prompt);
   assert_iteration_test(generate, expected_number);
 }
 
