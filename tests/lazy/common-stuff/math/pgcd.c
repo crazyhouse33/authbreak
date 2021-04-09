@@ -1,15 +1,16 @@
 #include "fast_rand.h"
-#include "pgcd.c"
+#include "pgcd.h"
+#include "munit.h"
 
 
-void test_pgcd(unsigned int a, unsigned b, unsigned int expected){
+void test_pgcd(unsigned int a, unsigned int b, unsigned int expected){
 	munit_assert_uint(gcd(a,b),=,expected);
 	munit_assert_uint(gcd(b,a),=,expected);
 }
 
 void test_prime_together(unsigned int* numbers, unsigned int size, bool expected){
-	prime_together(numbers, size);
-	munit_assert_true(gcd(a,b),=,expected);
+	bool res=prime_together(numbers, size);
+	munit_assert_true(res == expected);
 }
 
 void test_make_prime(unsigned int* numbers, unsigned int size){
@@ -39,8 +40,8 @@ int main() {
 	unsigned int test3[]={7,3,21};
 	test_prime_together(test3, 3, false);
 	test_make_prime(test3,3);
-	unsigned int expected[] ={7,3,22};
-	munit_assert_memory_equal(3*sizeof(unsigned int),test3,expected);
+	unsigned int expected3[] ={7,3,22};
+	munit_assert_memory_equal(3*sizeof(unsigned int),test3,expected3);
 
 	unsigned int test2[]={};
 	test_prime_together(test2, 0, true);
