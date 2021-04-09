@@ -4,8 +4,8 @@
 
 
 void test_pgcd(unsigned int a, unsigned int b, unsigned int expected){
-	munit_assert_uint(gcd(a,b),=,expected);
-	munit_assert_uint(gcd(b,a),=,expected);
+	munit_assert_true(gcd(a,b)==expected);
+	munit_assert_true(gcd(b,a)==expected);
 }
 
 void test_prime_together(unsigned int* numbers, unsigned int size, bool expected){
@@ -51,6 +51,11 @@ int main() {
 	test_prime_together(test4, 3, true);
 	test_make_prime(test4,3);
 	unsigned int expected2[]={7,3,10};
-	munit_assert_memory_equal(3*sizeof(unsigned int),test4,expected);
+	munit_assert_memory_equal(3*sizeof(unsigned int),test4,expected2);
+
+	unsigned int test5[]={7,3,8,48,64,54,47,47,32,57,10};
+	size_t size= (size_t) sizeof(test5)/sizeof(unsigned int);
+	test_prime_together(test5, size, false);
+	test_make_prime(test5,size);
 	return 0;
 }
