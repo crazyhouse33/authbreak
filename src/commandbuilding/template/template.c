@@ -18,4 +18,9 @@ bool template_next(Template* temp){
 	return false;
 }
 
+/*Return number of element that template represent*/
+size_t template_size(Template* temp){
+	return handler_size(temp->handler);
+
+}
 

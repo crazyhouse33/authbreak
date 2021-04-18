@@ -6,9 +6,7 @@
 #include "null_vec.h"       //concatenate_vector
 #include "replace_string.h" //Placeholder
 
-Command_builder* command_builder_new( char *command, char **prompts) {
-
-	Command_builder* builder = malloc (sizeof(Command_builder));
+void command_builder_init(Command_builder* builder, char* command, char** prompts){
 	builder->templates= (Template**) create_vector(0);
 	builder->cartesian_it= 0;
 	builder->templates_num = 0;
@@ -39,6 +37,14 @@ Command_builder* command_builder_new( char *command, char **prompts) {
 		}
 		builder->templates_num+= placeholder_num;
 	}
+
+}
+
+Command_builder* command_builder_new( char *command, char **prompts) {
+
+	Command_builder* builder = malloc (sizeof(Command_builder));
+	command_builder_init(builder, command, prompts);
+
 	return builder;
 }
 

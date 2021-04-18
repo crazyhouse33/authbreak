@@ -20,6 +20,8 @@ void assert_handler_generic_iteration_test(Handler *the_handler, Handler *the_fa
                                            size_t expected_cycle_size) { // fake handler is a same type handler to trap board effect bugs inside handler classes
   handler = the_handler;
   fake_handler = the_fake_handler;
+  
+  munit_assert_size(expected_cycle_size ,==, handler_size(the_handler));
 
   assert_iteration_test(generate_once, expected_cycle_size);
 

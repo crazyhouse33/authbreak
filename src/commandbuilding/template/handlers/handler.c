@@ -9,6 +9,7 @@
 
 DEFINE_ENUM(Handler_type, "\"%s\" is not a valid template type, chose amongs this options: \n%s\n", "\"%s\" is ambigious as template type, choose among: \n%s\n", HANDLER_TYPE);
 
+//TODO this should take main_template and options as arguments, not a string
 Handler *handler_new(char *template_string, size_t until) {
   Handler *res = malloc(sizeof(Handler));
   handler_init(res, template_string, until);
@@ -70,4 +71,17 @@ void handler_free(Handler *handler) {
   free(handler);
 }
 
+
+size_t handler_size(Handler *handler) {
+switch (handler->type) {
+  case file:
+    return file_handler_size(handler);
+    break;
+
+  case iterator:
+
+    return iterator_handler_size(handler);
+    break;
+  }
+}
 Handler *get_dummy_handler() { return handler_new("0:0, type=iterator", 18); }

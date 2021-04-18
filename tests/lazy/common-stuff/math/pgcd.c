@@ -3,17 +3,17 @@
 #include "munit.h"
 
 
-void test_pgcd(unsigned int a, unsigned int b, unsigned int expected){
+void test_pgcd(size_t a, size_t b, size_t expected){
 	munit_assert_true(gcd(a,b)==expected);
 	munit_assert_true(gcd(b,a)==expected);
 }
 
-void test_prime_together(unsigned int* numbers, unsigned int size, bool expected){
+void test_prime_together(size_t* numbers, size_t size, bool expected){
 	bool res=prime_together(numbers, size);
 	munit_assert_true(res == expected);
 }
 
-void test_make_prime(unsigned int* numbers, unsigned int size){
+void test_make_prime(size_t* numbers, size_t size){
 
 	make_prime_together(numbers, size);
 	test_prime_together(numbers, size, true);
@@ -29,32 +29,32 @@ int main() {
 	// fibonnaci seq (31 and 32) (worst case)
 	test_pgcd(1346269,2178309,1);
 
-	unsigned int test1[]={21,3,7};
+	size_t test1[]={21,3,7};
 	test_prime_together(test1, 3, false);
 	test_make_prime(test1,3);
 
-	unsigned int expected[] ={22,3,7};
-	munit_assert_memory_equal(3*sizeof(unsigned int),test1,expected);
+	size_t expected[] ={22,3,7};
+	munit_assert_memory_equal(3*sizeof(size_t),test1,expected);
 
 
-	unsigned int test3[]={7,3,21};
+	size_t test3[]={7,3,21};
 	test_prime_together(test3, 3, false);
 	test_make_prime(test3,3);
-	unsigned int expected3[] ={7,3,22};
-	munit_assert_memory_equal(3*sizeof(unsigned int),test3,expected3);
+	size_t expected3[] ={7,3,22};
+	munit_assert_memory_equal(3*sizeof(size_t),test3,expected3);
 
-	unsigned int test2[]={};
+	size_t test2[]={};
 	test_prime_together(test2, 0, true);
 	test_make_prime(test2,0);
 
-	unsigned int test4[]={7,3,10};
+	size_t test4[]={7,3,10};
 	test_prime_together(test4, 3, true);
 	test_make_prime(test4,3);
-	unsigned int expected2[]={7,3,10};
-	munit_assert_memory_equal(3*sizeof(unsigned int),test4,expected2);
+	size_t expected2[]={7,3,10};
+	munit_assert_memory_equal(3*sizeof(size_t),test4,expected2);
 
-	unsigned int test5[]={7,3,8,48,64,54,47,47,32,57,10};
-	size_t size= (size_t) sizeof(test5)/sizeof(unsigned int);
+	size_t test5[]={7,3,8,48,64,54,47,47,32,57,10};
+	size_t size= (size_t) sizeof(test5)/sizeof(size_t);
 	test_prime_together(test5, size, false);
 	test_make_prime(test5,size);
 	return 0;

@@ -13,6 +13,10 @@ typedef struct Command_builder {
 Command_builder* command_builder_new (char* command, char** prompts);
 /*Gather all the templates, append newline to prompts*/
 
+void command_builder_init(Command_builder* builder, char* command, char** prompts);
+/*Gather all the templates, append newline to prompts*/
+
+
 bool command_builder_next_command(Command_builder* builder);
 /*Set argv and prompt to next combinaison and return true if done */
 

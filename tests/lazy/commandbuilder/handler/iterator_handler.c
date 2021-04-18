@@ -16,7 +16,7 @@ void test_iteration(char *CHARSET, ssize_t LEN_MIN, ssize_t LEN_MAX) {
   size_t expected = 0;
 
   while (LEN_MAX >= LEN_MIN)
-    expected += my_pow(charset_size, LEN_MAX--);
+    expected += pow(charset_size, LEN_MAX--);
 
   Handler *fake_handler = malloc(sizeof(Handler));
   fake_handler->type = iterator;

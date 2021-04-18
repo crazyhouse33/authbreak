@@ -21,9 +21,6 @@ typedef struct Handler_options{
 
 DECLARE_ENUM(Handler_type,HANDLER_TYPE);
 
-
-
-
 typedef struct Handler
 {
 	Handler_type type;
@@ -50,5 +47,8 @@ char* handler_get_current(Handler* handler);//This is unavoidable for the first 
 
 void handler_free(Handler* handler);
 /*Free the handler*/
+
+size_t handler_size(Handler* handler);
+/*Get number of element the handler represent*/
 
 #endif

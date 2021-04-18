@@ -3,6 +3,7 @@
 #include <stdio.h>   //File pointer
 #include <stdlib.h>  //malloc
 #include <string.h>  //strlen
+#include "geometric.h"// geometric_xtoy
 
 #define INITIAL_ITERATOR_LEVEL_LIMIT 32
 #define ITERATOR_LEVEL_LIMIT_UPDATE 32
@@ -17,9 +18,8 @@ int get_max(char *charset, size_t size) {
 
 // TODO Done once, it's a permutation lut for the next character according to charset, notice how we loose a lot of memory if we use utf-8, this is a trade of speed/space because dictionnary access is
 // way slower. We may change that according to the perf of the tool when ran in parallel (maybe parraleliation will absord every diff allready even for simplest auth process), measure and see
-static void construct_next_table(char **pointer_to_table, char *charset) {
+static void construct_next_table(char **pointer_to_table, char *charset, size_t char_num) {
   // take a charset, construct pointer_to_table
-  size_t char_num = strlen(charset);
   int char_max = get_max(charset, char_num);
   *pointer_to_table = (char *)malloc(sizeof(char) * (char_max + 1));
   size_t i;
@@ -49,18 +49,25 @@ static void next_level(Iterator_needs *it, char *charset) {
   initiate_level(it, charset);
 }
 
+
 static void iterator_handler_reset(Handler *handler) {
   Iterator_needs *needs = (Iterator_needs *)handler->special_needs;
   needs->len = handler->options.len_min;
   initiate_level(needs, handler->options.charset);
 }
 
+size_t iterator_handler_size(Handler* handler){
+	Iterator_needs* it= (Iterator_needs*) handler->special_needs;
+	return geometric_xtoy(1, it->charset_len, handler->options.len_min, handler->options.len_max);
+}
+
 void iterator_handler_init_special_needs(Handler *handler) {
   Iterator_needs *needs = malloc(sizeof(Iterator_needs));
   handler->special_needs = needs;
+  needs->charset_len = strlen(handler->options.charset);
   needs->real_size = INITIAL_ITERATOR_LEVEL_LIMIT;
   needs->current = malloc(sizeof(char) * INITIAL_ITERATOR_LEVEL_LIMIT);
-  construct_next_table(&needs->charset_next_table, handler->options.charset);
+  construct_next_table(&needs->charset_next_table, handler->options.charset, needs->charset_len);
   iterator_handler_reset(handler);
 }
 

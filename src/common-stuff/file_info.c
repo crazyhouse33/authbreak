@@ -77,3 +77,4 @@ char *search_executable(char *file_name) {
     return NULL;
   return search_in_path_openable_file(file_name);
 }
+
