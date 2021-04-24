@@ -56,4 +56,5 @@ void assert_iteration_test(char *generate(int), size_t expected_cycle_size) { //
 
   assert_all_unique(history, size1);
   assert_is_permutation(history, history2, size1, size2);
+  return history;
 }

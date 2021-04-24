@@ -24,10 +24,12 @@ void iterator_handler_init_special_needs(Handler* handler);
 char* iterator_handler_get_current(Handler* handler);
 //return current
 
+char* iterator_handler_reset(Handler* handler, size_t pos);
+//Reset handler to given position
 
 void iterator_handler_free_needs(Handler* handler);
 
- size_t iterator_handler_size(Handler* handler);
+size_t iterator_handler_size(Handler* handler);
  //get number of element in handler
 
 

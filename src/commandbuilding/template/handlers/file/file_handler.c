@@ -21,8 +21,6 @@ char *file_handler_next(Handler *handler) {
   ssize_t res = getdelim(&buffer, &buffer_size, sep, fp);
   if (UNLIKELY(feof(fp))) { // EOF reached
     if (res <= 0) {         // true end
-      rewind(fp);
-      file_handler_next(handler); // reset to the first line
       return NULL;                // Signaling we are done
     }
     if (buffer[res - 1] == '\n') { // On unix every file like to have a last \n, polluting the last guess
@@ -35,17 +33,18 @@ char *file_handler_next(Handler *handler) {
   return buffer;
 }
 
+void file_handler_reset(Handler* handler){
+FILE *fp = ((File_needs*)handler->special_needs)->fp;
+rewind(fp);
+}
+
 void file_handler_init_special_needs(Handler *handler) {
 	File_needs* needs = malloc(sizeof(File_needs));
 	needs->fp = fopen(handler->main_component, "r");
 	handler->special_needs=needs;
 	if (needs->fp == NULL)
 		controlled_error_msg(3, "Can not open file \"%s\"", handler->main_component);
-
-	file_handler_next(handler); // getting first value
 }
-
-char *file_handler_get_current(Handler *handler) { return buffer; }
 
 void file_handler_free_needs(Handler *handler) { fclose(((File_needs*)handler->special_needs)->fp); }
 

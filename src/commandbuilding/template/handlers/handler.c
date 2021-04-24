@@ -84,4 +84,18 @@ switch (handler->type) {
     break;
   }
 }
+
+size_t handler_reset(Handler *handler, size_t pos) {
+switch (handler->type) {
+  case file:
+    return file_handler_reset(handler, pos);
+    break;
+
+  case iterator:
+
+    return iterator_handler_size(handler, pos);
+    break;
+  }
+}
+
 Handler *get_dummy_handler() { return handler_new("0:0, type=iterator", 18); }

@@ -51,4 +51,8 @@ void handler_free(Handler* handler);
 size_t handler_size(Handler* handler);
 /*Get number of element the handler represent*/
 
+
+size_t handler_reset(Handler* handler, size_t pos);
+/*reset handler to given pos*/
+
 #endif

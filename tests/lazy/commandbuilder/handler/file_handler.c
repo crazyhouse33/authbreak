@@ -13,7 +13,7 @@ void test_newline() {
   handler->type = file;
   handler->options = (Handler_options){.separator = '\n', .charset = NULL, .len_min = 0, .len_max = 0};
   file_handler_init_special_needs(handler);
-  char *res = file_handler_get_current(handler);
+  char *res = file_handler_next(handler);
   munit_assert_string_equal(res, "GUESS1;");
 
   res = file_handler_next(handler);
@@ -25,7 +25,8 @@ void test_newline() {
   res = file_handler_next(handler);
   munit_assert_ptr(res, ==, NULL);
 
-  res = file_handler_get_current(handler);
+  file_handler_reset(handler,0);
+	res = file_handler_next(handler);
   munit_assert_string_equal(res, "GUESS1;");
 }
 
@@ -36,7 +37,7 @@ void test_colon() {
   handler->main_component = test_file;
   handler->options = (Handler_options){.separator = ';', .charset = NULL, .len_min = 0, .len_max = 0};
   file_handler_init_special_needs(handler);
-  char *res = file_handler_get_current(handler);
+  char *res = file_handler_next(handler);
   munit_assert_string_equal(res, "GUESS1");
 
   res = file_handler_next(handler);
@@ -48,7 +49,9 @@ void test_colon() {
   res = file_handler_next(handler);
   munit_assert_ptr(res, ==, NULL);
 
-  res = file_handler_get_current(handler);
+  file_handler_reset(handler,0);
+
+  res = file_handler_next(handler);
   munit_assert_string_equal(res, "GUESS1");
 
   res = file_handler_next(handler);
@@ -62,7 +65,7 @@ void test_colon2() {
   handler->main_component = "../test_data/list/guess2.list";
   handler->options = (Handler_options){.separator = ';', .charset = NULL, .len_min = 0, .len_max = 0};
   file_handler_init_special_needs(handler);
-  char *res = file_handler_get_current(handler);
+  char *res = file_handler_next(handler);
   munit_assert_string_equal(res, "GUESS1");
 
   res = file_handler_next(handler);
@@ -74,7 +77,9 @@ void test_colon2() {
   res = file_handler_next(handler);
   munit_assert_ptr(res, ==, NULL);
 
-  res = file_handler_get_current(handler);
+  file_handler_reset(handler,0);
+
+  res = file_handler_next(handler);
   munit_assert_string_equal(res, "GUESS1");
 
   res = file_handler_next(handler);
@@ -103,7 +108,7 @@ void test_another_complex_file() {
   handler->main_component = "../test_data/list/complex.list";
   handler->options = (Handler_options){.separator = ';', .charset = NULL, .len_min = 0, .len_max = 0};
   file_handler_init_special_needs(handler);
-  char *res = file_handler_get_current(handler);
+  char *res = file_handler_next(handler);
   munit_assert_string_equal(res, "");
 
   res = file_handler_next(handler);
@@ -118,7 +123,9 @@ void test_another_complex_file() {
   res = file_handler_next(handler);
   munit_assert_ptr(res, ==, NULL);
 
-  res = file_handler_get_current(handler);
+  file_handler_reset(handler,0);
+
+  res = file_handler_next(handler);
   munit_assert_string_equal(res, "");
 
   res = file_handler_next(handler);
@@ -134,11 +141,10 @@ void test_another_complex_file() {
 void test_another_complex_file_newline() {
   Handler *handler = malloc(sizeof(Handler));
   handler->type = file;
-
   handler->main_component = "../test_data/list/complex.list";
   handler->options = (Handler_options){.separator = '\n', .charset = NULL, .len_min = 0, .len_max = 0};
   file_handler_init_special_needs(handler);
-  char *res = file_handler_get_current(handler);
+  char *res = file_handler_next(handler);
   munit_assert_string_equal(res, ";");
 
   res = file_handler_next(handler);
@@ -147,7 +153,9 @@ void test_another_complex_file_newline() {
   res = file_handler_next(handler);
   munit_assert_ptr(res, ==, NULL);
 
-  res = file_handler_get_current(handler);
+  file_handler_reset(handler,0);
+
+  res = file_handler_next(handler);
   munit_assert_string_equal(res, ";");
 
   res = file_handler_next(handler);
@@ -155,6 +163,43 @@ void test_another_complex_file_newline() {
 
   res = file_handler_next(handler);
   munit_assert_ptr(res, ==, NULL);
+
+}
+
+void test_reset() {
+  Handler *handler = malloc(sizeof(Handler));
+  handler->type = file;
+
+  handler->main_component = "../test_data/list/complex.list";
+  handler->options = (Handler_options){.separator = ';', .charset = NULL, .len_min = 0, .len_max = 0};
+  file_handler_init_special_needs(handler);
+  char* res;
+  file_handler_reset(handler,3);
+  res=file_handler_next(handler);
+  munit_assert_string_equal(res, "");//3
+
+  res = file_handler_next(handler);
+  munit_assert_ptr(res, ==, NULL);
+
+  
+  file_handler_reset(handler,2);
+  res=file_handler_next(handler);
+  munit_assert_string_equal(res, "ho");//2
+
+  file_handler_reset(handler,1);
+  res=file_handler_next(handler);
+  munit_assert_string_equal(res, "\nhey");//1
+
+  res=file_handler_next(handler);
+  munit_assert_string_equal(res, "ho");//2
+
+  file_handler_reset(handler,0);
+  res=file_handler_next(handler);
+  munit_assert_string_equal(res, ""); //0
+
+  res=file_handler_next(handler);
+  munit_assert_string_equal(res, "\nhey");//1
+
 }
 
 int main() {
@@ -164,6 +209,7 @@ int main() {
   test_another_complex_file();
   test_another_complex_file_newline();
   generic_test();
+  test_reset();
 
   return 0;
 }

@@ -17,3 +17,5 @@
 ?b = 0x00 - 0xff?s = ”space”!”’()*+,-./:;<=>?@[]‘|Par exemple ?l?l?l?l?l?l?l g ́en ́erera toutes les combinaisonspossibles entre aaaaaaa - zzzzzzz
 
 -remove _eq part of out_eq
+
+change handler constructor to take option type and main component
