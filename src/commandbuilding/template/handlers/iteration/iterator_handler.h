@@ -18,11 +18,12 @@ char* iterator_handler_next(Handler* handler);
 void iterator_handler_init_special_needs(Handler* handler);
 //Initialize iteration, create permutation
 
-char* iterator_handler_get_current(Handler* handler);
-//return current
-
-char* iterator_handler_reset(Handler* handler, size_t pos);
+void iterator_handler_reset_to(Handler* handler, size_t pos);
 //Reset handler to given position
+
+
+void iterator_handler_reset(Handler* handler);
+//Reset handler to 0 (faster)
 
 void iterator_handler_free_needs(Handler* handler);
 

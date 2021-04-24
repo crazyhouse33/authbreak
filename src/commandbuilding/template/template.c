@@ -10,7 +10,7 @@ Template* template_new(Placeholder* placeholder){
 bool template_next(Template* temp){
 	char* next_str = handler_next(temp->handler);
 	if (next_str == NULL){
-		handler_reset(temp->handler, 0);
+		handler_reset(temp->handler);
 		placeholder_switch(temp->placeholder, handler_next(temp->handler));
 		return true;
 	}

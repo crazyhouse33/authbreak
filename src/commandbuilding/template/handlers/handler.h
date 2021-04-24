@@ -42,9 +42,6 @@ char* handler_next(Handler* handler);
 /*Increment value for handler and return it. If we reach end of iterations, return NULL and reset the handler to the begining*/
 //TODO Make it such as it just return NULL when done, and add a reset method that the user can use if he want
 
-char* handler_get_current(Handler* handler);//This is unavoidable for the first value
-/*Return current value of the handler*/
-
 void handler_free(Handler* handler);
 /*Free the handler*/
 
@@ -52,7 +49,11 @@ size_t handler_size(Handler* handler);
 /*Get number of element the handler represent*/
 
 
-size_t handler_reset(Handler* handler, size_t pos);
+void handler_reset_to(Handler* handler, size_t pos);
 /*reset handler to given pos*/
+
+void handler_reset(Handler* handler);
+/*reset handler to 0, depending on handler it may be way faster than using reset_to 0*/
+
 
 #endif

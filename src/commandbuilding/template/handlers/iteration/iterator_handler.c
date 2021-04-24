@@ -1,4 +1,5 @@
 #include "iterator_handler.h"
+#include <math.h>
 #include "handler.h" //Handler
 #include <stdio.h>   //File pointer
 #include <stdlib.h>  //malloc
@@ -30,6 +31,7 @@ static void construct_next_table(char **pointer_to_table, char *charset, size_t 
   (*pointer_to_table)[charset[i]] = charset[0];
 }
 
+//TODO should just take handler as arg
 static void initiate_level(Iterator_needs *it, char *charset) {
 	int i;
   for (i = 0; i < it->len; i++)
@@ -43,7 +45,7 @@ static void next_level(Iterator_needs *it, char *charset) {
 }
 
 
-static void iterator_handler_reset(Handler *handler, size_t pos) {
+void iterator_handler_reset_to(Handler *handler, size_t pos) {
   Iterator_needs *needs = (Iterator_needs *)handler->special_needs;
   needs->len = handler->options.len_max;
   for (size_t i = 0; i < needs->len; i++){
@@ -51,11 +53,16 @@ static void iterator_handler_reset(Handler *handler, size_t pos) {
 	  if (offset==0){
 		  needs->len--;
 	  	  i--;
-		  continue
+		  continue;
 	  }
-	  needs->current[i] = charset[offset % needs->charset_len] ; 
   }
   needs->current[needs->len] = 0;      
+}
+
+void iterator_handler_reset(Handler *handler) {
+  	Iterator_needs *needs = (Iterator_needs *)handler->special_needs;
+	needs->len=handler->options.len_min;
+	initiate_level(needs, handler->options.charset);
 }
 
 size_t iterator_handler_size(Handler* handler){
@@ -90,11 +97,6 @@ char *iterator_handler_next(Handler *handler) { // Normal cartesian product
 
 	} while (it->current[offset] == first_letter);
 
-	return it->current;
-}
-
-char *iterator_handler_get_current(Handler *handler) {
-	Iterator_needs *it = (Iterator_needs *)handler->special_needs;
 	return it->current;
 }
 

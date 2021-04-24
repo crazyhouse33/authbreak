@@ -13,13 +13,12 @@ char *generate_once(int first_iter) {
 
 void reset_testing(Handler* handler, char** history, size_t size){
 	fast_rand_seed(21);
-	file_handler_reset(handler,pos);
 	if (! size)
 		return;
 	for (int i=0; i<10; i++){
 		size_t pos= fast_rand_until(size);
 		size_t until= fast_rand_until(size - pos);
-		handler_reset(pos);
+		handler_reset_to(handler, pos);
 		for (int j=0; j<until;j++){
 			char* res=handler_next(handler);
 			munit_assert_string_equal(res, history[pos++]);

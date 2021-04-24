@@ -42,20 +42,6 @@ char *handler_next(Handler *handler) {
   }
 }
 
-char *handler_get_current(Handler *handler) {
-  switch (handler->type) {
-  case file:
-    return file_handler_get_current(handler);
-    break;
-
-  case iterator:
-
-    return iterator_handler_get_current(handler);
-
-    break;
-  }
-}
-
 void handler_free(Handler *handler) {
   switch (handler->type) {
   case file:
@@ -85,15 +71,28 @@ switch (handler->type) {
   }
 }
 
-size_t handler_reset(Handler *handler, size_t pos) {
+void handler_reset_to(Handler *handler, size_t pos) {
 switch (handler->type) {
   case file:
-    return file_handler_reset(handler, pos);
+    return file_handler_reset_to(handler, pos);
     break;
 
   case iterator:
 
-    return iterator_handler_size(handler, pos);
+    return iterator_handler_reset_to(handler, pos);
+    break;
+  }
+}
+
+void handler_reset(Handler *handler) {
+switch (handler->type) {
+  case file:
+    return file_handler_reset(handler);
+    break;
+
+  case iterator:
+
+    return iterator_handler_reset(handler);
     break;
   }
 }

@@ -44,7 +44,7 @@ char **generate_iteration_history(size_t *s, char *generate(int)) {
   return (char **)res->array;
 }
 
-void assert_iteration_test(char *generate(int), size_t expected_cycle_size) { // We test than iteration is permutation/uniq/ciclique
+char** assert_iteration_test(char *generate(int), size_t expected_cycle_size) { // We test than iteration is permutation/uniq/ciclique
 
   size_t size1;
   size_t size2;
