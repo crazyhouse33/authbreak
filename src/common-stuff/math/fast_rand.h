@@ -11,5 +11,6 @@ void fast_rand_seed(uint32_t seed);
 uint32_t fast_rand();
 /*Random 32 bits number*/
 
-uint32_t fast_rand_range(uint32_t interval);
-/*Random number in between 0 included and interval excluded, interval must be > 0*/
+//TODO rename
+uint32_t fast_rand_until(uint32_t until);
+/*Random number in between 0 included and until excluded, until must be > 0*/

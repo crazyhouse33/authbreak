@@ -6,11 +6,8 @@ typedef struct Iterator_needs
 	char* current;//current string
 	char* charset_next_table;//table memorizing next char for each char
 	size_t charset_len;
-
 	size_t len;//actual len of string
 
-	//memory gestion
-	size_t real_size;
 } Iterator_needs;
 
 

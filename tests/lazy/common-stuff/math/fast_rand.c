@@ -5,7 +5,7 @@
 void test_intervalle(unsigned int range){
 	unsigned int a;
 	for (int i=0; i<1000;i++){
-		a=fast_rand_range(range);
+		a=fast_rand_until(range);
 		munit_assert_uint(a,<,range);
 	}
 }

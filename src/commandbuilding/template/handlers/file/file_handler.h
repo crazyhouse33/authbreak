@@ -18,4 +18,6 @@ void file_handler_free_needs(Handler* handler);
 
 size_t file_handler_size(Handler* handler);
 
+size_t file_handler_reset(Handler* handler, size_t pos);
+
 

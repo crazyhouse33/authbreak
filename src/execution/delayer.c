@@ -11,7 +11,7 @@
 #endif
 
 unsigned int _Delayer_delay_dry(Delayer *delayer) {
-  unsigned int rand_int = fast_rand_range(delayer->rand);
+  unsigned int rand_int = fast_rand_until(delayer->rand);
   return delayer->min + rand_int;
 }
 

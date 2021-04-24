@@ -32,7 +32,7 @@ static uint32_t map_to_interval( uint32_t number, uint32_t interval){//x->[0:int
 	return m >>32;
 }
 
-uint32_t fast_rand_range(uint32_t interval){
+uint32_t fast_rand_until(uint32_t interval){
 	return map_to_interval(fast_rand(), interval);
 }
 

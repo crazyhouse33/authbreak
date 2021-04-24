@@ -31,6 +31,7 @@ static void construct_next_table(char **pointer_to_table, char *charset, size_t 
 }
 
 static void initiate_level(Iterator_needs *it, char *charset) {
+	int i;
   for (i = 0; i < it->len; i++)
     it->current[i] = charset[0]; // TODO Initialize to first char everything for now, give the furtivity option to randomize each level base
   it->current[i] = 0;            // adding null char
@@ -62,12 +63,12 @@ size_t iterator_handler_size(Handler* handler){
 	return geometric_xtoy(1, it->charset_len, handler->options.len_min, handler->options.len_max);
 }
 
+//TODO current could be a shared buffer like for files
 void iterator_handler_init_special_needs(Handler *handler) {
 	Iterator_needs *needs = malloc(sizeof(Iterator_needs));
 	handler->special_needs = needs;
 	needs->charset_len = strlen(handler->options.charset);
-	needs->real_size = INITIAL_ITERATOR_LEVEL_LIMIT;
-	needs->current = malloc(sizeof(char) * INITIAL_ITERATOR_LEVEL_LIMIT);
+	needs->current = malloc(sizeof(char) * handler->options.len_max);
 	construct_next_table(&needs->charset_next_table, handler->options.charset, needs->charset_len);
 	iterator_handler_reset(handler);
 }
