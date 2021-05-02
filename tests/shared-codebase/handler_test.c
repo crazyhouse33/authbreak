@@ -7,14 +7,14 @@ Handler *handler;
 Handler *fake_handler;
 
 char *generate_once(int first_iter) {
+	if (first_iter)
+		handler_reset(handler);
 	char * trash = handler_next(fake_handler);
 	return handler_next(handler);
 }
 
 void reset_testing(Handler* handler, char** history, size_t size){
 	fast_rand_seed(21);
-	if (! size)
-		return;
 	for (int i=0; i<10; i++){
 		size_t pos= fast_rand_until(size);
 		size_t until= fast_rand_until(size - pos);

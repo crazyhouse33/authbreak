@@ -19,4 +19,10 @@ bool template_next(Template* temp);
 
 size_t template_size(Template* temp);
 /*Return number of element that template represent*/
+
+void template_reset(Template* temp);
+/*Reset handler of template (This have no immediate effect on the string)*/
+
+void template_free(Template* temp);
+
 #endif

@@ -21,6 +21,14 @@ bool template_next(Template* temp){
 /*Return number of element that template represent*/
 size_t template_size(Template* temp){
 	return handler_size(temp->handler);
+}
 
+void template_free(Template* temp){
+	handler_free(temp->handler);
+	//TODO implement placeholderfree
+}
+
+void template_reset(Template* temp){
+	handler_reset(temp->handler);
 }
 

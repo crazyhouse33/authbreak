@@ -19,3 +19,4 @@
 -remove _eq part of out_eq
 
 change handler constructor to take option type and main component
+PROBLEM Iterator Reset to is broken.since we iterate with left pivot, we should start right
