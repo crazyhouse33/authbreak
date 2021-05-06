@@ -51,12 +51,11 @@ Command_builder* command_builder_new( char *command, char **prompts) {
 // TODO do a sneaky cartesian product along with furtivity option (change order to have change in each consecutive template
 bool command_builder_next_command(Command_builder* builder) { // Cartesian product
 	Template** cartesian_cursor = builder->templates + builder->cartesian_it;
-	bool blocked_up = template_next(*cartesian_cursor);
-	while (blocked_up) { 
+	while (template_next(*cartesian_cursor) == NULL ) { 
+		template_next(*cartesian_cursor); 
 		cartesian_cursor++;
 		if (cartesian_cursor - builder->templates >= builder->templates_num ) // everything had been done
 			return true;
-		blocked_up = template_next(*cartesian_cursor);
 	}
 	return false;
 }

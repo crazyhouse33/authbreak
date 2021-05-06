@@ -6,9 +6,6 @@
 #include <string.h>  //strlen
 #include "geometric.h"// geometric_xtoy
 
-#define INITIAL_ITERATOR_LEVEL_LIMIT 32
-#define ITERATOR_LEVEL_LIMIT_UPDATE 32
-
 int get_max(char *charset, size_t size) {
   int max = -1;
   for (int i = 0; i < size; i++)
@@ -39,63 +36,25 @@ static void initiate_level(Iterator_needs *it, char *charset) {
 	it->current[it->len] = 0;            // adding null char
 }
 
-// we pass by args just to avoid useless deferencing for one time func
-static char* next_level(Iterator_needs *it, char *charset, size_t len_max) {
-	it->len++;
-	if (it->len > len_max) { // We need to stop(put it unlikely)
-		return NULL;
-	}
-	initiate_level(it, charset);
-	return it->current;
-}
-
-
-//Log n. Not for the faint of the heart
-void iterator_handler_reset_to(Handler *handler, size_t pos) {
-	Iterator_needs *needs = (Iterator_needs *)handler->special_needs;
-	needs->len = handler->options.len_max;
-	size_t i=0;
-	div_t divresult={0};
-	size_t divisor;
-	size_t pos_cpy;
-	size_t offset;
-
-	// This asume pivot is on the left, and will be broken otherwise
-	//skippings the ones to skip, getting real len
-		
-	while (divresult.quot == 0 && needs->len > handler->options.len_min){
-		offset = geometric_xtoy(1, needs->charset_len, handler->options.len_min, needs->len - 1);
-		pos_cpy = pos + offset;
-		divisor = pow(needs->charset_len, handler->options.len_max - i);
-		divresult = div(pos_cpy,divisor);	
-		needs->len--;
-		i++;
-	}
-		
-	pos -=offset;
-
-	for (i=1; i< needs->len; i++){
-		divisor=pow(needs->charset_len, needs->len - i);
-		divresult = div(pos,divisor);	
-		pos=divresult.rem;
-		needs->current[needs->len - i]=handler->options.charset[divresult.quot];
-	}
-
-	divresult.rem-=1;
-	if (divresult.rem==-1){
-		needs->current[0]=0;
-	}
-	else{
-		needs->current[0]=handler->options.charset[divresult.rem];
-	}
-
-	needs->current[needs->len] = 0;      
-}
-
 // This make the first char of an iterator to be the first one on the next round 
 static void it_minus_oneify(Iterator_needs *needs) {
 	needs->current[0]=0;
 }
+
+// we pass by args just to avoid useless deferencing for one time func
+static char* next_level(Iterator_needs *it, char *charset, size_t len_max) {
+	if (it->len >= len_max) { // We need to stop(put it unlikely)
+		return NULL;
+	}
+	it->len++;
+	initiate_level(it, charset);
+	if (it->len ==1){//Coming from 0
+		it_minus_oneify(it);
+		return "";
+	}
+	return it->current;
+}
+
 
 void iterator_handler_reset(Handler *handler) {
 	Iterator_needs *needs = (Iterator_needs *)handler->special_needs;

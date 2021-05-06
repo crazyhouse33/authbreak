@@ -45,8 +45,8 @@ if not args.dry:
     did_you("change the version number (CMakeLists.txt")
 
 current_dir=os.getcwd()
-build_dir= "/opt/personnal_stuff/authbreak/build"
-root_dir="/opt/personnal_stuff/authbreak"
+build_dir= "/home/halonso/project/authbreak/build"
+root_dir="/home/halonso/project/authbreak"
 
 change_dir(build_dir)
 threatCommand("cmake --build . --target full-test")#configuring file and running memory tests

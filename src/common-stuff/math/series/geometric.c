@@ -4,7 +4,7 @@
 //https://en.wikipedia.org/wiki/Geometric_series
 double geometric_n(double a, double r, size_t n){
 	if (r==1)
-		return a*n;
+		return a*(n+1);
 	double num= a *(1-pow(r,  n+1));
 	double div= 1-r;
 	return num/div;

@@ -7,6 +7,7 @@
 typedef struct Template {
 	Placeholder* placeholder;
 	Handler* handler;
+	size_t next_it;//number of iteration (ignore cycle)
 } Template;
 
 
@@ -14,14 +15,16 @@ typedef struct Template {
 Template* template_new(Placeholder* placeholder);
 /*Create template from placeholder*/
 
-bool template_next(Template* temp);
-/*Increment handler and set placeholder to new handler value. Return true if handler is done*/
+char* template_next(Template* temp);
+/*Increment handler and set placeholder to new handler value. Return NULL when handler is done, but automatically reset it (to get cycling behaviour)*/
 
 size_t template_size(Template* temp);
 /*Return number of element that template represent*/
 
 void template_reset(Template* temp);
 /*Reset handler of template (This have no immediate effect on the string)*/
+
+void template_reset_to(Template* temp, size_t pos);
 
 void template_free(Template* temp);
 

@@ -48,10 +48,6 @@ void handler_free(Handler* handler);
 size_t handler_size(Handler* handler);
 /*Get number of element the handler represent*/
 
-
-void handler_reset_to(Handler* handler, size_t pos);
-/*reset handler to given pos*/
-
 void handler_reset(Handler* handler);
 /*reset handler to 0, depending on handler it may be way faster than using reset_to 0*/
 

@@ -33,12 +33,6 @@ char *file_handler_next(Handler *handler) {
   return buffer;
 }
 
-void file_handler_reset_to(Handler* handler, size_t pos){
-file_handler_reset( handler);
-for (size_t i=0; i<pos;i++)
-	file_handler_next(handler);
-}
-
 void file_handler_reset(Handler* handler){
 FILE *fp = ((File_needs*)handler->special_needs)->fp;
 rewind(fp);

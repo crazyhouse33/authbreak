@@ -71,19 +71,6 @@ switch (handler->type) {
   }
 }
 
-void handler_reset_to(Handler *handler, size_t pos) {
-switch (handler->type) {
-  case file:
-    return file_handler_reset_to(handler, pos);
-    break;
-
-  case iterator:
-
-    return iterator_handler_reset_to(handler, pos);
-    break;
-  }
-}
-
 void handler_reset(Handler *handler) {
 switch (handler->type) {
   case file:

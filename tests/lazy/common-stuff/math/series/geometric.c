@@ -17,6 +17,7 @@ int main() {
 	test_geom(46,46,0,46);
 	test_geom(46,3,1,46*4);
 	test_geom(46,23,3,585120);
+	test_geom(1,1,3,4);
 	// fibonnaci seq (31 and 32) (worst case)
 	test_xtoy(3,21,0,46,geometric_n(3,21,46));
 	test_xtoy(3,4,2,5,4080);
