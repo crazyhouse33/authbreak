@@ -60,12 +60,12 @@ static bool __sneaky_command_builder_next_command_fix_rec(Sneaky_command_builder
 static bool __sneaky_command_builder_next_command_fix(Sneaky_command_builder* builder, int just_wrapped){
 	for (int i=0; i<builder->builder.templates_num; i++){
 		if ( i< just_wrapped)
-			builder->pos[i] = builder->builder.templates[i]->next_it;	
+			builder->pos[i] = builder->builder.templates[i]->next_it - 1;	
 		else if ( i== just_wrapped)
 			builder->pos[i] = builder->sizes[i];
 
 		else
-			builder->pos[i] =builder->builder.templates[i]->next_it + 1; //Those had been early stopped by fix call
+			builder->pos[i] =builder->builder.templates[i]->next_it; //Those had been early stopped by fix call
 	}
 	return __sneaky_command_builder_next_command_fix_rec(builder, just_wrapped, 0);
 }

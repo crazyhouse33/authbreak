@@ -32,13 +32,29 @@ void test_iteration(char *command, char **prompt, size_t expected_number) { // n
 
 int main() {
   DEFAULT_CHARSET = strdup("01");
+
+  DEFAULT_LEN_MIN = 1;
+  DEFAULT_LEN_MAX = 1;
+  DEFAULT_SEPARATOR = '\n';
+  char *prompt3[] = {strdup("testprompt"), strdup("templatedprompt --{}--"), NULL};
+  char *command3 = strdup("test hey--{}-- -p tata -u --{}--");
+  // each handler have 1 + 2 + 4 7
+  test_iteration(command3, prompt3, 2 * 2 * 2);
+
   DEFAULT_LEN_MIN = 0;
-  DEFAULT_LEN_MAX = 2;
+  DEFAULT_LEN_MAX = 1;
   DEFAULT_SEPARATOR = '\n';
   char *prompt[] = {strdup("testprompt"), strdup("templatedprompt --{}--"), NULL};
   char *command = strdup("test hey--{}-- -p tata -u --{}--");
   // each handler have 1 + 2 + 4 7
-  test_iteration(command, prompt, 7 * 7 * 7);
+  test_iteration(command, prompt, 3 * 3 * 3);
+
+  DEFAULT_LEN_MIN = 0;
+  DEFAULT_LEN_MAX = 2;
+  DEFAULT_SEPARATOR = '\n';
+  char* prompt2[] = {strdup("testprompt"), strdup("templatedprompt --{}--"), NULL};
+  char* command2 = strdup("test hey--{}-- -p tata -u --{}--");
+  test_iteration(command2, prompt2, 7 * 7 * 7);
 }
 
 /*Testing internal state*/
