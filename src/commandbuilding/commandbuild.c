@@ -64,8 +64,11 @@ char *command_builder_current_command(Command_builder* builder) {
 	char *command = join_argv(builder->argv, ' ');
 	char *prompts = join_argv(builder->prompts, '\n');
 	concat_string(&command, "\n");
-	concat_string(&command, prompts);
-	free(prompts);
+	char** it = builder->prompts;
+	while (*it){
+		concat_string(&command, *it++);
+		concat_char(&command,'\n');
+	}
 	return command;
 }
 

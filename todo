@@ -20,3 +20,4 @@
 
 change handler constructor to take option type and main component
 PROBLEM Iterator Reset to is broken.since we iterate with left pivot, we should start right
+BUG investigate ./authbreak -h -s status==0 'echo {/tmp/tata} {/tmp/toto}' that seem to generate bad iteration with files (tested only with it)

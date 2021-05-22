@@ -11,7 +11,8 @@ typedef struct Arguments
   bool no_timing, no_guessing, no_random;
   double wait, random_wait, prompt_wait, prompt_random_wait;//delayer
   bool target;
-  bool no_miss;
+  bool allow_miss, early_stop;
+  bool cartesian_product;
 
   //state
   Composed_classifier* current_classifier;

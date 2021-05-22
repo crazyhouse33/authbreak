@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h> //size_t
 #include "template.h"
-//This module iterate on the possibilities created by the user placement of injection point. For performance reason we reflect changes of state unstead of allocating memory to return a prompt and argv.
+//This module iterate on the possibilities created by the user placement of injection point. 
 typedef struct Command_builder {
 	   Template** templates;
 	   char** argv;

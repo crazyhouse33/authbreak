@@ -20,6 +20,8 @@
 #define DEFAULT_MIN_LEN_KEY 1007
 #define DEFAULT_SEPARATOR_KEY 1008
 #define ALLOW_MISS_KEY 1009
+#define CARTESIAN_PRODUCT_KEY 1010
+#define EARLY_STOP_KEY 1011
 
 const char *argp_program_version = AUTHBREAK_VERSION; // This variable is added at compilation
 error_t argp_err_exit_status = 2;
@@ -46,7 +48,7 @@ char doc[] =
     "second one. If 0, the empty string is included in the guesses.\n\n"
     " 		Valids OPT:\n"
     "			-charset=STR : STR is a string of different characters. Every guess will contain only thoses characters.\n\n Exit Status:\n"
-    "    0 If at least a try had been successfull or reached end but --allow-fail activated.\n"
+    "    0 If at least a try had been successfull or reached end but --allow-miss activated.\n"
     "    1 The attack terminated without finding any sucessfull creds\n"
     "    2 There is an error of parsing.\n"
     "    3 One of the ressource authbreak needs for the given command is not accessible (file, executable...)\n\n";
@@ -56,6 +58,7 @@ char args_doc[] = "COMMAND";
 /* The options we understand. */
 struct argp_option options[] = {
     {0, 'h', 0, OPTION_HIDDEN, "Alias for --help", 0},
+
     {0, 0, 0, 0, "Injection Point Default Control:", 1},
     {
         "default-charset", DEFAULT_CHARSET_KEY, "CHARSET", 0, "Given charset become the default for every injection point. Default=abcdefghiklmnopqrstuvwxyz1234567890",
@@ -72,7 +75,9 @@ struct argp_option options[] = {
                                   "prompt payloads in the order you set them. "
                                   "Nothing more than you write is injected. In particular, you have to add a newline where you want it to be entered.",
      2},
+
     {0, 0, 0, 0, "Output Interpretation Options:", 3},
+
     {"success", 's', "[!]CLASSIFIER_KEY OPERATOR VALUE", 0,
      "Add a CLASSIFIER to the current group of classifier. Authbreak considers a group TRUE if all of the CLASSIFIERS of the group are TRUE. Authbreak "
      "considers a try as a success if one group is TRUE. See NOT and OR options."
@@ -83,10 +88,14 @@ struct argp_option options[] = {
     {0, 0, 0, 0, "	status [==,!=,<=,<,>=,>] INT: The exit status of the targeted process respects the given operator and status.", 4},
     {"NOT", NOT_FAKE_KEY, 0, 0, "Negate the next group of classifier.", 4},
     {"OR", OR_FAKE_KEY, 0, 0, "Create a new group of classifier.", 4},
-    {"allow-miss", ALLOW_MISS_KEY, 0, 0, "Exit stats is 0 if ran out of tried (normally it's 1)", 5},
+    {"allow-miss", ALLOW_MISS_KEY, 0, 0, "Exit status will be 0 when Authnreak run out of guesses (normally it's 1)", 5},
+    {"early-stop", EARLY_STOP_KEY, 0, 0, "Exit at first success", 6},
+
     {0, 0, 0, 0, "Furtivity tuning options:", 6},
-    {"wait", 'w', "SECONDS", 0, "Ensure a minimu delay each guess by a certain amount of seconds.", 6},
+
+    {"wait", 'w', "SECONDS", 0, "Ensure a minimum delay each guess by a certain amount of seconds.", 6},
     {"random-wait", 'r', "SECONDS", 0, "Add a random delay each guess by a random amount of seconds bounded by the given value.", 6},
+    {"cartesian-product", CARTESIAN_PRODUCT_KEY, 0, 0, "Iterate over injections points with a regular cartesian product. This make the tool faster, but the iteration is way simpler to detect, and less equilibrated., and less equilibrated.  ", 7},
     /*{"wait-prompt", 0, "SECONDS", 0, "Delay each prompt by a certain amount of seconds.", 6},
     {"random-wait", 'r', "SECONDS", 0, "Delay each guess by a random amount of seconds bounded by the entered value.", 6},
     {"no-random", RANDOM_FAKE_KEY, 0, 0, "Without this option, Authbreak makes the order of the guesses look random. Activate this flag to turn off this behaviour to win some time.", 6},
@@ -152,9 +161,15 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     break;
 
   case ALLOW_MISS_KEY:
-    arguments->no_miss = true;
+    arguments->allow_miss = true;
     ;
     break;
+
+  case EARLY_STOP_KEY:
+    arguments->early_stop = true;
+    ;
+    break;
+
 
   case ARGP_KEY_ARG:
     arguments->command_line = arg;
@@ -171,6 +186,10 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     DEFAULT_LEN_MIN = parse_len(arg);
     break;
 
+  case CARTESIAN_PRODUCT_KEY:
+    arguments->cartesian_product = true;
+    break;
+
   case DEFAULT_SEPARATOR_KEY:
     DEFAULT_SEPARATOR = handler_parse_separator(arg, strlen(arg));
     break;
@@ -179,18 +198,18 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     DEFAULT_CHARSET = arg;
 
   case ARGP_KEY_END: {
-    if (arguments->current_classifier != NULL) // we finished with a non empty composed class
-      or_combined_classifier_add(arguments->classifier_combined, arguments->current_classifier);
+			     if (arguments->current_classifier != NULL) // we finished with a non empty composed class
+				     or_combined_classifier_add(arguments->classifier_combined, arguments->current_classifier);
 
-    printf("\n");
-    if (arg_count != 1) {
-      argp_usage(state);
-      argp_failure(state, 2, 0, "Authbreak take one and only one COMMAND positionnal argument argument. Got %d", arg_count);
-    }
-  } break;
+			     printf("\n");
+			     if (arg_count != 1) {
+				     argp_usage(state);
+				     argp_failure(state, 2, 0, "Authbreak take one and only one COMMAND positionnal argument argument. Got %d", arg_count);
+			     }
+		     } break;
 
   default:
-    return ARGP_ERR_UNKNOWN;
+		     return ARGP_ERR_UNKNOWN;
   }
   return 0;
 }
@@ -199,33 +218,35 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
 struct argp argp = {options, parse_opt, args_doc, doc};
 
 Arguments *get_arguments(int argc, char **argv, unsigned argp_flag) {
-  Arguments *arguments = malloc(sizeof(Arguments));
+	Arguments *arguments = malloc(sizeof(Arguments));
 
-  /* Default values. */
-  arguments->no_timing = false;
-  arguments->no_guessing = false;
-  arguments->no_random = false;
-  arguments->wait = 0;
-  arguments->random_wait = 0;
-  arguments->target = true;
-  arguments->no_miss = false;
-  arguments->current_classifier = NULL;
+	/* Default values. */
+	arguments->no_timing = false;
+	arguments->no_guessing = false;
+	arguments->no_random = false;
+	arguments->wait = 0;
+	arguments->random_wait = 0;
+	arguments->target = true;
+	arguments->allow_miss = false;
+	arguments->early_stop = false;
+	arguments->cartesian_product = false;
+	arguments->current_classifier = NULL;
 
-  arguments->classifier_combined = or_combined_classifier_new();
-  arguments->prompt = (char **)create_vector(0);
+	arguments->classifier_combined = or_combined_classifier_new();
+	arguments->prompt = (char **)create_vector(0);
 
-  /* Parse our arguments; every option seen by parse_opt will
-     be reflected in arguments. */
+	/* Parse our arguments; every option seen by parse_opt will
+	   be reflected in arguments. */
 
-  arg_count = 0; // we reset state (for tests)
+	arg_count = 0; // we reset state (for tests)
 
-  // Set default default injection point
-  DEFAULT_CHARSET = "abcdefghijklmnopqrstuvwxyz0123456789";
-  DEFAULT_LEN_MIN = 0;
-  DEFAULT_LEN_MAX = 8;
-  DEFAULT_SEPARATOR = '\n';
+	// Set default default injection point
+	DEFAULT_CHARSET = "abcdefghijklmnopqrstuvwxyz0123456789";
+	DEFAULT_LEN_MIN = 0;
+	DEFAULT_LEN_MAX = 8;
+	DEFAULT_SEPARATOR = '\n';
 
-  argp_parse(&argp, argc, argv, argp_flag, 0, arguments);
+	argp_parse(&argp, argc, argv, argp_flag, 0, arguments);
 
-  return arguments;
+	return arguments;
 }
