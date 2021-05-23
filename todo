@@ -1,13 +1,6 @@
 - Remember to see if doing you own getdelim is not better as some point as I suspect it may be(we can work directely in the internal buffer) and safer as well because not static shared buffer), after performance report per commit routine is in place.
 
-- The whole parsing "until" technique may be an error of design, and it's more easy to use begin/end interface, because every subparsing stuff need until actualization, which is tedious and recquiert to be super carefull, more variables... I chose it in the begining because it matched strnlen, strncmp way of doing, so it would save sove diff conversion. At least identify function where until is not used like that and change to begin/end
-
-- Order test by prepending number so test discovery put them in an optimal order that reflect test dependancies (So when 10 test fails we know the upper failed one probably is reponsible the 9 others one to fail)
-
-
 - use https://www.argtable.org/ unstead of argp (cross platform)
-
--use len min and len max as option. Allow file to use charset, and filter each entry accordingly
 
 -use enw type of handler hashcat masque
 ?l = abcdefghijklmnopqrstuvwxyz
@@ -16,8 +9,23 @@
 ?a = ?l?u?d?s
 ?b = 0x00 - 0xff?s = ”space”!”’()*+,-./:;<=>?@[]‘|Par exemple ?l?l?l?l?l?l?l g ́en ́erera toutes les combinaisonspossibles entre aaaaaaa - zzzzzzz
 
--remove _eq part of out_eq
-
 change handler constructor to take option type and main component
 PROBLEM Iterator Reset to is broken.since we iterate with left pivot, we should start right
 BUG investigate ./authbreak -h -s status==0 'echo {/tmp/tata} {/tmp/toto}' that seem to generate bad iteration with files (tested only with it)
+
+redesign stuff so all attacks can take as init a template* and use it:
+	template should just be a placeholder carrying informations about content such as charset, max/min len...(ie handler options)
+	previous template should be renamed cyclyc_template and should use regular template
+	put handlers options stuff at template level
+
+what we want:
+
+placeholder a replacebable region in a string:  DONE
+
+template: a placeholder and informations about content: Nop
+
+cyclic_template: a template that can auto increment himself/reset to given position: Just rename template
+
+handler: generator: Nop, it's a mix of what should be template and cyclic_template
+
+In this sheme every attack get initialized with a list of template, and is free to build cyclic_templates from it, or to just do eratic stuff all the time

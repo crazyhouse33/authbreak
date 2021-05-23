@@ -38,11 +38,10 @@ void test2() {
   munit_assert_double(args->wait, ==, 0);
   munit_assert_double(args->random_wait, ==, 0);
   munit_assert_false(args->allow_miss);
-  munit_assert_false(args->cartesian_product);
 }
 
 void test3() {
-  char *command = "authbreak --early-stop --allow-miss --cartesian-product './basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}' --prompt {../test_data/list/basic_auth_crack_pin.list}\n";
+  char *command = "authbreak --early-stop --allow-miss './basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}' --prompt {../test_data/list/basic_auth_crack_pin.list}\n";
   size_t argc;
   char **argv = arg_vector_from_string(command, &argc);
   Arguments *args = get_arguments(argc, argv, ARGP_NO_EXIT);
@@ -50,7 +49,6 @@ void test3() {
   munit_assert_int(0, ==, args->classifier_combined->num_groups);
   munit_assert_string_equal(args->command_line, "./basic_auth {../test_data/list/basic_auth_crack_user.list} {4:4,charset=rot}");
   munit_assert_true(args->allow_miss);
-  munit_assert_true(args->cartesian_product);
   munit_assert_true(args->early_stop);
   munit_assert_string_equal(args->prompt[0], "{../test_data/list/basic_auth_crack_pin.list}\n");
 }

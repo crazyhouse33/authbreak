@@ -9,7 +9,7 @@ void classifier_stringcmp_init_core_value(Classifier_stringcmp *class, char *tar
 void classifier_stringcmp_init_core_op(Classifier_stringcmp *class, Operator op) {
 	switch (op){
 		case equal:
-			break;
+		break;
 		case not_equal:
 			class->common.target= ! class->common.target;
 		break;

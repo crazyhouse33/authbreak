@@ -32,15 +32,11 @@ typedef struct Handler
 Handler* handler_new(char* template_string, size_t until);
 /*Handler constructor, create a pointer pointing to the handler initialized by the string*/
 
-Handler* get_dummy_handler();
-/*Return an handler that dont do anything*/
-
 void handler_init(Handler* emptypointer, char* template_string, size_t until);
 /*Initialize memory pointed by emptypointer to the template_string setup. Consider the string end after until bytes*/
 
 char* handler_next(Handler* handler);
 /*Increment value for handler and return it. If we reach end of iterations, return NULL and reset the handler to the begining*/
-//TODO Make it such as it just return NULL when done, and add a reset method that the user can use if he want
 
 void handler_free(Handler* handler);
 /*Free the handler*/

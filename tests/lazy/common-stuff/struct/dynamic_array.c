@@ -1,5 +1,7 @@
 #include "dynamic_array.h"
 #include "munit.h"
+#include "test_unicity.h"
+
 
 void test_alloc() {
 
@@ -49,9 +51,29 @@ void test_it() {
   dynamic_array_put(strda, (void *)"I am far", 15000);
 }
 
-int main() {
-  test_alloc();
-  test_it();
+void test_shake(){
+	char *string1[] = {"str1", "str2", "str3", "str4", "str5", "str6", "str7", "str8", "str9", "str10"};
+	char *ref[] = {"str1", "str2", "str3", "str4", "str5", "str6", "str7", "str8", "str9", "str10"};
+	int size_str = sizeof(ref) / sizeof(char *);
+	Dynamic_Array dyn;
+	dyn.array = (void**) string1;
+	dyn.size= size_str;
 
-  return 0;
+	bool same = true;
+	for (int i=0; i<10 ; i++){
+		dynamic_array_shake(&dyn);
+		assert_is_permutation(string1, ref, size_str, size_str);
+		same &= array_equal(string1, ref, size_str);
+	}
+	munit_assert_false(same);
+	
+
+}
+
+int main() {
+	test_alloc();
+	test_it();
+	test_shake();
+
+	return 0;
 }

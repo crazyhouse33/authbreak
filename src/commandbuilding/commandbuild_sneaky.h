@@ -16,4 +16,6 @@ Sneaky_command_builder* sneaky_command_builder_new (char* command, char** prompt
 bool sneaky_command_builder_next_command(Sneaky_command_builder* builder);
 /*Set argv and prompt to next combinaison and return true if done */
 
+char *sneaky_command_builder_current_command(Sneaky_command_builder* builder);
+
 

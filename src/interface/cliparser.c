@@ -20,8 +20,7 @@
 #define DEFAULT_MIN_LEN_KEY 1007
 #define DEFAULT_SEPARATOR_KEY 1008
 #define ALLOW_MISS_KEY 1009
-#define CARTESIAN_PRODUCT_KEY 1010
-#define EARLY_STOP_KEY 1011
+#define EARLY_STOP_KEY 1010
 
 const char *argp_program_version = AUTHBREAK_VERSION; // This variable is added at compilation
 error_t argp_err_exit_status = 2;
@@ -95,7 +94,6 @@ struct argp_option options[] = {
 
     {"wait", 'w', "SECONDS", 0, "Ensure a minimum delay each guess by a certain amount of seconds.", 6},
     {"random-wait", 'r', "SECONDS", 0, "Add a random delay each guess by a random amount of seconds bounded by the given value.", 6},
-    {"cartesian-product", CARTESIAN_PRODUCT_KEY, 0, 0, "Iterate over injections points with a regular cartesian product. This make the tool faster, but the iteration is way simpler to detect, and less equilibrated., and less equilibrated.  ", 7},
     /*{"wait-prompt", 0, "SECONDS", 0, "Delay each prompt by a certain amount of seconds.", 6},
     {"random-wait", 'r', "SECONDS", 0, "Delay each guess by a random amount of seconds bounded by the entered value.", 6},
     {"no-random", RANDOM_FAKE_KEY, 0, 0, "Without this option, Authbreak makes the order of the guesses look random. Activate this flag to turn off this behaviour to win some time.", 6},
@@ -186,10 +184,6 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     DEFAULT_LEN_MIN = parse_len(arg);
     break;
 
-  case CARTESIAN_PRODUCT_KEY:
-    arguments->cartesian_product = true;
-    break;
-
   case DEFAULT_SEPARATOR_KEY:
     DEFAULT_SEPARATOR = handler_parse_separator(arg, strlen(arg));
     break;
@@ -229,7 +223,6 @@ Arguments *get_arguments(int argc, char **argv, unsigned argp_flag) {
 	arguments->target = true;
 	arguments->allow_miss = false;
 	arguments->early_stop = false;
-	arguments->cartesian_product = false;
 	arguments->current_classifier = NULL;
 
 	arguments->classifier_combined = or_combined_classifier_new();

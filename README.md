@@ -4,7 +4,7 @@ Generic authentification system injection point based tester for Linux.
 
 # Function and motivation
 
-Authbreak is a tool built to execute attacks that can work on every authentification system, with the same powerful user interface and complete set of feature. It's been done entirely in C ( Because I was willing to try the language Linux was coded with, and god I regret this decision). It also have an insane (first degree of the word) focus on performance. Yet it also follow manual but very strict continious integration, lot of tests (memory), per commit performance auditing.
+Authbreak is a tool built to execute attacks that can work on every authentification system, with the same powerful user interface and complete set of feature. It's been done entirely in C ( Because I was willing to try the language Linux was coded with, and god I regret this decision). It also have an insane (first degree of the word) focus on performance. Yet it also follow manual but very strict continious integration, lot of tests including valgrind assisted memory checks, per commit performance auditing...
 
 # Install
 
@@ -27,34 +27,70 @@ The dev branch contains additional continuous integration files, and has a usual
 
 # Usage
 
-The philosophy is to provide a command with some configurable injection points along with boolean combination of some target execution metrics (time, stdout...) to allow differentiation of success and failures. The different implementeds attacks will try to exploit the target using your inputs in the most efficient way they can to get a success. A sheduler make sure we converge as quick as we can to a working attack, or toward the brutforcer.
+The philosophy is to provide a command with some configurable injection points along with boolean combination of some target execution metrics (time, stdout...) to allow differentiation of success and failures. The different implementeds attacks will try to exploit the target using your inputs in the most efficient way they can to get a success.
 
-authbreak -h for a complete explanation of how this version works.
+authbreak -h for an extensive explanation on every options.
 
 
 # Attacks
 
 ## Brutforcer
 
-The brutforcer iterate once on every possible combination defined by the differents injections points.
-
-### Iteration order
-The trickiest thing with the Brutforcer is to understand what the default does compared to cartesian option.
+The brutforcer iterate once on every possible combination defined by the differents injections points. It does so with an order maximazing cyling size over each injection points. 
 
 If user contains:
 
 ```
 ansible
-toto
 root
+Jack
+Elizabeth
+```
+And password contains:
+```
+admiN123 
+1234 
+password 
+gorilla43
 ```
 
+Then authbreak generate followings output:
+
 ```
-admiN123
-1234
-password
+./authbreak -s status==0 'echo {user} {password}'
+
+/bin/echo ansible admiN123
+
+/bin/echo root 1234
+
+/bin/echo Jack password
+
+/bin/echo Elizabeth gorilla43
+
+/bin/echo ansible 1234
+
+/bin/echo root password
+
+/bin/echo Jack gorilla43
+
+/bin/echo Elizabeth admiN123
+
+/bin/echo ansible password
+
+/bin/echo root gorilla43
+
+/bin/echo Jack admiN123
+
+/bin/echo Elizabeth 1234
+
+/bin/echo ansible gorilla43
+
+/bin/echo root admiN123
+
+/bin/echo Jack 1234
+
+/bin/echo Elizabeth password
 ```
-Then the authbreak generate followings outputs:
 
 # Coming
 

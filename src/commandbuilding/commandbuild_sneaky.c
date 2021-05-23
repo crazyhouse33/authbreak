@@ -71,11 +71,6 @@ static bool __sneaky_command_builder_next_command_fix(Sneaky_command_builder* bu
 }
 
 
-
-
-
-
-
 //The goal of this implementation is to work fast when no fix is needed
 bool sneaky_command_builder_next_command(Sneaky_command_builder* builder) { 
 	for (int i=0; i<builder->builder.templates_num; i++){
@@ -86,6 +81,11 @@ bool sneaky_command_builder_next_command(Sneaky_command_builder* builder) {
 	}
 	return false;
 }
+
+char *sneaky_command_builder_current_command(Sneaky_command_builder* builder) {
+	return command_builder_current_command(&builder->builder);
+}
+
 
 
 

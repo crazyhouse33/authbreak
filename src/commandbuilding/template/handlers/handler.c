@@ -83,5 +83,3 @@ switch (handler->type) {
     break;
   }
 }
-
-Handler *get_dummy_handler() { return handler_new("0:0, type=iterator", 18); }

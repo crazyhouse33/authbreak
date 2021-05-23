@@ -10,6 +10,14 @@ static size_t count(char *string, char **res, ssize_t size_res) {
   return cpt;
 }
 
+//TODO put it in dynamicArray
+bool array_equal(char **res1, char **res2, size_t size){
+	for (size_t i ; i< size ;i++)
+		if (res1[i]!=res2[i])
+			return false;
+	return true;
+}
+
 void assert_not_present(char *string, char **result, size_t size_res) { munit_assert_size(count(string, result, size_res), >=, 1); }
 
 void assert_present(char *string, char **result, size_t size_res) { munit_assert_size(count(string, result, size_res), <=, 0); }

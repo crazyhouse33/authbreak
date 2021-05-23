@@ -2,8 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h> //realloc
 #include <sys/types.h>
-// we suffer in perf from the the deferencing, in rust, you can declare a type that can vary in size. In C there is no way around this. If you want efficient acces you stick to an iteration that keep
-// memory size in mind. This using this structure is way easier obviously and you should use it where performance dont matter
+#include "fast_rand.h"
 
 static uint64_t next_power_2(uint64_t v) {
   v |= v >> 1;
@@ -31,3 +30,14 @@ void dynamic_array_put(Dynamic_Array *array, void *to_put, size_t where) {
 
   array->array[where] = to_put;
 }
+
+Dynamic_Array* as_dynamic_array(void**array);
+void dynamic_array_shake(Dynamic_Array* array){
+	for (size_t i=0; i < array->size; i++){
+		size_t rand = fast_rand_until(array->size);
+		void* randelem = array->array[rand];
+		array->array[rand] = array->array[i];
+		array->array[i]= randelem; 
+	}
+}
+

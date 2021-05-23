@@ -12,7 +12,6 @@ typedef struct Arguments
   double wait, random_wait, prompt_wait, prompt_random_wait;//delayer
   bool target;
   bool allow_miss, early_stop;
-  bool cartesian_product;
 
   //state
   Composed_classifier* current_classifier;
