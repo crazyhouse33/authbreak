@@ -10,6 +10,7 @@ typedef struct Command_builder {
 	   unsigned short cartesian_it;//current temp getting inc
 } Command_builder;
 
+
 Command_builder* command_builder_new (char* command, char** prompts);
 /*Gather all the templates, append newline to prompts*/
 
@@ -31,5 +32,8 @@ char* command_builder_serialize(Command_builder* builder);
 
 void* command_builder_unserialize(Command_builder* builder,char* string);
 /*Set the state as specified in string*/
+
+size_t command_builder_size(Command_builder* builder);
+/*Retrieve number of elements that contain a builder*/
 
 

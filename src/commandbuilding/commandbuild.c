@@ -79,3 +79,12 @@ char *command_builder_serialize(Command_builder* builder);
 
 void *command_builder_unserialize(Command_builder* builder, char *string);
 /*Set the state as specified in string*/
+
+size_t command_builder_size(Command_builder* builder){
+        size_t ret = 1;
+        for (unsigned short i = 0; i<builder->templates_num; i++){
+                ret *= template_size(builder->templates[i]);
+        }
+        return ret;
+}
+

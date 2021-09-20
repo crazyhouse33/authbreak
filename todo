@@ -13,19 +13,8 @@ change handler constructor to take option type and main component
 PROBLEM Iterator Reset to is broken.since we iterate with left pivot, we should start right
 BUG investigate ./authbreak -h -s status==0 'echo {/tmp/tata} {/tmp/toto}' that seem to generate bad iteration with files (tested only with it)
 
-redesign stuff so all attacks can take as init a template* and use it:
-	template should just be a placeholder carrying informations about content such as charset, max/min len...(ie handler options)
-	previous template should be renamed cyclyc_template and should use regular template
-	put handlers options stuff at template level
-
-what we want:
-
+redesign stuff so all attacks can take as init templates options and use it unstead of builders:
 placeholder a replacebable region in a string:  DONE
-
 template: a placeholder and informations about content: Nop
-
 cyclic_template: a template that can auto increment himself/reset to given position: Just rename template
-
 handler: generator: Nop, it's a mix of what should be template and cyclic_template
-
-In this sheme every attack get initialized with a list of template, and is free to build cyclic_templates from it, or to just do eratic stuff all the time

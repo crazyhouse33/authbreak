@@ -5,10 +5,7 @@ static unsigned int* sneaky_command_builder_get_templates_sizes(){
 
 }
 
-Sneaky_command_builder* sneaky_command_builder_new( char *command, char **prompts) {
-	Sneaky_command_builder* builder = malloc(sizeof(Sneaky_command_builder));
-	command_builder_init(&builder->builder, command, prompts);
-
+static void __init_sneaky_part( Sneaky_command_builder* builder) {
 	size_t* ghost_sizes = malloc(sizeof(size_t) * builder->builder.templates_num);
 	size_t* sizes = malloc(sizeof(size_t) * builder->builder.templates_num);
 	builder->pos = malloc(sizeof(size_t) * builder->builder.templates_num);
@@ -21,7 +18,20 @@ Sneaky_command_builder* sneaky_command_builder_new( char *command, char **prompt
 	builder->sizes= sizes;
 	make_prime_together(ghost_sizes,builder->builder.templates_num);
 	builder->ghost_sizes=ghost_sizes;
+}
+
+Sneaky_command_builder* sneaky_command_builder_new( char *command, char **prompts) {
+	Sneaky_command_builder* builder = malloc(sizeof(Sneaky_command_builder));
+	command_builder_init(&builder->builder, command, prompts);
+	__init_sneaky_part(builder);
 	return builder;
+}
+
+Sneaky_command_builder* command_builder_sneakify( Command_builder* builder) {
+	Sneaky_command_builder* new_builder = malloc(sizeof(Sneaky_command_builder));
+	new_builder->builder = *builder;
+	__init_sneaky_part(new_builder);
+	return new_builder;
 }
 
 static bool __sneaky_command_builder_next_command_fix_rec(Sneaky_command_builder* builder, int from, size_t to_inc){

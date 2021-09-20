@@ -27,7 +27,9 @@ char *generate(int firs_ite) {
 
 void test_iteration(char *command, char **prompt, size_t expected_number) { // n is number of template
   builder=command_builder_new(command, prompt);
+  munit_assert_size( expected_number, ==, command_builder_size(builder));
   assert_iteration_test(generate, expected_number);
+
 }
 
 int main() {
