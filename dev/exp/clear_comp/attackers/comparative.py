@@ -1,4 +1,4 @@
-# This one try to favorise the winner. It does so by simulating fights between couples, and favorise the letter that win for futur runs. Each exp take 2 guess, but there is early stopage, and the theoric distribution of wins is Binomial(n,0.5), which may accelerate things compare to the other uknown distribution approach
+# This one try to favorise the winner. It does so by simulating fights between couples, and favorise the letter that win for futur runs. Each exp take 2 guess, the theoric distribution of wins is Binomial(n,0.5), which may accelerate things compare to the other uknown distribution approach
 
 class Comparative_attacker(Attacker):
 
