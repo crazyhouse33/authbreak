@@ -18,4 +18,7 @@ bool sneaky_command_builder_next_command(Sneaky_command_builder* builder);
 
 char *sneaky_command_builder_current_command(Sneaky_command_builder* builder);
 
+Sneaky_command_builder* command_builder_sneakify( Command_builder* builder);
+// wrap a build into a sneaky one
+
 

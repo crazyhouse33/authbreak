@@ -1,0 +1,4 @@
+Design what we ant for attack interface (shared command_builder? each one have a different one? pb is : bruteforcer need isolation, but some others dont. But some attack can destroy on injection point for every attack. How to handle this?
+
+There is a redesign branch on wich I tried to clean the messy front handler part. Would be nice to finish this work.
+

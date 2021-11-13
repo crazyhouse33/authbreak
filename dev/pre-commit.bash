@@ -4,7 +4,7 @@ set -e
 echo building again from scratch
 cd ../build
 rm -rf -- *
-cmake .. -G Ninja
+cmake .. 
 cmake --build . --target all
 cmake --build . --target test
 

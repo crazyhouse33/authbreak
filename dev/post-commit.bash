@@ -5,6 +5,7 @@ echo including pre-commit change
 git commit -a --amend --no-verify --no-edit
 
 echo going to perf branch 
+# Should fetch perf before
 git checkout perf
 
 echo merge dev
