@@ -57,8 +57,8 @@ class Flat_attacker(Attacker):
         other_series = self._separate_series(best_letter)
         if len(best_serie) < 30 or len(other_series) < 30:
             return False, best_letter
-        confidence_interval_best = scipy.stats.t.interval(self.intervalle_proba, len(best_serie)-1, best_serie.mean(), best_serie.stddev(ddof=1) / math.sqrt(len(best_serie)-1)or 0.0000000000000000001)
-        confidence_interval_other = scipy.stats.t.interval(self.intervalle_proba, len(other_series)-1, other_series.mean(), other_series.stddev(ddof=1)/math.sqrt(len(other_series)-1) or 0.0000000000000000001)
+        confidence_interval_best = scipy.stats.t.interval(self.intervalle_proba, len(best_serie)-1, best_serie.mean(), best_serie.stddev(ddof=1) / math.sqrt(len(best_serie)))
+        confidence_interval_other = scipy.stats.t.interval(self.intervalle_proba, len(other_series)-1, other_series.mean(), other_series.stddev(ddof=1)/math.sqrt(len(other_series)))
 
   #      print(f'{self.cpt}: {confidence_interval_best} {confidence_interval_other}')
         #logging.debug({letter: (len(v),v.mean(),v.stddev()) for letter, v in self.history.items()})
