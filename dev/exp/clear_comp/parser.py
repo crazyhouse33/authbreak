@@ -1,6 +1,14 @@
 import argparse
 import logging
 parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "confiance", 
+    type = float,
+    help=(
+        "Sucess rate"),
+    )
+
 parser.add_argument(
     "-log", 
     "--log", 

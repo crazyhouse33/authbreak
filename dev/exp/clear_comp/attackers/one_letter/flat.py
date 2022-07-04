@@ -1,7 +1,7 @@
-# (one guess per attack), but uses "loi des grands nombre" to narrow intervall of incertitude until two sets are totally disjoint, wich may or may not be faster than bernouilly stuff
+# (one guess per attack), but uses "loi des grands nombre" to narrow in
 import scipy.stats
 import math
-from attackers.attacker import Attacker
+from attackers.one_letter.attacker import Attacker
 from runstats import Statistics
 import logging
 import runstats
@@ -11,12 +11,9 @@ import warnings
 class Flat_attacker(Attacker):
 
     def __init__(self, charset, confidence_level):
-        super().__init__(charset)
-        self.confidence_level= confidence_level
-        self.intervalle_proba = Flat_attacker.get_individual_intervall_needed_proba(confidence_level)
-        self.reset()
+        super().__init__(charset,confidence_level)
 
-    def reset(self):
+    def reset_data(self):
         self.cpt=0
         self.history = {}
 
@@ -33,18 +30,13 @@ class Flat_attacker(Attacker):
 
     # To get a asked error rate, we need to correct the confidence_level, otherwise this algo is too strict
     # This function result from establishing the tree error rate of the decision considering the direction of the error(left or right from interval)  and computing the inverse function
-    def get_individual_intervall_needed_proba(confidence_level):
-        # The mean is in the interval with proba X => error rate =  0.25 + 0.5*x + + 0.25 x**2
+    def set_confidence_level(self, confidence_level):
+        # The mean is in the interval with proba X => error rate =  0.5x + 0.5 x**2
         # Thus we just resolve the equation to obtain wanted error rate
-        if confidence_level < 0.25:
+        if confidence_level < 0.5:
             warnings.warn(f"Given confidence_level is too low to equilibrate error rate: {confidence_level}")
-            return confidence_level
-
-
-#        return confidence_level
-        return (2* math.sqrt(confidence_level)) -1
-
-#        return poly.polyroots([0.25 - confidence_level, 0.5, 0.25])[1]
+            self.intervalle_proba = confidence_level
+        self.intervalle_proba = poly.polyroots([0.5 - confidence_level, 0, 0.5])[1]
 
     def score_letter(self):
         pass
@@ -57,11 +49,11 @@ class Flat_attacker(Attacker):
         other_series = self._separate_series(best_letter)
         if len(best_serie) < 30 or len(other_series) < 30:
             return False, best_letter
-        confidence_interval_best = scipy.stats.t.interval(self.intervalle_proba, len(best_serie)-1, best_serie.mean(), best_serie.stddev(ddof=1) / math.sqrt(len(best_serie)))
-        confidence_interval_other = scipy.stats.t.interval(self.intervalle_proba, len(other_series)-1, other_series.mean(), other_series.stddev(ddof=1)/math.sqrt(len(other_series)))
+        confidence_interval_best = scipy.stats.t.interval(self.intervalle_proba, len(best_serie)-1, best_serie.mean(), (best_serie.stddev(ddof=1) or 0.0000000000000000001) / math.sqrt(len(best_serie)))
+        confidence_interval_other = scipy.stats.t.interval(self.intervalle_proba, len(other_series)-1, other_series.mean(), (other_series.stddev(ddof=1) or 0.0000000000000000001)/math.sqrt(len(other_series)))
 
   #      print(f'{self.cpt}: {confidence_interval_best} {confidence_interval_other}')
-        #logging.debug({letter: (len(v),v.mean(),v.stddev()) for letter, v in self.history.items()})
+        #print({letter: (len(v),v.mean(),v.stddev()) for letter, v in self.history.items()})
         
         return confidence_interval_best[0] > confidence_interval_other[1], best_letter
 

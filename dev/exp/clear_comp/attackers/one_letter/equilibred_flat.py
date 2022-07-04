@@ -1,7 +1,7 @@
 # (one guess per attack), but uses "loi des grands nombre" to narrow intervall of incertitude until two sets are totally disjoint, wich may or may not be faster than bernouilly stuff
 import scipy.stats
 import math
-from attackers.flat import Flat_attacker
+from attackers.one_letter.flat import Flat_attacker
 from runstats import Statistics
 import logging
 import runstats
@@ -13,8 +13,8 @@ class Equilibred_flat(Flat_attacker):
         self.best_letter = charset[0]
         self.other_series = Statistics()
 
-    def reset(self):
-        super().reset()
+    def reset_data(self):
+        super().reset_data()
         self.history = {letter: Statistics() for letter in self.charset}
 
     def _separate_series(self, best_letter):

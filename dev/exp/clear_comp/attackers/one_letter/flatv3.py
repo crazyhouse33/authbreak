@@ -1,7 +1,7 @@
 # (one guess per attack), but uses "loi des grands nombre" to narrow intervall of incertitude until two sets are totally disjoint, wich may or may not be faster than bernouilly stuff
 import scipy.stats
 import math
-from attackers.equilibred_flat import Equilibred_flat
+from attackers.one_letter.equilibred_flat import Equilibred_flat
 from runstats import Statistics
 import logging
 import runstats
@@ -21,10 +21,11 @@ class Flat_attacker_v3(Equilibred_flat):
 
 
         
-        #the_min = min(len(best_serie), len(other_series)) # 
-        #size = int(the_min + 0.5 *  (len(best_serie) - the_min + len(other_series) - the_min)) 1000 ok network:3.1%, 338.712
+        the_min = min(len(best_serie), len(other_series)) 
+        size = int(the_min + 0.5 *  (len(best_serie) - the_min + len(other_series) - the_min)) # 1000 ok network:3.1%, 338.712
 
-        size = int((len(best_serie) + len(other_series))/2) #1000ok network:3.1%, 338.712 equi 1000 ok network:1.5%, 388.344
+        #size = int((len(best_serie) + len(other_series))/2) #1000ok network:3.1%, 338.712 equi 1000 ok network:1.5%, 388.344
+        #size = int((len(best_serie) + len(other_series))) #1000ok network:3.1%, 338.712 equi 1000 ok network:1.5%, 388.344
         confidence_interval = scipy.stats.t.interval(self.confidence_level, size, best_serie.mean() - other_series.mean(), (2*stddev / math.sqrt(size))or 0.0000000000000000001) # Var[X-Y] = var x + var y
         #https://en.wikipedia.org/wiki/Student%27s_t-test#Independent_two-sample_t-test
 #        import pdb;pdb.set_trace()
